@@ -24,6 +24,8 @@ Color SpriteSheet::Get_Pixel(int x, int y) const
 
 namespace Mario
 {
+    SpriteSheet mario_sprite;
+
     namespace Small
     {
         namespace Stance
@@ -59,6 +61,29 @@ namespace Mario
             Rectangle c2 = {27, 175, 15, 17};
             std::vector<Rectangle> climb_ = {c1, c2};
         }
+        namespace Enter_Pipe
+        {
+            Rectangle enter = {515, 121, 16, 30};
+            std::vector<Rectangle> enter_pipe = {enter};
+        }
+        namespace Fade_Out
+        {
+            Rectangle f1 = {5, 224, 15, 16};
+            Rectangle f2 = {27, 224, 15, 16};
+            Rectangle f3 = {49, 225, 12, 15};
+            Rectangle f4 = {70, 225, 12, 15};
+            Rectangle f5 = {91, 225, 12, 15};
+            Rectangle f6 = {112, 225, 12, 15};
+            Rectangle f7 = {133, 225, 12, 15};
+            Rectangle f8 = {175, 225, 12, 15};
+            Rectangle f9 = {194, 224, 15, 16};
+            Rectangle f10 = {215, 224, 15, 16};
+            Rectangle f11 = {236, 224, 15, 16};
+            Rectangle f12 = {257, 224, 15, 16};
+            Rectangle f13 = {280, 225, 12, 15};
+            Rectangle f14 = {301, 225, 12, 15};
+            std::vector<Rectangle> fade_out = {f1, f2, f3, f4, f5, f6, f7, f8, f9, f10, f11, f12, f13, f14};
+        }
         namespace Small_To_Super
         {
             // x3
@@ -72,6 +97,7 @@ namespace Mario
             std::vector<Rectangle> small_to_super = {s1, s2, s3, s4, s5, s6};
         }
     }
+
     namespace Invincible
     {
         namespace Stance
@@ -126,6 +152,14 @@ namespace Mario
             Rectangle s4 = {428, 447, 15, 18};
             std::vector<Rectangle> slide_ = {s1, s2, s3, s4};
         }
+        namespace Enter_Pipe
+        {
+            Rectangle e1 = {344, 291, 16, 16};
+            Rectangle e2 = {365, 291, 16, 16};
+            Rectangle e3 = {386, 291, 16, 16};
+            Rectangle e4 = {407, 291, 16, 16};
+            std::vector<Rectangle> enter_pipe = {e1, e2, e3, e4};
+        }
         namespace Small_To_Super
         {
             Rectangle s1 = {6, 416, 14, 17};
@@ -150,6 +184,7 @@ namespace Mario
             std::vector<Rectangle> small_to_super = {s1, s2, s3, s4, s5, s6, s7, s8, s9, s10, s11, s12, s13, s14, s15, s16, s17};
         }
     }
+
     namespace Super
     {
         namespace Stance
@@ -235,6 +270,29 @@ namespace Mario
             Rectangle c2 = {450, 120, 16, 28};
             std::vector<Rectangle> climb_ = {c1, c2};
         }
+        namespace Enter_Pipe
+        {
+            Rectangle enter = {515, 121, 16, 30};
+            std::vector<Rectangle> enter_pipe = {enter};
+        }
+        namespace Fade_Out
+        {
+            Rectangle f1 = {385, 205, 16, 29};
+            Rectangle f2 = {406, 205, 16, 30};
+            Rectangle f3 = {427, 205, 16, 30};
+            Rectangle f4 = {449, 205, 14, 30};
+            Rectangle f5 = {470, 205, 14, 30};
+            Rectangle f6 = {491, 205, 14, 30};
+            Rectangle f7 = {511, 205, 16, 29};
+            Rectangle f8 = {532, 205, 16, 29};
+            Rectangle f9 = {553, 205, 16, 29};
+            Rectangle f10 = {574, 205, 16, 29};
+            Rectangle f11 = {595, 205, 16, 30};
+            Rectangle f12 = {616, 205, 16, 30};
+            Rectangle f13 = {659, 205, 14, 30};
+            Rectangle f14 = {680, 205, 14, 30};
+            std::vector<Rectangle> fade_out = {f1, f2, f3, f4, f5, f6, f7, f8, f9, f10, f11, f12, f13, f14};
+        }
         namespace Hit
         {
             Rectangle h1 = {615, 131, 15, 32};
@@ -247,7 +305,8 @@ namespace Mario
             std::vector<Rectangle> hit_ = {h1, h2, h3, h4, h5};
         }
     }
-    namespace Invincible_Super
+
+    namespace Invincible_Super_And_Fire
     {
         namespace Stance
         {
@@ -317,7 +376,16 @@ namespace Mario
             Rectangle w12 = {620, 405, 16, 31};
             std::vector<Rectangle> walk_ = {w1, w2, w3, w4, w5, w6, w7, w7, w9, w10, w11, w12};
         }
+        namespace Enter_Pipe
+        {
+            Rectangle e1 = {897, 332, 16, 3};
+            Rectangle e2 = {918, 332, 16, 3};
+            Rectangle e3 = {939, 332, 16, 3};
+            Rectangle e4 = {960, 332, 16, 3};
+            std::vector<Rectangle> enter_pipe = {e1, e2, e3, e4};
+        }
     }
+
     namespace Fire
     {
         namespace Stance
@@ -358,11 +426,34 @@ namespace Mario
             Rectangle shoot = {921, 78, 15, 30};
             std::vector<Rectangle> shoot_ = {shoot};
         }
+        namespace Enter_Pipe
+        {
+            Rectangle enter = {923, 121, 16, 30};
+            std::vector<Rectangle> enter_pipe = {enter};
+        }
+        namespace Fade_out
+        {
+            Rectangle f1 = {792, 290, 16, 29};
+            Rectangle f2 = {813, 290, 16, 30};
+            Rectangle f3 = {834, 290, 16, 30};
+            Rectangle f4 = {856, 290, 14, 30};
+            Rectangle f5 = {877, 290, 14, 30};
+            Rectangle f6 = {898, 290, 14, 30};
+            Rectangle f7 = {918, 290, 16, 29};
+            Rectangle f8 = {939, 290, 16, 29};
+            Rectangle f9 = {960, 290, 16, 29};
+            Rectangle f10 = {981, 290, 16, 29};
+            Rectangle f11 = {1002, 290, 16, 30};
+            Rectangle f12 = {1023, 290, 16, 30};
+            Rectangle f13 = {1066, 290, 14, 30};
+            Rectangle f14 = {1087, 290, 14, 30};
+            std::vector<Rectangle> fade_out = {f1, f2, f3, f4, f5, f6, f7, f8, f9, f10, f11, f12, f13, f14};
+        }
         namespace Hit
         {
             Rectangle h1 = {971, 141, 14, 30};
             Rectangle h2 = {991, 139, 16, 30};
-            //x6
+            // x6
             Rectangle h3 = {1012, 144, 16, 27};
             Rectangle h4 = {1033, 155, 16, 16};
             //
@@ -374,6 +465,8 @@ namespace Mario
 
 namespace Luigi
 {
+    SpriteSheet luigi_sprite;
+
     namespace Small
     {
         namespace Stance
@@ -403,11 +496,34 @@ namespace Luigi
             Rectangle slide = {134, 133, 15, 18};
             std::vector<Rectangle> slide_ = {slide};
         }
+        namespace Enter_Pipe
+        {
+            Rectangle enter = {515, 121, 16, 30};
+            std::vector<Rectangle> enter_pipe = {enter};
+        }
         namespace Climb
         {
             Rectangle c1 = {5, 175, 15, 18};
             Rectangle c2 = {27, 175, 15, 17};
             std::vector<Rectangle> climb_ = {c1, c2};
+        }
+        namespace Fade_Out
+        {
+            Rectangle f1 = {5, 224, 15, 16};
+            Rectangle f2 = {27, 224, 15, 16};
+            Rectangle f3 = {49, 225, 12, 15};
+            Rectangle f4 = {70, 225, 12, 15};
+            Rectangle f5 = {91, 225, 12, 15};
+            Rectangle f6 = {112, 225, 12, 15};
+            Rectangle f7 = {133, 225, 12, 15};
+            Rectangle f8 = {175, 225, 12, 15};
+            Rectangle f9 = {194, 224, 15, 16};
+            Rectangle f10 = {215, 224, 15, 16};
+            Rectangle f11 = {236, 224, 15, 16};
+            Rectangle f12 = {257, 224, 15, 16};
+            Rectangle f13 = {280, 225, 12, 15};
+            Rectangle f14 = {301, 225, 12, 15};
+            std::vector<Rectangle> fade_out = {f1, f2, f3, f4, f5, f6, f7, f8, f9, f10, f11, f12, f13, f14};
         }
         namespace Small_To_Super
         {
@@ -422,6 +538,7 @@ namespace Luigi
             std::vector<Rectangle> small_to_super = {s1, s2, s3, s4, s5, s6};
         }
     }
+
     namespace Invincible
     {
         namespace Stance
@@ -476,6 +593,14 @@ namespace Luigi
             Rectangle s4 = {428, 447, 15, 18};
             std::vector<Rectangle> slide_ = {s1, s2, s3, s4};
         }
+        namespace Enter_Pipe
+        {
+            Rectangle e1 = {344, 291, 16, 16};
+            Rectangle e2 = {365, 291, 16, 16};
+            Rectangle e3 = {386, 291, 16, 16};
+            Rectangle e4 = {407, 291, 16, 16};
+            std::vector<Rectangle> enter_pipe = {e1, e2, e3, e4};
+        }
         namespace Small_To_Super
         {
             Rectangle s1 = {6, 416, 14, 17};
@@ -500,6 +625,7 @@ namespace Luigi
             std::vector<Rectangle> small_to_super = {s1, s2, s3, s4, s5, s6, s7, s8, s9, s10, s11, s12, s13, s14, s15, s16, s17};
         }
     }
+
     namespace Super
     {
         namespace Stance
@@ -585,6 +711,29 @@ namespace Luigi
             Rectangle c2 = {450, 120, 16, 28};
             std::vector<Rectangle> climb_ = {c1, c2};
         }
+        namespace Enter_Pipe
+        {
+            Rectangle enter = {515, 121, 16, 30};
+            std::vector<Rectangle> enter_pipe = {enter};
+        }
+        namespace Fade_Out
+        {
+            Rectangle f1 = {385, 205, 16, 29};
+            Rectangle f2 = {406, 205, 16, 30};
+            Rectangle f3 = {427, 205, 16, 30};
+            Rectangle f4 = {449, 205, 14, 30};
+            Rectangle f5 = {470, 205, 14, 30};
+            Rectangle f6 = {491, 205, 14, 30};
+            Rectangle f7 = {511, 205, 16, 29};
+            Rectangle f8 = {532, 205, 16, 29};
+            Rectangle f9 = {553, 205, 16, 29};
+            Rectangle f10 = {574, 205, 16, 29};
+            Rectangle f11 = {595, 205, 16, 30};
+            Rectangle f12 = {616, 205, 16, 30};
+            Rectangle f13 = {659, 205, 14, 30};
+            Rectangle f14 = {680, 205, 14, 30};
+            std::vector<Rectangle> fade_out = {f1, f2, f3, f4, f5, f6, f7, f8, f9, f10, f11, f12, f13, f14};
+        }
         namespace Hit
         {
             Rectangle h1 = {615, 131, 15, 32};
@@ -597,7 +746,8 @@ namespace Luigi
             std::vector<Rectangle> hit_ = {h1, h2, h3, h4, h5};
         }
     }
-    namespace Invincible_Super
+
+    namespace Invincible_Super_And_Fire
     {
         namespace Stance
         {
@@ -667,7 +817,16 @@ namespace Luigi
             Rectangle w12 = {620, 405, 16, 31};
             std::vector<Rectangle> walk_ = {w1, w2, w3, w4, w5, w6, w7, w7, w9, w10, w11, w12};
         }
+        namespace Enter_Pipe
+        {
+            Rectangle e1 = {897, 332, 16, 3};
+            Rectangle e2 = {918, 332, 16, 3};
+            Rectangle e3 = {939, 332, 16, 3};
+            Rectangle e4 = {960, 332, 16, 3};
+            std::vector<Rectangle> enter_pipe = {e1, e2, e3, e4};
+        }
     }
+
     namespace Fire
     {
         namespace Stance
@@ -708,16 +867,348 @@ namespace Luigi
             Rectangle shoot = {921, 78, 15, 30};
             std::vector<Rectangle> shoot_ = {shoot};
         }
+        namespace Enter_Pipe
+        {
+            Rectangle enter = {923, 121, 16, 30};
+            std::vector<Rectangle> enter_pipe = {enter};
+        }
+        namespace Fade_out
+        {
+            Rectangle f1 = {792, 290, 16, 29};
+            Rectangle f2 = {813, 290, 16, 30};
+            Rectangle f3 = {834, 290, 16, 30};
+            Rectangle f4 = {856, 290, 14, 30};
+            Rectangle f5 = {877, 290, 14, 30};
+            Rectangle f6 = {898, 290, 14, 30};
+            Rectangle f7 = {918, 290, 16, 29};
+            Rectangle f8 = {939, 290, 16, 29};
+            Rectangle f9 = {960, 290, 16, 29};
+            Rectangle f10 = {981, 290, 16, 29};
+            Rectangle f11 = {1002, 290, 16, 30};
+            Rectangle f12 = {1023, 290, 16, 30};
+            Rectangle f13 = {1066, 290, 14, 30};
+            Rectangle f14 = {1087, 290, 14, 30};
+            std::vector<Rectangle> fade_out = {f1, f2, f3, f4, f5, f6, f7, f8, f9, f10, f11, f12, f13, f14};
+        }
         namespace Hit
         {
             Rectangle h1 = {971, 141, 14, 30};
             Rectangle h2 = {991, 139, 16, 30};
-            //x6
+            // x6
             Rectangle h3 = {1012, 144, 16, 27};
             Rectangle h4 = {1033, 155, 16, 16};
             //
             Rectangle h5 = {1056, 156, 12, 15};
             std::vector<Rectangle> hit_ = {h1, h2, h3, h4, h5};
         }
+    }
+}
+
+namespace Item
+{
+    SpriteSheet item_;
+
+    namespace Mushroom
+    {
+        Rectangle super_mushroom = {1, 1, 16, 16};
+        Rectangle one_up_mushroom = {18, 1, 16, 16};
+        Rectangle posion_mushroom = {35, 1, 16, 16};
+    }
+
+    namespace Flower
+    {
+        Rectangle fire_flower = {1, 18, 16, 16};
+    }
+
+    namespace Star
+    {
+        Rectangle invincible_star = {1, 35, 16, 16};
+    }
+    
+    namespace Coin
+    {
+        namespace Blinking
+        {
+            Rectangle b1 = {4, 54, 10, 14};
+            Rectangle b2 = {21, 54, 10, 14};
+            Rectangle b3 = {38, 54, 10, 14};
+            std::vector<Rectangle> blinking_ = {b1, b2, b3};
+        }
+
+        namespace Sparkle
+        {
+            Rectangle s1 = {9, 71, 2, 14};
+            Rectangle s2 = {24, 71, 6, 14};
+            Rectangle s3 = {39, 71, 10, 14};
+            Rectangle s4 = {58, 71, 6, 14};
+            Rectangle s5 = {7, 90, 7, 7};
+            Rectangle s6 = {24, 86, 15, 16};
+            Rectangle s7 = {44, 86, 18, 15};
+            Rectangle s8 = {64, 88, 20, 15};
+            Rectangle s9 = {86, 93, 18, 11};
+            std::vector<Rectangle> sparkle_ = {s1, s2, s3, s4, s5, s6, s7, s8, s9};
+        }
+    }
+
+    namespace Fire_Ball
+    {
+        namespace Fly
+        {
+            Rectangle f1 = {1, 105, 8, 8};
+            Rectangle f2 = {10, 105, 8, 8};
+            Rectangle f3 = {19, 105, 8, 8};
+            Rectangle f4 = {28, 105, 8, 8};
+            std::vector<Rectangle> fly_ = {f1, f2, f3, f4};
+        }
+
+        namespace Explode
+        {
+            Rectangle e1 = {5, 118, 8, 8};
+            Rectangle e2 = {20, 115, 12, 14};
+            Rectangle e3 = {35, 114, 16, 16};
+            std::vector<Rectangle> explode_ = {e1, e2, e3};
+        }
+    }
+
+    namespace Question_Brick
+    {
+        Rectangle q1 = {1, 131, 16, 16};
+        Rectangle q2 = {18, 131, 16, 16};
+        Rectangle q3 = {35, 131, 16, 16};
+        std::vector<Rectangle> question_ = {q1, q2, q3};
+    }
+
+    namespace Brown_Brick
+    {
+        Rectangle type_1 = {1, 148, 16, 16};
+        Rectangle type_2 = {18, 148, 16, 16};
+        Rectangle type_3 = {35, 148, 16, 16};
+    }
+
+    namespace Blue_Brick
+    {
+        Rectangle type_1 = {1, 165, 16, 16};
+        Rectangle type_2 = {18, 165, 16, 16};
+        Rectangle type_3 = {35, 165, 16, 16};
+    }
+
+    namespace Gray_Brick
+    {
+        Rectangle type_1 = {1, 182, 16, 16};
+        Rectangle type_2 = {18, 182, 16, 16};
+        Rectangle type_3 = {35, 182, 16, 16};
+    }
+}
+
+namespace Font
+{
+    SpriteSheet font_;
+
+    namespace Number
+    {
+        Rectangle n0 = {1, 1, 10, 10};
+        Rectangle n1 = {11, 1, 8, 10};
+        Rectangle n2 = {19, 1, 10, 10};
+        Rectangle n3 = {28, 1, 10, 10};
+        Rectangle n4 = {37, 1, 10, 10};
+        Rectangle n5 = {46, 1, 10, 10};
+        Rectangle n6 = {55, 1, 10, 10};
+        Rectangle n7 = {64, 1, 10, 10};
+        Rectangle n8 = {73, 1, 10, 10};
+        Rectangle n9 = {82, 1, 10, 10};
+        std::vector<Rectangle> num = {n0, n1, n2, n3, n4, n5, n6, n7, n8, n9};
+    }
+
+    namespace Coin
+    {
+        Rectangle c1 = {91, 1, 7, 10};
+        Rectangle c2 = {100, 1, 7, 10};
+        Rectangle c3 = {109, 1, 7, 10};
+        std::vector<Rectangle> coin = {c1, c2, c3};
+    }
+
+    namespace Heart
+    {
+        Rectangle color = {82, 64, 10, 10};
+        Rectangle not_color = {91, 64, 10, 10};
+    }
+
+    namespace X
+    {
+        Rectangle x = {83, 38, 9, 9};
+    }
+
+    namespace Hyphen
+    {
+        Rectangle hyphen = {19, 48, 10, 6};
+    }
+
+    namespace Clock
+    {
+        Rectangle clock = {1, 58, 10, 9};
+    }
+}
+
+namespace Screen
+{
+    SpriteSheet screen_;
+    
+    Rectangle mario_word = {29, 39, 42, 8};
+    Rectangle luigi_word = {30, 284, 40, 8};
+    Rectangle world_word = {149, 38, 42, 9};
+    Rectangle time_word = {205, 39, 34, 8};
+    Rectangle game_over_word = {94, 95, 76, 16};
+    Rectangle time_up_word = {362, 127, 55, 16};
+    Rectangle arrow_ = {297, 508, 12, 9};
+    Rectangle continue_word = {94, 127, 59, 8};
+    Rectangle save_and_continue_word = {94, 143, 99, 8};
+    Rectangle save_and_quit_word = {94, 159, 68, 8};
+}
+
+namespace Enemies
+{
+    SpriteSheet enemies_;
+
+    namespace Goomba_Brown
+    {
+        namespace Normal
+        {
+            Rectangle n1 = {23, 174, 16, 16};
+            Rectangle n2 = {61, 174, 16, 16};
+            std::vector<Rectangle> normal_ = {n1, n2};
+        }
+
+        Rectangle be_stomped = {42, 182, 16, 8};
+        Rectangle be_fired = {4, 174, 16, 16};
+    }
+
+    namespace Goomba_Blue
+    {
+        namespace Normal
+        {
+            Rectangle n1 = {23, 193, 16, 16};
+            Rectangle n2 = {61, 193, 16, 16};
+            std::vector<Rectangle> normal_ = {n1, n2};
+        }
+
+        Rectangle be_stomped = {42, 201, 16, 8};
+        Rectangle be_fired = {4, 193, 16, 16};
+    }
+
+    namespace Goomba_Gray
+    {
+        namespace Normal
+        {
+            Rectangle n1 = {23, 212, 16, 16};
+            Rectangle n2 = {61, 212, 16, 16};
+            std::vector<Rectangle> normal_ = {n1, n2};
+        }
+
+        Rectangle be_stomped = {42, 220, 16, 8};
+        Rectangle be_fired = {4, 212, 16, 16};
+    }
+
+    namespace Piranha_Plant_Green
+    {
+        Rectangle p1 = {327, 123, 16, 24};
+        Rectangle p2 = {346, 123, 16, 24};
+        std::vector<Rectangle> plant_ = {p1, p2};
+    }
+
+    namespace Piranha_Plant_Red
+    {
+        Rectangle p1 = {365, 123, 16, 24};
+        Rectangle p2 = {384, 123, 16, 24};
+        std::vector<Rectangle> plant_ = {p1, p2};
+    }
+
+    namespace Buzzy_Beetle
+    {
+        namespace Normal
+        {
+            Rectangle n1 = {175, 187, 16, 15};
+            Rectangle n2 = {194, 186, 15, 16};
+            std::vector<Rectangle> normal = {n1, n2};
+        }
+
+        Rectangle be_stomped = {213, 187, 16, 15};
+
+        namespace Be_Kicked
+        {
+            Rectangle k1 = {213, 187, 16, 15};
+            Rectangle k2 = {232, 187, 16, 15};
+            Rectangle k3 = {251, 187, 16, 15};
+            Rectangle k4 = {270, 187, 16, 15};
+            std::vector<Rectangle> be_kicked = {k1, k2, k3, k4};
+        }
+    }
+
+    namespace Troopa_Red
+    {
+        namespace Normal
+        {
+            Rectangle n1 = {4, 13, 16, 23};
+            Rectangle n2 = {23, 12, 16, 24};
+            std::vector<Rectangle> normal_ = {n1, n2};
+        }
+
+        namespace Be_Kicked
+        {
+            Rectangle k1 = {61, 22, 16, 14};
+            Rectangle k2 = {80, 22, 16, 14};
+            Rectangle k3 = {99, 22, 16, 14};
+            Rectangle k4 = {118, 22, 16, 14};
+            std::vector<Rectangle> be_kicked = {k1, k2, k3, k4};
+        }
+
+        Rectangle be_stomped = {42, 22, 16, 14};
+        Rectangle be_fired = {99, 49, 16, 14};
+    }
+
+    namespace Troopa_Green
+    {
+        namespace Normal
+        {
+            Rectangle n1 = {4, 67, 16, 23};
+            Rectangle n2 = {23, 66, 16, 24};
+            std::vector<Rectangle> normal_ = {n1, n2};
+        }
+
+        namespace Be_Kicked
+        {
+            Rectangle k1 = {61, 76, 16, 14};
+            Rectangle k2 = {80, 76, 16, 14};
+            Rectangle k3 = {99, 76, 16, 14};
+            Rectangle k4 = {118, 76, 16, 14};
+            std::vector<Rectangle> be_kicked = {k1, k2, k3, k4};
+        }
+
+        Rectangle be_stomped = {42, 76, 16, 14};
+        Rectangle be_fired = {99, 103, 16, 14};
+    }
+
+    namespace Latiku
+    {
+        Rectangle fly_ = {194, 123, 16, 24};
+        Rectangle throw_ = {213, 131, 16, 16};
+        Rectangle fall_ = {175, 123, 16, 24};
+    }
+
+    namespace Spiny
+    {
+        namespace Egg
+        {
+            Rectangle e1 = {252, 150, 14, 16};
+            Rectangle e2 = {233, 150, 14, 16};
+            std::vector<Rectangle> egg_ = {e1, e2};
+        }
+        
+        namespace Normal
+        {
+            Rectangle n1 = {175, 151, 16, 15};
+            Rectangle n2 = {194, 150, 16, 16};
+            std::vector<Rectangle> normal_ = {n1, n2};
+        }
+        Rectangle fall_ = {213, 150, 16, 16};
     }
 }
