@@ -121,6 +121,9 @@ namespace Mario
             extern Rectangle w10;
             extern Rectangle w11;
             extern Rectangle w12;
+            extern Rectangle w13;
+            extern Rectangle w14;
+            extern Rectangle w15;
             extern std::vector<Rectangle> walk_;
         }
         namespace Climb
@@ -365,6 +368,9 @@ namespace Mario
             extern Rectangle w10;
             extern Rectangle w11;
             extern Rectangle w12;
+            extern Rectangle w13,
+                extern Rectangle w14;
+            extern Rectangle w15;
             extern std::vector<Rectangle> walk_;
         }
         namespace Enter_Pipe
@@ -562,6 +568,9 @@ namespace Luigi
             extern Rectangle w10;
             extern Rectangle w11;
             extern Rectangle w12;
+            extern Rectangle w13;
+            extern Rectangle w14;
+            extern Rectangle w15;
             extern std::vector<Rectangle> walk_;
         }
         namespace Climb
@@ -1019,7 +1028,7 @@ namespace Font
         extern std::vector<Rectangle> num;
     }
 
-    //Coin frame
+    // Coin frame
     namespace Coin
     {
         extern Rectangle c1;
@@ -1035,7 +1044,7 @@ namespace Font
         // không còn mạng
         extern Rectangle not_color;
     }
-    
+
     // Dấu x
     namespace X
     {
@@ -1070,15 +1079,15 @@ namespace Screen
     extern Rectangle save_and_quit_word;
 }
 
-//Enemies.png
+// Enemies.png
 namespace Enemies
 {
     extern SpriteSheet enemies_;
 
-    //Nấm độc
+    // Nấm độc
     namespace Goomba_Brown
     {
-        //Move
+        // Move
         namespace Normal
         {
             extern Rectangle n1;
@@ -1092,7 +1101,7 @@ namespace Enemies
 
     namespace Goomba_Blue
     {
-        //Move
+        // Move
         namespace Normal
         {
             extern Rectangle n1;
@@ -1106,7 +1115,7 @@ namespace Enemies
 
     namespace Goomba_Gray
     {
-        //Move
+        // Move
         namespace Normal
         {
             extern Rectangle n1;
