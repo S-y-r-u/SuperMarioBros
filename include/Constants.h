@@ -3,8 +3,8 @@
 #include<iostream>
 
 // Screen dimensions
-constexpr int Screen_w = 1000;
-constexpr int Screen_h = 600;
+constexpr int Screen_w = 1248;
+constexpr int Screen_h = 720;
 
 // Program states
 enum ProgramState {

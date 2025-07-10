@@ -1,9 +1,7 @@
 #pragma once
-#include "raylib.h"
-#include "Constants.h"
-#include <vector>
-
-class Stage; // Forward declaration
+#include "EasyMap.h"
+#include "MediumMap.h"
+#include "HardMap.h"
 
 class GameManager {
 public:

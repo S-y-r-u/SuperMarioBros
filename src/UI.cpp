@@ -14,9 +14,11 @@ void UI::Process() {
     SetTargetFPS(60);
 
 
-    auto menu = std::make_unique<Menu>();
+    // auto menu = std::make_unique<Menu>();
+    Menu *menu = new Menu();
     //auto setting = std::make_unique<SettingScreen>();
-    auto gameManager = std::make_unique<GameManager>();
+    // auto gameManager = std::make_unique<GameManager>();
+    GameManager *gameManager = new GameManager();
 
     menu->Init();
     //setting->Init();
@@ -53,6 +55,9 @@ void UI::Process() {
 
     CloseWindow();
     UnloadFont(font);
+
+    delete menu;
+    delete gameManager;
 
     //menu->Unload();
     //setting->Unload();

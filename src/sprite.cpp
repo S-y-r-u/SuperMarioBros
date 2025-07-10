@@ -1,4 +1,4 @@
-#include "../include/sprite.h"
+#include "sprite.h"
 
 void SpriteSheet::Load_(const char *path)
 {
@@ -978,7 +978,7 @@ namespace Item
     }
 }
 
-namespace Font
+namespace font
 {
     SpriteSheet font_;
 

@@ -368,8 +368,8 @@ namespace Mario
             extern Rectangle w10;
             extern Rectangle w11;
             extern Rectangle w12;
-            extern Rectangle w13,
-                extern Rectangle w14;
+            extern Rectangle w13;
+            extern Rectangle w14;
             extern Rectangle w15;
             extern std::vector<Rectangle> walk_;
         }
@@ -1009,7 +1009,7 @@ namespace Item
 }
 
 // Font.png
-namespace Font
+namespace font
 {
     extern SpriteSheet font_;
 
