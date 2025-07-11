@@ -20,6 +20,7 @@ public:
     Mush_Room(Vector2 pos, State_MushRoom state);
 
     void Update_() override;
+    //
     void Activate_(Character &character) override;
 
     void Fall_();

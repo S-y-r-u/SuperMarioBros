@@ -22,5 +22,6 @@ public:
 
     void Appear_() override;
     void Update_() override;
+    //
     void Activate_(Character &character) override;
 };

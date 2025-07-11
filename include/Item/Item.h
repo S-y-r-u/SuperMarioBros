@@ -26,6 +26,7 @@ public:
     void Draw_();
     virtual void Update_() = 0;
     virtual void Appear_() = 0;
+    //
     virtual void Activate_(Character &character) = 0;
 
     Vector2 Get_Pos() const;
