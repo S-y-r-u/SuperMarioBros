@@ -1,10 +1,14 @@
 #include "Menu.h"
+#include "raylib.h"
 
+Rectangle playBtn = { 400, 250, 200, 60 };
+Rectangle settingBtn = { 400, 350, 200, 60 };
 
-
-void Menu::Init() {
-    // Load resources if needed
+Menu::Menu() {
+	// Constructor can be used to initialize any member variables if needed
 }
+
+void Menu::Init() {}
 
 void Menu::Draw() {
     DrawText("MARIO GAME", 420, 150, 32, DARKBLUE);
@@ -14,11 +18,11 @@ void Menu::Draw() {
     DrawText("SETTING", 460, 365, 24, BLACK);
 }
 
-int Menu::HandleEvent() {
+int Menu::Update() {
     Vector2 mouse = GetMousePosition();
     if (IsMouseButtonPressed(MOUSE_LEFT_BUTTON)) {
         if (CheckCollisionPointRec(mouse, playBtn)) {
-            return gameManagerState;
+            return choosingStageState;
         }
         if (CheckCollisionPointRec(mouse, settingBtn)) {
             return settingState;
@@ -27,6 +31,4 @@ int Menu::HandleEvent() {
     return menuState;
 }
 
-Menu::~Menu() {
-    // Unload resources if needed
-}
+Menu::~Menu() {}

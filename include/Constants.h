@@ -10,12 +10,15 @@ constexpr int Screen_h = 720;
 enum ProgramState {
     menuState = 0,
     settingState = 1,
-    gameManagerState = 2
+    choosingStageState = 2,
+    gameManagerState = 3
 };
 
-constexpr int NUM_MONITORED_KEYS = 16;
-
-
+enum class Difficulty {
+    Easy,
+    Medium,
+    Hard
+};
 
 // Colors (if you want to define custom colors, otherwise use raylib's built-in colors)
 // Example:
