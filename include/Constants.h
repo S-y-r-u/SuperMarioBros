@@ -1,10 +1,11 @@
 #pragma once
-#include<string>
-#include<iostream>
+#include <string>
+#include <iostream>
 
 // Screen dimensions
 constexpr int Screen_w = 1248;
 constexpr int Screen_h = 720;
+constexpr float scale_screen = 3.0f;
 
 // Program states
 enum ProgramState {
@@ -19,6 +20,12 @@ enum class Difficulty {
     Medium,
     Hard
 };
+
+namespace Physics
+{
+    constexpr float gravity_ = 10.0f;
+}
+
 
 // Colors (if you want to define custom colors, otherwise use raylib's built-in colors)
 // Example:

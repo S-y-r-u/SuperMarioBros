@@ -1,4 +1,4 @@
-#include "sprite.h"
+#include "Sprite.h"
 
 void SpriteSheet::Load_(const char *path)
 {
@@ -22,7 +22,7 @@ Color SpriteSheet::Get_Pixel(int x, int y) const
     return pixel[y * image.width + x];
 }
 
-namespace Mario
+namespace Mario_Sprite
 {
     SpriteSheet mario_sprite;
 
@@ -451,7 +451,7 @@ namespace Mario
     }
 }
 
-namespace Luigi
+namespace Luigi_Sprite
 {
     SpriteSheet luigi_sprite;
 
@@ -882,7 +882,7 @@ namespace Luigi
     }
 }
 
-namespace Item
+namespace Item_Sprite
 {
     SpriteSheet item_;
 
@@ -913,7 +913,7 @@ namespace Item
             std::vector<Rectangle> blinking_ = {b1, b2, b3};
         }
 
-        namespace Sparkle
+        namespace Hidden
         {
             Rectangle s1 = {9, 71, 2, 14};
             Rectangle s2 = {24, 71, 6, 14};
@@ -924,7 +924,7 @@ namespace Item
             Rectangle s7 = {44, 86, 18, 15};
             Rectangle s8 = {64, 88, 20, 15};
             Rectangle s9 = {86, 93, 18, 11};
-            std::vector<Rectangle> sparkle_ = {s1, s2, s3, s4, s5, s6, s7, s8, s9};
+            std::vector<Rectangle> hidden_ = {s1, s2, s3, s4, s5, s6, s7, s8, s9};
         }
     }
 
@@ -978,7 +978,7 @@ namespace Item
     }
 }
 
-namespace font
+namespace Font_Sprite
 {
     SpriteSheet font_;
 
@@ -1027,7 +1027,7 @@ namespace font
     }
 }
 
-namespace Screen
+namespace Screen_Sprite
 {
     SpriteSheet screen_;
 
@@ -1043,7 +1043,7 @@ namespace Screen
     Rectangle save_and_quit_word = {94, 159, 68, 8};
 }
 
-namespace Enemies
+namespace Enemies_Sprite
 {
     SpriteSheet enemies_;
 
