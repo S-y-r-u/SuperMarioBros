@@ -23,6 +23,7 @@ private:
 
 public:
     Block(Vector2 pos, int item_count, const std::string &type_item, const std::string &type_block);
+    ~Block();
 
     void Update_();
     void Draw_();
