@@ -13,7 +13,7 @@ struct SpriteSheet
 };
 
 // Mario.png
-namespace Mario
+namespace Mario_Sprite
 {
     extern SpriteSheet mario_sprite;
 
@@ -461,9 +461,10 @@ namespace Mario
 }
 
 // Luigi.png
-namespace Luigi
+namespace Luigi_Sprite
 {
     extern SpriteSheet luigi_sprite;
+
     namespace Small
     {
         namespace Stance
@@ -905,7 +906,7 @@ namespace Luigi
 }
 
 // Items_Blocks.png
-namespace Item
+namespace Item_Sprite
 {
     extern SpriteSheet item_;
 
@@ -924,11 +925,13 @@ namespace Item
         // Thành fire
         extern Rectangle fire_flower;
     }
+
     namespace Star
     {
         // Thành invincible
         extern Rectangle invincible_star;
     }
+
     namespace Coin
     {
         // coin bình thường
@@ -941,7 +944,7 @@ namespace Item
         }
 
         // coin đập gạch
-        namespace Sparkle
+        namespace Hidden
         {
             extern Rectangle s1;
             extern Rectangle s2;
@@ -953,7 +956,7 @@ namespace Item
             extern Rectangle s7;
             extern Rectangle s8;
             extern Rectangle s9;
-            extern std::vector<Rectangle> sparkle_;
+            extern std::vector<Rectangle> hidden_;
         }
     }
 
@@ -967,6 +970,7 @@ namespace Item
             extern Rectangle f4;
             extern std::vector<Rectangle> fly_;
         }
+
         // Hiệu ứng khi nổ
         namespace Explode
         {
@@ -991,6 +995,7 @@ namespace Item
         extern Rectangle type_1;
         extern Rectangle type_2;
         extern Rectangle type_3;
+        extern Rectangle break_;
     }
 
     namespace Blue_Brick
@@ -998,6 +1003,7 @@ namespace Item
         extern Rectangle type_1;
         extern Rectangle type_2;
         extern Rectangle type_3;
+        extern Rectangle break_;
     }
 
     namespace Gray_Brick
@@ -1005,11 +1011,12 @@ namespace Item
         extern Rectangle type_1;
         extern Rectangle type_2;
         extern Rectangle type_3;
+        extern Rectangle break_;
     }
 }
 
 // Font.png
-namespace font
+namespace Font_Sprite
 {
     extern SpriteSheet font_;
 
@@ -1064,9 +1071,10 @@ namespace font
 }
 
 // GameOver_TimeUp.png
-namespace Screen
+namespace Screen_Sprite
 {
     extern SpriteSheet screen_;
+
     extern Rectangle mario_word;
     extern Rectangle luigi_word;
     extern Rectangle world_word;
@@ -1080,7 +1088,7 @@ namespace Screen
 }
 
 // Enemies.png
-namespace Enemies
+namespace Enemies_Sprite
 {
     extern SpriteSheet enemies_;
 
