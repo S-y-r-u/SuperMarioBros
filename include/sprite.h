@@ -995,6 +995,7 @@ namespace Item_Sprite
         extern Rectangle type_1;
         extern Rectangle type_2;
         extern Rectangle type_3;
+        extern Rectangle break_;
     }
 
     namespace Blue_Brick
@@ -1002,6 +1003,7 @@ namespace Item_Sprite
         extern Rectangle type_1;
         extern Rectangle type_2;
         extern Rectangle type_3;
+        extern Rectangle break_;
     }
 
     namespace Gray_Brick
@@ -1009,6 +1011,7 @@ namespace Item_Sprite
         extern Rectangle type_1;
         extern Rectangle type_2;
         extern Rectangle type_3;
+        extern Rectangle break_;
     }
 }
 

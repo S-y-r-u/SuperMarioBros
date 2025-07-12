@@ -961,6 +961,7 @@ namespace Item_Sprite
         Rectangle type_1 = {1, 148, 16, 16};
         Rectangle type_2 = {18, 148, 16, 16};
         Rectangle type_3 = {35, 148, 16, 16};
+        Rectangle break_ = {52, 148, 8, 8};
     }
 
     namespace Blue_Brick
@@ -968,6 +969,7 @@ namespace Item_Sprite
         Rectangle type_1 = {1, 165, 16, 16};
         Rectangle type_2 = {18, 165, 16, 16};
         Rectangle type_3 = {35, 165, 16, 16};
+        Rectangle break_ = {52, 165, 8, 8};
     }
 
     namespace Gray_Brick
@@ -975,6 +977,7 @@ namespace Item_Sprite
         Rectangle type_1 = {1, 182, 16, 16};
         Rectangle type_2 = {18, 182, 16, 16};
         Rectangle type_3 = {35, 182, 16, 16};
+        Rectangle break_ = {52, 182, 8, 8};
     }
 }
 
