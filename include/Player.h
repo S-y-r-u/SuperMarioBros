@@ -14,7 +14,7 @@ class Player : public Character{
         float frameTimer;
         float animationSpeed;
 
-        virtual const std::vector<Rectangle>& getAnimationFrame() const = 0;
+        virtual std::vector<Rectangle>& getAnimationFrame() const = 0;
     public:
         Player(Vector2 startPos);
         virtual ~Player();
