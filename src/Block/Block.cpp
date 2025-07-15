@@ -1,9 +1,9 @@
-#include "Block.h"
-#include "Abstract_Block_State.h"
-#include "Question_Block.h"
-#include "Normal_Block.h"
-#include "Breakable_Block.h"
-#include "Unbreakable_Block.h"
+#include "Block/Block.h"
+#include "Block/Abstract_Block_State.h"
+#include "Block/Question_Block.h"
+#include "Block/Normal_Block.h"
+#include "Block/Breakable_Block.h"
+#include "Block/Unbreakable_Block.h"
 
 Block::Block(Vector2 pos, int item_count, const std::string &type_item, const std::string &type_block)
     : sprite_(Item_Sprite::item_), pos_(pos), item_count_(item_count), type_item_(type_item)

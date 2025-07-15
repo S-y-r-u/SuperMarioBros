@@ -1,4 +1,4 @@
-#include "HiddenCoin.h"
+#include "Item/HiddenCoin.h"
 
 HiddenCoin::HiddenCoin(Vector2 pos)
     : Item(pos), m_rec(Item_Sprite::Coin::Hidden::hidden_), delta_time(0.0f), before_pos(pos) {}

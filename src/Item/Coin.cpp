@@ -1,4 +1,4 @@
-#include "Coin.h"
+#include "Item/Coin.h"
 
 Coin::Coin(Vector2 pos)
     : Item(pos), m_rec(Item_Sprite::Coin::Blinking::blinking_) {}
