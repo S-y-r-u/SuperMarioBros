@@ -1,38 +1,56 @@
 #include "ChoosingStageState.h"
 #include "raylib.h"
 
-void ChoosingStageState::Init() {
-    selectedDifficulty = Difficulty::Easy;
+ChoosingStageState::ChoosingStageState() :selectedDifficulty(Difficulty::Easy){
+    MenuTexture = LoadTexture("Menu.jpg");
+    
+    // Create buttons arranged horizontally
+    float buttonWidth = 150;
+    float buttonHeight = 50;
+    float spacing = 50;
+    float totalWidth = 3 * buttonWidth + 2 * spacing;
+    float startX = (Screen_w - totalWidth) / 2;
+    float buttonY = 550;
+    
+    easyButton = new Button("EASY", startX, buttonY, buttonWidth, buttonHeight);
+    mediumButton = new Button("MEDIUM", startX + buttonWidth + spacing, buttonY, buttonWidth, buttonHeight);
+    hardButton = new Button("HARD", startX + 2 * (buttonWidth + spacing), buttonY, buttonWidth, buttonHeight);
+}
+
+ChoosingStageState::~ChoosingStageState() {
+    delete easyButton;
+    delete mediumButton;
+    delete hardButton;
+    UnloadTexture(MenuTexture);
 }
 
 void ChoosingStageState::Draw() {
-    DrawText("Choose Difficulty", 400, 150, 32, DARKBLUE);
-
-    DrawRectangle(400, 250, 200, 50, LIGHTGRAY);
-    DrawText("EASY", 480, 265, 24, BLACK);
-
-    DrawRectangle(400, 320, 200, 50, LIGHTGRAY);
-    DrawText("MEDIUM", 465, 335, 24, BLACK);
-
-    DrawRectangle(400, 390, 200, 50, LIGHTGRAY);
-    DrawText("HARD", 480, 405, 24, BLACK);
+    DrawTexture(MenuTexture, 0, 0, WHITE);
+    
+    // Center the title text
+    const char* titleText = "Choose Difficulty";
+    int textWidth = MeasureText(titleText, 50);
+    int titleX = (Screen_w - textWidth) / 2;
+    DrawText(titleText, titleX, 50, 50, BLACK);
+    
+    // Draw buttons
+    easyButton->Draw();
+    mediumButton->Draw();
+    hardButton->Draw();
 }
 
 int ChoosingStageState::Update() {
-    Vector2 mouse = GetMousePosition();
-    if (IsMouseButtonPressed(MOUSE_LEFT_BUTTON)) {
-        if (CheckCollisionPointRec(mouse, { 400, 250, 200, 50 })) {
-            selectedDifficulty = Difficulty::Easy;
-            return gameManagerState;
-        }
-        if (CheckCollisionPointRec(mouse, { 400, 320, 200, 50 })) {
-            selectedDifficulty = Difficulty::Medium;
-            return gameManagerState;
-        }
-        if (CheckCollisionPointRec(mouse, { 400, 390, 200, 50 })) {
-            selectedDifficulty = Difficulty::Hard;
-            return gameManagerState;
-        }
+    if (easyButton->Update()) {
+        selectedDifficulty = Difficulty::Easy;
+        return gameManagerState;
+    }
+    if (mediumButton->Update()) {
+        selectedDifficulty = Difficulty::Medium;
+        return gameManagerState;
+    }
+    if (hardButton->Update()) {
+        selectedDifficulty = Difficulty::Hard;
+        return gameManagerState;
     }
     return choosingStageState;
 }

@@ -15,10 +15,6 @@ GameManager::~GameManager() {
     delete stage;
 }
 
-void GameManager::Init() {
-    if (stage) delete stage;
-    stage = nullptr; // Replace with actual stage initialization
-}
 
 void GameManager::SetDifficulty(Difficulty diff) {
     difficulty = diff;

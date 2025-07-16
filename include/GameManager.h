@@ -12,7 +12,6 @@ public:
     GameManager();
     ~GameManager();
 
-    void Init();
     int Update();
     void Draw();
     void SetDifficulty(Difficulty diff);
