@@ -1,15 +1,19 @@
 #pragma once
 #include "raylib.h"
 #include "Constants.h"
+#include "Button.h"
+
 
 
 class Menu {
 private:
-    Rectangle playBtn = { 400, 250, 200, 60 };
-    Rectangle settingBtn = { 400, 350, 200, 60 };
+    Button playButton;
+    Button settingBtn;
+    Button infoButton ;
+    Button quitButton ;
+    Texture MenuTexture;
 public:
 	Menu() ;
-    void Init();
     void Draw();
     int Update();
     ~Menu();

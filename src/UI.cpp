@@ -20,9 +20,6 @@ void UI::Process() {
     ChoosingStageState* choosingStage = new ChoosingStageState();
     GameManager* gameManager = new GameManager();
 
-    menu->Init();
-    choosingStage->Init();
-    gameManager->Init();
 
     int Program_state = menuState;
 

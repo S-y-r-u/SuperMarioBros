@@ -1,4 +1,4 @@
-#include "Star.h"
+#include "Item/Star.h"
 #include <iostream>
 
 Star::Star(Vector2 pos)

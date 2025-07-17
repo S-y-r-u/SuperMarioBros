@@ -1,32 +1,37 @@
 #include "Menu.h"
 #include "raylib.h"
 
-Rectangle playBtn = { 400, 250, 200, 60 };
-Rectangle settingBtn = { 400, 350, 200, 60 };
 
-Menu::Menu() {
+
+Menu::Menu() : playButton("Play", 274, 500),settingBtn("Setting", 774, 500),  infoButton("Info", 274, 600),quitButton("Quit", 774, 600)  {
 	// Constructor can be used to initialize any member variables if needed
+    MenuTexture = LoadTexture("Menu.jpg");
 }
 
-void Menu::Init() {}
+
 
 void Menu::Draw() {
-    DrawText("MARIO GAME", 420, 150, 32, DARKBLUE);
-    DrawRectangleRec(playBtn, LIGHTGRAY);
-    DrawText("PLAY", 480, 265, 24, BLACK);
-    DrawRectangleRec(settingBtn, LIGHTGRAY);
-    DrawText("SETTING", 460, 365, 24, BLACK);
+    DrawTexture(MenuTexture, 0, 0, WHITE);
+    playButton.Draw();
+    settingBtn.Draw();
+    infoButton.Draw();
+    quitButton.Draw();
+
 }
 
 int Menu::Update() {
-    Vector2 mouse = GetMousePosition();
-    if (IsMouseButtonPressed(MOUSE_LEFT_BUTTON)) {
-        if (CheckCollisionPointRec(mouse, playBtn)) {
-            return choosingStageState;
-        }
-        if (CheckCollisionPointRec(mouse, settingBtn)) {
-            return settingState;
-        }
+    if (playButton.Update()) {
+        std::cout << "PLAY\n";
+        return choosingStageState;
+    }
+    if (settingBtn.Update()) {
+        return settingState;
+    }
+    if (infoButton.Update()) {
+        // return infoState;
+    }
+    if (quitButton.Update()) {
+        // return quitState;
     }
     return menuState;
 }

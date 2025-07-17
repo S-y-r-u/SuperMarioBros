@@ -1,4 +1,4 @@
-#include "Normal_Block.h"
+#include "Block/Normal_Block.h"
 
 Normal_Block::Normal_Block(Block &block)
     : m_block(block), delta_time(0.0f), elapse_(0), change_state(0)

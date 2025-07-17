@@ -6,6 +6,6 @@ public:
 	UI();
 	void Process();
 private:
-	int Program_state = -1;
+	int Program_state ;
 	Font font;
 };
