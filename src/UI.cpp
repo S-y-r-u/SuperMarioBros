@@ -1,11 +1,4 @@
 #include "UI.h"
-#include "Menu.h"
-#include "GameManager.h"
-#include "ChoosingStageState.h"
-#include "Constants.h"
-#include "resource_dir.h"
-//#include "SettingScreen.h"
-
 
 
 UI::UI() {
@@ -15,19 +8,25 @@ UI::UI() {
 void UI::Process() {
     InitWindow(Screen_w, Screen_h, "Mario Game");
     SetTargetFPS(60);
+    InitAudioDevice();
+
+    SoundManager::GetInstance().LoadSounds();
+    SoundManager::GetInstance().LoadMusic();
+    SoundManager::GetInstance().PlayMusic("background", true);
 
     Menu* menu = new Menu();
     ChoosingStageState* choosingStage = new ChoosingStageState();
     GameManager* gameManager = new GameManager();
 
 
-    int Program_state = menuState;
+    Program_state = menuState;
 
     while (!WindowShouldClose()) {
         if (Program_state == menuState) {
             Program_state = menu->Update();
         }
         else if (Program_state == choosingStageState) {
+            SoundManager::GetInstance().Update();
             int nextState = choosingStage->Update();
             if (nextState == gameManagerState) {
                 gameManager->SetDifficulty(choosingStage->GetSelectedDifficulty());
@@ -57,5 +56,6 @@ void UI::Process() {
     delete choosingStage;
     delete gameManager;
 
+    CloseAudioDevice();
     CloseWindow();
 }
