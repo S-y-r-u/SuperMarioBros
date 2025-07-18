@@ -12,8 +12,10 @@ class Stage {
         Texture MapTexture;
         int Map[214][15];
         Player* player;
+        Camera2D camera = {0};
     public:
         Stage();
         virtual ~Stage();
+        void Run();
         void Draw();
 };

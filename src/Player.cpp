@@ -58,8 +58,10 @@ void Player :: draw(){
     Rectangle dest;
     dest.width = abs(source.width) * scale;
     dest.height = abs(source.height) * scale;
-    dest.x = position.x - dest.width/2.0f;
-    dest.y = position.y - dest.height;
+    // dest.x = position.x - dest.width/2.0f;
+    // dest.y = position.y - dest.height;
+    dest.x = position.x;
+    dest.y = position.y;
     
     DrawTexturePro(*texture, source, dest, {0, 0}, 0.0f, WHITE);
 }
