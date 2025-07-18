@@ -1,6 +1,7 @@
 #pragma once
 #include "raylib.h"
 #include "Constants.h"
+#include "Mario.h"
 #include <vector>
 
 class Stage {
@@ -10,6 +11,7 @@ class Stage {
     protected:
         Texture MapTexture;
         int Map[214][15];
+        Player* player;
     public:
         Stage();
         virtual ~Stage();
