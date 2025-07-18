@@ -14,18 +14,16 @@ Player :: Player(Vector2 startPos) : Character(startPos){
 
 Player :: ~Player(){}
 
-void Player :: handleInput(){
-    velocity.x = 0.0f;
-    if(IsKeyDown(KEY_RIGHT)){
-        velocity.x = speed;
-        isFacingLeft = 0;
-    }
-
-    if(IsKeyDown(KEY_LEFT)){
-        velocity.x = -speed;
-        isFacingLeft = 1;
-    }
+void Player :: MoveRight(){
+    velocity.x = speed;
+    isFacingLeft = 0;
 }
+
+void Player :: MoveLeft(){
+    velocity.x = -speed;
+    isFacingLeft = 1;
+}
+
 
 void Player :: update(float dt){
     position.x += velocity.x * dt;

@@ -4,6 +4,7 @@
 #include "EasyMap.h"
 #include "MediumMap.h"
 #include "HardMap.h"
+#include "Sprite.h"
 
 class Stage; // Forward declaration
 
@@ -15,6 +16,8 @@ public:
     int Update();
     void Draw();
     void SetDifficulty(Difficulty diff);
+    void Load_Texture();
+    void Unload_Texture();
 
 private:
     Stage* stage;

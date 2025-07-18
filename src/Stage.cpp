@@ -9,4 +9,5 @@ Stage::~Stage() {}
 
 void Stage::Draw() {
     DrawTexturePro(MapTexture, source, dest, {0, 0}, 0, WHITE);
+    player->draw();
 }

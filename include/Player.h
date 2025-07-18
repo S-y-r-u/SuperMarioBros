@@ -18,7 +18,8 @@ class Player : public Character{
     public:
         Player(Vector2 startPos);
         virtual ~Player();
-        void handleInput() override;
+        void MoveRight() override;
+        void MoveLeft() override;
         void update(float dt) override;
         void draw() override;
         

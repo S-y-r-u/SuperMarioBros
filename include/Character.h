@@ -11,7 +11,10 @@ class Character{
     public:
         Character(Vector2 startPos);
         virtual ~Character();
-        virtual void handleInput() = 0;  
+
+        Vector2 getPosition();
+        virtual void MoveRight() = 0;
+        virtual void MoveLeft() = 0;  
         virtual void update(float dt) = 0;
         virtual void draw() = 0;    
 };
