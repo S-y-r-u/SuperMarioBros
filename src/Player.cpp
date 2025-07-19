@@ -4,6 +4,7 @@
 Player :: Player(Vector2 startPos) : Character(startPos){
     velocity = {0.0f , 0.0f};
     isFacingLeft = 0;
+    isGround = 1;
     speed = 150.0f;
     form = PlayerForm :: Small;
     state = AnimationState :: Stance;
@@ -13,6 +14,19 @@ Player :: Player(Vector2 startPos) : Character(startPos){
 }
 
 Player :: ~Player(){}
+
+Rectangle Player :: get_draw_rec(){
+    const auto& frame = getAnimationFrame();
+    return {position.x, position.y, frame[currentFrame].width * scale_screen, frame[currentFrame].height * scale_screen};
+}
+
+AnimationState Player :: get_state() const{
+    return state;
+}
+
+PlayerForm Player :: get_form() const{
+    return form;
+}
 
 void Player :: MoveRight(){
     velocity.x = speed;
@@ -24,6 +38,13 @@ void Player :: MoveLeft(){
     isFacingLeft = 1;
 }
 
+void Player :: StopMoving(){
+    velocity.x = 0.0f;
+}
+
+void Player :: Jump(){
+
+}
 
 void Player :: update(float dt){
     position.x += velocity.x * dt;
@@ -54,14 +75,43 @@ void Player :: draw(){
         source.width *= (-1);
     }
 
-    float scale = 3.0f;
     Rectangle dest;
-    dest.width = abs(source.width) * scale;
-    dest.height = abs(source.height) * scale;
-    // dest.x = position.x - dest.width/2.0f;
-    // dest.y = position.y - dest.height;
+    dest.width = abs(source.width) * scale_screen;
+    dest.height = abs(source.height) * scale_screen;
     dest.x = position.x;
     dest.y = position.y;
     
-    DrawTexturePro(*texture, source, dest, {0, 0}, 0.0f, WHITE);
+    DrawTexturePro(texture->sprite, source, dest, {0, 0}, 0.0f, WHITE);
+}
+
+void Player :: collectCoin(){
+
+}
+
+void Player :: getMushroom(){
+    if(form == PlayerForm :: Small){
+        form = PlayerForm :: Super;
+        state = AnimationState::Small_To_Super;
+    } 
+    currentFrame = 0;
+    frameTimer = 0.0f;
+}
+
+void Player :: getFlower(){
+    if(form != PlayerForm :: Fire){
+        if(form == PlayerForm :: Small){
+            state = AnimationState::Small_To_Super;
+        }
+        else{
+            state = AnimationState::Stance_To_Fire; 
+        }
+    }
+    currentFrame = 0;
+    frameTimer = 0.0f;
+}
+
+void Player :: getStar(){
+    
+    currentFrame = 0;
+    frameTimer = 0.0f;
 }

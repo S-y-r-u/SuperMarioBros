@@ -421,7 +421,7 @@ namespace Mario_Sprite
             Rectangle enter = {923, 121, 16, 30};
             std::vector<Rectangle> enter_pipe = {enter};
         }
-        namespace Fade_out
+        namespace Fade_Out
         {
             Rectangle f1 = {792, 290, 16, 29};
             Rectangle f2 = {813, 290, 16, 30};

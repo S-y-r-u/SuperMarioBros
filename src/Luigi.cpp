@@ -1,8 +1,7 @@
 #include "Luigi.h"
-#include "sprite.h"
 
 Luigi :: Luigi(Vector2 startPos) : Player(startPos){
-    this -> texture = &Luigi_Sprite::luigi_sprite.sprite;
+    this -> texture = &Luigi_Sprite::luigi_sprite;
 }
 
 // Stance, Jump, Die, Walk, Slide, Climb, Crouch
