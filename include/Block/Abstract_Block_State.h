@@ -1,6 +1,7 @@
 #pragma once
 #include "Constants.h"
 #include "Item/Item.h"
+#include <raylib.h>
 #include <string>
 #include <vector>
 
@@ -8,7 +9,7 @@ class A_Block_State
 {
 protected:
     Rectangle rec_;
-    const float push_height = 15.0f;
+    const float Push_Height = 15.0f;
 
 public:
     virtual ~A_Block_State() = default;

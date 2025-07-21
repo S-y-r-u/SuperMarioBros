@@ -1,14 +1,14 @@
 #pragma once
 #include "Item.h"
 
-constexpr float star_ini_velo = 30.0f;
-
 class Star : public Item
 {
 private:
     bool direct_, is_appear;
     float delta_time;
     Vector2 before_pos;
+    Vector2 previous_frame_pos;
+    const float Star_Ini_Velo = 30.0f;
 
 public:
     Star(Vector2 pos);
@@ -24,4 +24,7 @@ public:
     void Update_() override;
     //
     void Activate_(Character &character) override;
+
+    Vector2 Get_Previous_Frame_Pos() override;
+    bool Get_Direct() const;
 };

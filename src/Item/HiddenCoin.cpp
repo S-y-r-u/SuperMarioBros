@@ -10,7 +10,7 @@ void HiddenCoin::Update_()
 
 void HiddenCoin::Appear_()
 {
-    const float max_air_time = 2 * push_height / (Physics::gravity_ * 0.12f);
+    const float max_air_time = 2 * Push_Height / (Physics::gravity_ * 0.12f);
     const int time_transform = (int)(max_air_time * 0.8f) / m_rec.size();
 
     if (frame_ == 0 && type_ == m_rec.size())
@@ -30,7 +30,7 @@ void HiddenCoin::Appear_()
         rec_ = m_rec[type_];
 
     delta_time += 0.12f;
-    float delta_y = -push_height * delta_time + 0.5f * delta_time * delta_time * Physics::gravity_;
+    float delta_y = -Push_Height * delta_time + 0.5f * delta_time * delta_time * Physics::gravity_;
     pos_.y = before_pos.y + delta_y;
 }
 

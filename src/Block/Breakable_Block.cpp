@@ -58,16 +58,16 @@ void Breakable_BLock::Fall_()
 {
     delta_time += 0.16f;
 
-    float up_delta_y = -break_height * delta_time + 0.5f * delta_time * delta_time * Physics::gravity_;
+    float up_delta_y = -Break_Height * delta_time + 0.5f * delta_time * delta_time * Physics::gravity_;
     float down_delta_y = 0.5f * delta_time * delta_time * Physics::gravity_;
 
     up_pos_left.y = before_pos.y + up_delta_y;
-    up_pos_left.x -= move_;
+    up_pos_left.x -= Move_;
 
     down_pos_left.y = before_pos.y + down_delta_y;
-    down_pos_left.x -= move_;
+    down_pos_left.x -= Move_;
 
-    rotation += rotation_speed;
+    rotation += Rotation_Speed;
     if (rotation >= 360.0f)
         rotation = 0.0f;
 }

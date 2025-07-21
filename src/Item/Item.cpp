@@ -5,6 +5,10 @@ Item::Item(Vector2 pos)
 
 Vector2 Item::Get_Pos() const { return pos_; }
 
+void Item::Set_Pos(Vector2 pos) { pos_ = pos; }
+
+Vector2 Item::Get_Previous_Frame_Pos() {}
+
 Rectangle Item::Get_Source_Rec() const { return rec_; }
 
 Rectangle Item::Get_Draw_Rec() const { return {pos_.x - rec_.width * scale_screen / 2.0f, pos_.y - rec_.height * scale_screen, rec_.width * scale_screen, rec_.height * scale_screen}; }

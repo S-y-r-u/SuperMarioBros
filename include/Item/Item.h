@@ -30,6 +30,8 @@ public:
     virtual void Activate_(Character &character) = 0;
 
     Vector2 Get_Pos() const;
+    void Set_Pos(Vector2 pos);
+    virtual Vector2 Get_Previous_Frame_Pos();
     Rectangle Get_Source_Rec() const;
     Rectangle Get_Draw_Rec() const;
     bool Is_Appear_Animation() const;

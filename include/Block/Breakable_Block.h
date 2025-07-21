@@ -10,10 +10,10 @@ private:
     float delta_time;
     Vector2 before_pos;
     Vector2 up_pos_left, down_pos_left;
-    const float move_ = 2.0f;
-    const float break_height = 30.0f;
+    const float Move_ = 2.0f;
+    const float Break_Height = 30.0f;
     float rotation;
-    const float rotation_speed = 30.0f;
+    const float Rotation_Speed = 30.0f;
 
 public:
     Breakable_BLock(Block &block);

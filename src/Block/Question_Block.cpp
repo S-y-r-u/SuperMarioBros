@@ -58,7 +58,7 @@ void Question_Block::Elapse_()
         return;
 
     delta_time += 0.14f;
-    float delta_y = -push_height * delta_time + 0.5f * delta_time * delta_time * Physics::gravity_;
+    float delta_y = -Push_Height * delta_time + 0.5f * delta_time * delta_time * Physics::gravity_;
     Vector2 tmp = m_block.Get_Pos();
     tmp.y = before_pos.y + delta_y;
     m_block.Set_Pos(tmp);
@@ -66,7 +66,7 @@ void Question_Block::Elapse_()
 
 void Question_Block::Change_State()
 {
-    float t_max = 2 * push_height / Physics::gravity_;
+    float t_max = 2 * Push_Height / Physics::gravity_;
 
     if (m_block.Get_Item_Count() == 0 && elapse_ && delta_time >= t_max)
     {
