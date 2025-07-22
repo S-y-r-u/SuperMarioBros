@@ -9,6 +9,7 @@ class Character{
         Vector2 velocity;
         bool isFacingLeft = 0;
         float speed = 150.0f;
+        float gravity;
         SpriteSheet* texture = nullptr;
 
     public:

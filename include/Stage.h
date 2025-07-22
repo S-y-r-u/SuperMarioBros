@@ -7,6 +7,7 @@
 #include "Item/Star.h"
 #include "Block/Block.h"
 #include <vector>
+#include <algorithm>
 
 class Stage
 {
@@ -19,7 +20,8 @@ protected:
     int Map[214][15];
     Player *player;
     Camera2D camera = {0};
-
+    std::vector<KeyboardKey> Keyboard;
+    
     std::vector<Item *> items;
     std::vector<Block *> blocks;
 
