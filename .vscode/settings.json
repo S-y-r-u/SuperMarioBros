@@ -59,6 +59,7 @@
 		"xlocmon": "cpp",
 		"xlocnum": "cpp",
 		"xloctime": "cpp",
-		"xstring": "cpp"
+		"xstring": "cpp",
+		"*.m": "cpp"
 	}
 }
