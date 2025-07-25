@@ -1060,7 +1060,7 @@ namespace Enemies_Sprite
         }
 
         Rectangle be_stomped = {42, 182, 16, 8};
-        Rectangle be_fired = {4, 174, 16, 16};
+        Rectangle be_fired_or_hit = {4, 174, 16, 16};
     }
 
     namespace Goomba_Blue
@@ -1073,7 +1073,7 @@ namespace Enemies_Sprite
         }
 
         Rectangle be_stomped = {42, 201, 16, 8};
-        Rectangle be_fired = {4, 193, 16, 16};
+        Rectangle be_fired_or_hit = {4, 193, 16, 16};
     }
 
     namespace Goomba_Gray
@@ -1086,7 +1086,7 @@ namespace Enemies_Sprite
         }
 
         Rectangle be_stomped = {42, 220, 16, 8};
-        Rectangle be_fired = {4, 212, 16, 16};
+        Rectangle be_fired_or_hit = {4, 212, 16, 16};
     }
 
     namespace Piranha_Plant_Green
@@ -1143,7 +1143,7 @@ namespace Enemies_Sprite
         }
 
         Rectangle be_stomped = {42, 22, 16, 14};
-        Rectangle be_fired = {99, 49, 16, 14};
+        Rectangle be_fired_or_hit = {99, 49, 16, 14};
     }
 
     namespace Troopa_Green
@@ -1165,14 +1165,14 @@ namespace Enemies_Sprite
         }
 
         Rectangle be_stomped = {42, 76, 16, 14};
-        Rectangle be_fired = {99, 103, 16, 14};
+        Rectangle be_fired_or_hit = {99, 103, 16, 14};
     }
 
     namespace Latiku
     {
         Rectangle fly_ = {194, 123, 16, 24};
         Rectangle throw_ = {213, 131, 16, 16};
-        Rectangle fall_ = {175, 123, 16, 24};
+        Rectangle be_fired = {175, 123, 16, 24};
     }
 
     namespace Spiny
@@ -1190,6 +1190,6 @@ namespace Enemies_Sprite
             Rectangle n2 = {194, 150, 16, 16};
             std::vector<Rectangle> normal_ = {n1, n2};
         }
-        Rectangle fall_ = {213, 150, 16, 16};
+        Rectangle be_fired_or_hit = {213, 150, 16, 16};
     }
 }

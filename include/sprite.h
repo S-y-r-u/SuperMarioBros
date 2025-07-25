@@ -1104,7 +1104,7 @@ namespace Enemies_Sprite
         }
 
         extern Rectangle be_stomped;
-        extern Rectangle be_fired;
+        extern Rectangle be_fired_or_hit;
     }
 
     namespace Goomba_Blue
@@ -1118,7 +1118,7 @@ namespace Enemies_Sprite
         }
 
         extern Rectangle be_stomped;
-        extern Rectangle be_fired;
+        extern Rectangle be_fired_or_hit;
     }
 
     namespace Goomba_Gray
@@ -1132,7 +1132,7 @@ namespace Enemies_Sprite
         }
 
         extern Rectangle be_stomped;
-        extern Rectangle be_fired;
+        extern Rectangle be_fired_or_hit;
     }
 
     namespace Piranha_Plant_Green
@@ -1189,7 +1189,7 @@ namespace Enemies_Sprite
         }
 
         extern Rectangle be_stomped;
-        extern Rectangle be_fired;
+        extern Rectangle be_fired_or_hit;
     }
 
     namespace Troopa_Green
@@ -1211,14 +1211,14 @@ namespace Enemies_Sprite
         }
 
         extern Rectangle be_stomped;
-        extern Rectangle be_fired;
+        extern Rectangle be_fired_or_hit;
     }
 
     namespace Latiku
     {
         extern Rectangle fly_;
         extern Rectangle throw_;
-        extern Rectangle fall_;
+        extern Rectangle be_fired;
     }
 
     namespace Spiny
@@ -1237,6 +1237,6 @@ namespace Enemies_Sprite
             extern std::vector<Rectangle> normal_;
         }
 
-        extern Rectangle fall_;
+        extern Rectangle be_fired_or_hit;
     }
 }

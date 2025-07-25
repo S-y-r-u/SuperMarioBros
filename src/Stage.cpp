@@ -16,24 +16,28 @@ Stage::~Stage()
         delete block;
     blocks.clear();
 
+    for (Enemy *enemy : enemies)
+        delete enemy;
+    enemies.clear();
+
     delete player;
 }
 
 void Stage::Run()
 {
-    if(IsKeyPressed(KEY_A))
+    if (IsKeyPressed(KEY_A))
         Keyboard.emplace_back(KEY_A);
-    else if(IsKeyReleased(KEY_A))
+    else if (IsKeyReleased(KEY_A))
         Keyboard.erase(std::remove(Keyboard.begin(), Keyboard.end(), KEY_A), Keyboard.end());
-    else if(IsKeyPressed(KEY_D))
+    else if (IsKeyPressed(KEY_D))
         Keyboard.emplace_back(KEY_D);
-    else if(IsKeyReleased(KEY_D))
+    else if (IsKeyReleased(KEY_D))
         Keyboard.erase(std::remove(Keyboard.begin(), Keyboard.end(), KEY_D), Keyboard.end());
-    else if(IsKeyPressed(KEY_W))
+    else if (IsKeyPressed(KEY_W))
         player->Jump();
-    if(Keyboard.empty())
+    if (Keyboard.empty())
         player->StopMoving();
-    else if(Keyboard.back() == KEY_A)
+    else if (Keyboard.back() == KEY_A)
         player->MoveLeft();
     else
         player->MoveRight();
@@ -41,14 +45,19 @@ void Stage::Run()
     player->update(GetFrameTime());
 
     camera.target = player->getPosition();
-    
-    /*
+
     Check_Item_Vs_Ground();
     Check_Item_Vs_Block();
+    /*
     for (Item *item : items)
         item->Update_();
     for (Block *block : blocks)
         block->Update_();
+    size_t size_before = enemies.size();
+    for (size_t i = 0; i < size_before; ++i)
+    {
+        enemies[i]->Update(GetFrameTime());
+    }
     */
 }
 
@@ -58,11 +67,16 @@ void Stage::Draw()
     BeginMode2D(camera);
     DrawTexturePro(MapTexture, source, dest, {0, 0}, 0, WHITE);
     player->draw();
+
     /*
-    for(Item* item : items) 
+    for (Item *item : items)
         item->Draw_();
-    */
+    for (Block *block : blocks)
+        block->Draw_();
+    for (Enemy *enemy : enemies)
+        enemy->Draw();
     EndMode2D();
+    */
 }
 
 void Stage::Check_Player_Vs_Ground()
@@ -94,32 +108,41 @@ void Stage::Check_Player_Vs_Ground()
                 continue;
 
             // Tính toán độ sâu va chạm
-            float overlapX = std::min(playerRec.x + playerRec.width - rec_map.x, 
-                                    rec_map.x + rec_map.width - playerRec.x);
+            float overlapX = std::min(playerRec.x + playerRec.width - rec_map.x,
+                                      rec_map.x + rec_map.width - playerRec.x);
             float overlapY = std::min(playerRec.y + playerRec.height - rec_map.y,
-                                    rec_map.y + rec_map.height - playerRec.y);
+                                      rec_map.y + rec_map.height - playerRec.y);
             // std::cout << isOnGround << " " << overlapX << " " << overlapY << std::endl;
 
             // Xác định hướng va chạm
-            if (overlapX < overlapY ) {
+            if (overlapX < overlapY)
+            {
                 // Va chạm ngang
-                if (playerRec.x < rec_map.x  ) {
+                if (playerRec.x < rec_map.x)
+                {
                     // Va chạm từ bên trái
                     correctedPos.x = rec_map.x - playerRec.width;
                     velocity.x = 0;
-                } else {
+                }
+                else
+                {
                     // Va chạm từ bên phải
                     correctedPos.x = rec_map.x + rec_map.width;
                     velocity.x = 0;
                 }
-            } else {
+            }
+            else
+            {
                 // Va chạm dọc
-                if (playerRec.y < rec_map.y && velocity.y >= 0 && Map[j][i - 1] == 0) {
+                if (playerRec.y < rec_map.y && velocity.y >= 0 && Map[j][i - 1] == 0)
+                {
                     // Va chạm từ trên xuống (đáp xuống mặt đất)
                     correctedPos.y = rec_map.y - playerRec.height;
                     velocity.y = 0.f;
                     isOnGround = true;
-                } else if (playerRec.y > rec_map.y && Map[j][i + 1] == 0) {
+                }
+                else if (playerRec.y > rec_map.y && Map[j][i + 1] == 0)
+                {
                     // Va chạm từ dưới lên (đụng đầu)
                     correctedPos.y = rec_map.y + rec_map.height;
                     velocity.y = 0.f;
@@ -134,7 +157,6 @@ void Stage::Check_Player_Vs_Ground()
     player->Set_Velocity(velocity);
     player->Set_isGround(isOnGround);
 }
-
 
 void Stage::Check_Item_Vs_Ground()
 {
@@ -272,3 +294,4 @@ void Stage::Check_Item_Vs_Block()
         }
     }
 }
+

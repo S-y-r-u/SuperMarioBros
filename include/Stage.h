@@ -6,6 +6,8 @@
 #include "Item/MushRoom.h"
 #include "Item/Star.h"
 #include "Block/Block.h"
+#include "Enemy/Enemy.h"
+#include "Enemy/Goomba.h"
 #include <vector>
 #include <algorithm>
 
@@ -21,9 +23,10 @@ protected:
     Player *player;
     Camera2D camera = {0};
     std::vector<KeyboardKey> Keyboard;
-    
+
     std::vector<Item *> items;
     std::vector<Block *> blocks;
+    std::vector<Enemy *> enemies;
 
 public:
     Stage();
