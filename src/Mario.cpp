@@ -2,6 +2,10 @@
 
 Mario :: Mario(Vector2 startPos) : Player(startPos){
     this -> texture = &Mario_Sprite::mario_sprite;
+    speed = 150.0f;
+    gravity = 500.0f;
+    JumpForce = -450.0f;
+    friction = 0.9f;
 }
 
 std::vector<Rectangle>& Mario :: getAnimationFrame() const{

@@ -11,7 +11,9 @@ class Player : public Character{
     protected:
         PlayerForm form;
         AnimationState state;
-        bool isGround = 1;
+        bool isGround;
+        float JumpForce;
+        float friction;
         int currentFrame;
         float frameTimer;
         float animationSpeed;

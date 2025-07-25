@@ -46,12 +46,19 @@ void Player :: StopMoving(){
 void Player :: Jump(){
     if(!isGround) return;
     isGround = 0;
-    velocity.y = -450;
+    velocity.y = JumpForce;
 }
 
 void Player :: update(float dt){
-    position.x += velocity.x * dt;
     velocity.y += gravity * dt;
+
+    // ma sát trượt
+    if(velocity.x != 0.0f){
+        velocity.x *= pow(friction, dt*60);
+        if(abs(velocity.x) < 1.0f)   velocity.x = 0.0f;
+    }
+    
+    position.x += velocity.x * dt;
     position.y += velocity.y * dt;
 
     if(velocity.x != 0.0f)   state = AnimationState :: Walk;
