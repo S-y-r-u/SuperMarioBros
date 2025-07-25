@@ -6,7 +6,7 @@ Player :: Player(Vector2 startPos) : Character(startPos){
     isFacingLeft = 0;
     isGround = 1;
     speed = 150.0f;
-    gravity = 4000.0f;
+    gravity = 500.0f;
     form = PlayerForm :: Small;
     state = AnimationState :: Stance;
     currentFrame = 0;
@@ -46,7 +46,7 @@ void Player :: StopMoving(){
 void Player :: Jump(){
     if(!isGround) return;
     isGround = 0;
-    velocity.y = -1000;
+    velocity.y = -450;
 }
 
 void Player :: update(float dt){
@@ -56,7 +56,6 @@ void Player :: update(float dt){
 
     if(velocity.x != 0.0f)   state = AnimationState :: Walk;
     else state = AnimationState :: Stance;
-
     frameTimer += dt;
     if(frameTimer >= animationSpeed){
         frameTimer = 0.0f;
