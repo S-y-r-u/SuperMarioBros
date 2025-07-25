@@ -53,10 +53,6 @@ void Player :: update(float dt){
     position.x += velocity.x * dt;
     velocity.y += gravity * dt;
     position.y += velocity.y * dt;
-    if(position.y > 579) {
-        position.y = 579;
-        isGround = 1;
-    }
 
     if(velocity.x != 0.0f)   state = AnimationState :: Walk;
     else state = AnimationState :: Stance;
@@ -64,10 +60,7 @@ void Player :: update(float dt){
     frameTimer += dt;
     if(frameTimer >= animationSpeed){
         frameTimer = 0.0f;
-        currentFrame++;
-
-        const auto& frame = getAnimationFrame();
-        if(currentFrame >= frame.size()) currentFrame = 0;
+        currentFrame = (currentFrame + 1) % getAnimationFrame().size();
     }
 }
 
