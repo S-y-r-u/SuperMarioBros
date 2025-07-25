@@ -6,7 +6,7 @@ Player :: Player(Vector2 startPos) : Character(startPos){
     isFacingLeft = 0;
     isGround = 1;
     speed = 150.0f;
-    gravity = 2300.0f;
+    gravity = 4000.0f;
     form = PlayerForm :: Small;
     state = AnimationState :: Stance;
     currentFrame = 0;

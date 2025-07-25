@@ -1,4 +1,4 @@
-#include "Enemy.h"
+#include "Enemy/Enemy.h"
 
 Enemy::Enemy(Vector2 startPos, Vector2 velocity, float gravity)
     : position_(startPos),
