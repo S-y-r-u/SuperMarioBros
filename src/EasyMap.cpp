@@ -14,5 +14,6 @@ EasyMap::EasyMap() {
 }
 
 EasyMap::~EasyMap() {
+    delete player;
     UnloadTexture(MapTexture);
 }
