@@ -1,6 +1,6 @@
 #include "Character.h"
 
-Character :: Character(Vector2 startPos): position(startPos) {}
+Character :: Character(Vector2 startPos): position(startPos), isGround(1), isFacingLeft(0) {}
 
 Character :: ~Character(){}
 

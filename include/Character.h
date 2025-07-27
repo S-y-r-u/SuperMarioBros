@@ -7,8 +7,9 @@ class Character{
     protected: 
         Vector2 position;
         Vector2 velocity;
-        bool isFacingLeft = 0;
-        float speed = 150.0f;
+        bool isGround;
+        bool isFacingLeft;
+        float speed;
         float gravity;
         SpriteSheet* texture = nullptr;
 
