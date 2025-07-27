@@ -64,7 +64,7 @@ void UI::Process()
     }
 
     gameManager->Unload_Texture();
-
+    SoundManager::GetInstance().UnloadAll();
     delete menu;
     delete choosingStage;
     delete gameManager;

@@ -1,7 +1,9 @@
 #include "SoundManager.h"
 #include <iostream>
 
-SoundManager::~SoundManager() {
+SoundManager::~SoundManager() {}
+
+void SoundManager::UnloadAll() {
     // Unload all sound effects
     for (auto& sfx : soundEffects) {
         UnloadSound(sfx.second);

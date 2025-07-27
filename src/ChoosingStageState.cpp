@@ -2,7 +2,7 @@
 #include "raylib.h"
 
 ChoosingStageState::ChoosingStageState() :selectedDifficulty(Difficulty::Easy){
-    MenuTexture = LoadTexture("Menu.jpg");
+    MenuTexture = LoadTexture("Menu/Menu.jpg");
     
     // Create buttons arranged horizontally
     float buttonWidth = 150;

@@ -1201,17 +1201,28 @@ namespace Enemies_Sprite
             extern std::vector<Rectangle> normal_;
         }
 
-        namespace Be_Kicked
+        namespace Shell_Idle
+        {
+            extern Rectangle k1;
+            extern Rectangle k2;
+            extern std::vector<Rectangle> shell_idle;
+        }
+
+        namespace Shell_Moving
         {
             extern Rectangle k1;
             extern Rectangle k2;
             extern Rectangle k3;
-            extern Rectangle k4;
-            extern std::vector<Rectangle> be_kicked;
+            extern std::vector<Rectangle> shell_moving;
+        }
+        namespace Flying
+        {
+            extern Rectangle f1;
+            extern Rectangle f2;
+            extern std::vector<Rectangle> flying_;
         }
 
-        extern Rectangle be_stomped;
-        extern Rectangle be_fired_or_hit;
+        extern Rectangle be_dying;
     }
 
     namespace Latiku

@@ -1155,17 +1155,28 @@ namespace Enemies_Sprite
             std::vector<Rectangle> normal_ = {n1, n2};
         }
 
-        namespace Be_Kicked
+        namespace Shell_Idle
         {
             Rectangle k1 = {61, 76, 16, 14};
-            Rectangle k2 = {80, 76, 16, 14};
-            Rectangle k3 = {99, 76, 16, 14};
-            Rectangle k4 = {118, 76, 16, 14};
-            std::vector<Rectangle> be_kicked = {k1, k2, k3, k4};
+            Rectangle k2 = {42, 76, 16, 14};
+            std::vector<Rectangle> shell_idle = {k1, k2};
+        }
+        
+        namespace Shell_Moving
+        {
+            Rectangle k1 = {80, 76, 16, 14};
+            Rectangle k2 = {99, 76, 16, 14};
+            Rectangle k3 = {118, 76, 16, 14};
+            std::vector<Rectangle> shell_moving = {k1, k2, k3};
         }
 
-        Rectangle be_stomped = {42, 76, 16, 14};
-        Rectangle be_fired_or_hit = {99, 103, 16, 14};
+        namespace Flying
+        {
+            Rectangle f1 = {4, 94, 16, 23};
+            Rectangle f2 = {23, 93, 16, 24};
+            std::vector<Rectangle> flying_ = {f1, f2};
+        }
+        Rectangle be_dying = {99, 103, 16, 14};
     }
 
     namespace Latiku

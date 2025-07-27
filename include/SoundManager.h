@@ -30,6 +30,7 @@ public:
     void ResumeMusic();
 
     bool IsPaused() const { return isPaused; }
+    void UnloadAll();
 
 private:
     // Private constructor to prevent direct instantiation

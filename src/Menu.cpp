@@ -5,7 +5,7 @@
 
 Menu::Menu() : playButton("Play", 274, 500),settingBtn("Setting", 774, 500),  infoButton("Info", 274, 600),quitButton("Quit", 774, 600)  {
 	// Constructor can be used to initialize any member variables if needed
-    MenuTexture = LoadTexture("Menu.jpg");
+    MenuTexture = LoadTexture("Menu/Menu.jpg");
 }
 
 
@@ -36,4 +36,8 @@ int Menu::Update() {
     return menuState;
 }
 
-Menu::~Menu() {}
+Menu::~Menu() {
+    UnloadTexture(MenuTexture);
+    // Unload other resources if needed
+    // e.g., playButton.Unload(), settingBtn.Unload(), etc.
+}
