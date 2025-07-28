@@ -48,7 +48,7 @@ void Stage::Run()
 
     Check_Item_Vs_Ground();
     Check_Item_Vs_Block();
-    /*
+
     for (Item *item : items)
         item->Update_();
     for (Block *block : blocks)
@@ -58,7 +58,6 @@ void Stage::Run()
     {
         enemies[i]->Update(GetFrameTime());
     }
-    */
 }
 
 void Stage::Draw()
@@ -68,7 +67,6 @@ void Stage::Draw()
     DrawTexturePro(MapTexture, source, dest, {0, 0}, 0, WHITE);
     player->draw();
 
-    /*
     for (Item *item : items)
         item->Draw_();
     for (Block *block : blocks)
@@ -76,7 +74,6 @@ void Stage::Draw()
     for (Enemy *enemy : enemies)
         enemy->Draw();
     EndMode2D();
-    */
 }
 
 void Stage::Check_Player_Vs_Ground()

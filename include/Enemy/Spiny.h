@@ -1,47 +1,49 @@
 #pragma once
 #include "Enemy.h"
 
-enum class Goomba_State
+enum class Spiny_State
 {
-    normal = 0,
-    be_stomped,
+    egg = 0,
+    normal,
     be_fired_or_hit
 };
 
-class Goomba : public Enemy
+class Spiny : public Enemy
 {
 private:
-    Goomba_State state_;
+    Spiny_State state_;
+    std::vector<Rectangle> m_egg;
     std::vector<Rectangle> m_normal;
 
-    // Dùng trong fall
+    // Dung trong fall
     Vector2 before_pos;
     Vector2 previous_frame_pos;
     float delta_time;
+    bool is_jump;
     const float Push_Height = 25.0f;
-
-    int stomped_timer = 0;
-    const int Stomped_Duration = 30;
+    const float Ini_Velo = 40.0f;
 
 public:
-    Goomba(Vector2 pos, Vector2 velo, float gravity);
+    Spiny(Vector2 pos, Vector2 velo, float gravity);
 
-    void Draw() const override;
     void Update(float dt) override;
-    void Set_Pos(Vector2 pos) override;
+    void Draw() const override;
 
     void Notify_Fall(float dt) override;
     void Notify_On_Ground() override;
-    void Notify_Be_Stomped() override;
+    void Notify_Jump();
+    void Notify_Be_Stomped() override {}
     void Notify_Be_Fired_Or_Hit() override;
+
+    void Set_Pos(Vector2 pos) override;
 
     bool Can_Be_Stomped() const override;
     bool Can_Be_Fired_Or_Hit() const override;
 
 private:
+    void Animate_();
     void Fall_();
     void Move_(float dt);
-    void Animate_();
-    void Be_Stomped();
+    void Jump_(float dt);
     void Be_Fired_Or_Hit();
 };

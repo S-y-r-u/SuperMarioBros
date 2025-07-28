@@ -8,6 +8,7 @@
 #include "Block/Block.h"
 #include "Enemy/Enemy.h"
 #include "Enemy/Goomba.h"
+#include "Enemy/Latiku.h"
 #include <vector>
 #include <algorithm>
 

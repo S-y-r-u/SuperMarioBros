@@ -65,7 +65,7 @@ void Mush_Room::Fall_()
     if (!is_appear || !fall_)
         return;
     previous_frame_pos = pos_;
-    delta_time += 0.06f;
+    delta_time += 0.14f;
     float deltaY = 0.5 * delta_time * delta_time * Physics::gravity_;
     pos_.y = before_pos.y + deltaY;
 }

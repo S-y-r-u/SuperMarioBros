@@ -28,6 +28,8 @@ void Goomba::Update(float dt)
     Be_Stomped();      // Kiểm tra và xử lý nếu bị dậm lên
     Be_Fired_Or_Hit(); // Kiểm tra và xử lý nếu bị bắn hoặc tấn công
     Animate_();        // Cập nhật hoạt ảnh
+    if (position_.y - rec_.height >= Screen_h)
+        is_active = 0;
 }
 
 // Cho phép Goomba bị dậm lên
@@ -149,8 +151,5 @@ void Goomba::Be_Fired_Or_Hit()
         // Tính quỹ đạo parabol bay lên rồi rơi xuống
         float deltaY = -Push_Height * delta_time + 0.5 * delta_time * delta_time * Physics::gravity_;
         position_.y = before_pos.y + deltaY;
-
-        if (position_.y - rec_.height >= Screen_h)
-            is_active = 0;
     }
 }
