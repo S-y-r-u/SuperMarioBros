@@ -1,25 +1,45 @@
 #include "Menu.h"
 #include "raylib.h"
+#include <cmath>
 
-
-
-Menu::Menu() : playButton("Play", 274, 500),settingBtn("Setting", 774, 500),  infoButton("Info", 274, 600),quitButton("Quit", 774, 600)  {
-	// Constructor can be used to initialize any member variables if needed
-    MenuTexture = LoadTexture("Menu/Menu.jpg");
+Menu::Menu() : 
+    playButton("PLAY", 500, 420, 200, 50),
+    settingBtn("SETTINGS", 500, 480, 200, 50),
+    infoButton("INFO", 500, 540, 200, 50),
+    quitButton("QUIT", 500, 600, 200, 50),
+    titleBaseY(50.0f),      // Vị trí Y cơ bản của title
+    titleAnimTime(0.0f),     // Thời gian animation
+    titleAnimSpeed(2.0f),    // Tốc độ animation (càng lớn càng nhanh)
+    titleAnimRange(15.0f)    // Phạm vi chuyển động (±15 pixels)
+{
+    MenuTexture = &MenuImages::GetInstance().menuTexture;
+    MenuTitleTexture = &MenuImages::GetInstance().MenuTitleTexture;
+    titleY = titleBaseY;
 }
 
-
-
 void Menu::Draw() {
-    DrawTexture(MenuTexture, 0, 0, WHITE);
+    // Vẽ background
+    DrawTexture(*MenuTexture, 0, 0, WHITE);
+    
+    // Vẽ title với animation
+    if (MenuTitleTexture->id > 0) {
+        float titleX = (Screen_w - MenuTitleTexture->width) / 2.0f - 10.0f; // Căn giữa
+        DrawTexture(*MenuTitleTexture, titleX, titleY, WHITE);
+    }
+    
+    // Vẽ các button
     playButton.Draw();
     settingBtn.Draw();
     infoButton.Draw();
     quitButton.Draw();
-
 }
 
 int Menu::Update() {
+    // Cập nhật animation cho title
+    titleAnimTime += GetFrameTime();
+    titleY = titleBaseY + sin(titleAnimTime * titleAnimSpeed) * titleAnimRange;
+    
+    // Xử lý button clicks
     if (playButton.Update()) {
         std::cout << "PLAY\n";
         return choosingStageState;
@@ -37,7 +57,55 @@ int Menu::Update() {
 }
 
 Menu::~Menu() {
-    UnloadTexture(MenuTexture);
-    // Unload other resources if needed
-    // e.g., playButton.Unload(), settingBtn.Unload(), etc.
+    // Destructor
+}
+
+// Static instance
+MenuImages& MenuImages::GetInstance() {
+    static MenuImages instance;
+    return instance;
+}
+
+void MenuImages::Load() {
+    menuTexture = LoadTexture("Menu/Menu.png");
+    buttonTexture = LoadTexture("Menu/Button.png");
+    MenuTitleTexture = LoadTexture("Menu/SuperMarioTitle.png");
+    buttonBackTexture = LoadTexture("Menu/Back.png");
+    buttonPlusTexture = LoadTexture("Menu/Plus.png");
+    buttonMinusTexture = LoadTexture("Menu/Minus.png");
+
+    // Set rectangles
+    menu_background = {0, 0, (float)menuTexture.width, (float)menuTexture.height};
+    button_normal = {0, 0, (float)buttonTexture.width, (float)buttonTexture.height};
+    menu_title = {0, 0, (float)MenuTitleTexture.width, (float)MenuTitleTexture.height};
+    button_plus = {0, 0, (float)buttonPlusTexture.width, (float)buttonPlusTexture.height};
+    button_minus = {0, 0, (float)buttonMinusTexture.width, (float)buttonMinusTexture.height};
+    button_back = {0, 0, (float)buttonBackTexture.width, (float)buttonBackTexture.height};
+}
+
+void MenuImages::Unload() {
+    if (menuTexture.id > 0) {
+        UnloadTexture(menuTexture);
+        menuTexture.id = 0;
+    }
+    if (buttonTexture.id > 0) {
+        UnloadTexture(buttonTexture);
+        buttonTexture.id = 0;
+    }
+    if (MenuTitleTexture.id > 0) {
+        UnloadTexture(MenuTitleTexture);
+        MenuTitleTexture.id = 0;
+    }
+    if (buttonBackTexture.id > 0) {
+        UnloadTexture(buttonBackTexture);
+        buttonBackTexture.id = 0;
+    }
+    if (buttonPlusTexture.id > 0) {
+        UnloadTexture(buttonPlusTexture);
+        buttonPlusTexture.id = 0;
+    }
+    if (buttonMinusTexture.id > 0) {
+        UnloadTexture(buttonMinusTexture);
+        buttonMinusTexture.id = 0;
+    }
 }

@@ -1,8 +1,11 @@
 #include "ChoosingStageState.h"
 #include "raylib.h"
 
-ChoosingStageState::ChoosingStageState() :selectedDifficulty(Difficulty::Easy){
-    MenuTexture = LoadTexture("Menu/Menu.jpg");
+ChoosingStageState::ChoosingStageState() 
+    : selectedDifficulty(Difficulty::Easy)
+    , backButton(80, 80, 40, CircleButton::BACK)  // Nút back tròn ở góc trái
+{
+    MenuTexture = &MenuImages::GetInstance().menuTexture;
     
     // Create buttons arranged horizontally
     float buttonWidth = 150;
@@ -12,20 +15,20 @@ ChoosingStageState::ChoosingStageState() :selectedDifficulty(Difficulty::Easy){
     float startX = (Screen_w - totalWidth) / 2;
     float buttonY = 550;
     
-    easyButton = new Button("EASY", startX, buttonY, buttonWidth, buttonHeight);
-    mediumButton = new Button("MEDIUM", startX + buttonWidth + spacing, buttonY, buttonWidth, buttonHeight);
-    hardButton = new Button("HARD", startX + 2 * (buttonWidth + spacing), buttonY, buttonWidth, buttonHeight);
+    easyButton = new RecButton("EASY", startX, buttonY, buttonWidth, buttonHeight);
+    mediumButton = new RecButton("MEDIUM", startX + buttonWidth + spacing, buttonY, buttonWidth, buttonHeight);
+    hardButton = new RecButton("HARD", startX + 2 * (buttonWidth + spacing), buttonY, buttonWidth, buttonHeight);
 }
 
 ChoosingStageState::~ChoosingStageState() {
     delete easyButton;
     delete mediumButton;
     delete hardButton;
-    UnloadTexture(MenuTexture);
+    // Không cần UnloadTexture vì MenuImages quản lý
 }
 
 void ChoosingStageState::Draw() {
-    DrawTexture(MenuTexture, 0, 0, WHITE);
+    DrawTexture(*MenuTexture, 0, 0, WHITE);
     
     // Center the title text
     const char* titleText = "Choose Difficulty";
@@ -33,13 +36,22 @@ void ChoosingStageState::Draw() {
     int titleX = (Screen_w - textWidth) / 2;
     DrawText(titleText, titleX, 50, 50, BLACK);
     
-    // Draw buttons
+    // Draw back button
+    backButton.Draw();
+    
+    // Draw difficulty buttons
     easyButton->Draw();
     mediumButton->Draw();
     hardButton->Draw();
 }
 
 int ChoosingStageState::Update() {
+    // Kiểm tra nút back
+    if (backButton.Update()) {
+        return menuState;  // Quay về menu
+    }
+    
+    // Kiểm tra các nút difficulty
     if (easyButton->Update()) {
         selectedDifficulty = Difficulty::Easy;
         return gameManagerState;
@@ -52,6 +64,7 @@ int ChoosingStageState::Update() {
         selectedDifficulty = Difficulty::Hard;
         return gameManagerState;
     }
+    
     return choosingStageState;
 }
 

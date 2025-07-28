@@ -1,6 +1,7 @@
 #pragma once
 #include "Constants.h"
 #include "Button.h" 
+#include "Menu.h"
 
 class ChoosingStageState {
 public:
@@ -9,11 +10,13 @@ public:
     int Update();
     Difficulty GetSelectedDifficulty() const;
     ~ChoosingStageState();
+    
 private:
-    Texture MenuTexture;    
+    Texture* MenuTexture;    
     Difficulty selectedDifficulty = Difficulty::Easy;
     
-    Button* easyButton;
-    Button* mediumButton;
-    Button* hardButton;
+    CircleButton backButton;        // Nút back tròn
+    RecButton* easyButton;
+    RecButton* mediumButton;
+    RecButton* hardButton;
 };

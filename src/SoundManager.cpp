@@ -48,7 +48,8 @@ void SoundManager::LoadMusic() {
     musics["warning"] = LoadMusicStream((path + "warning.wav").c_str());
     musics["stage_clear"] = LoadMusicStream((path + "stage_clear.wav").c_str());
     musics["world_clear"] = LoadMusicStream((path + "world_clear.wav").c_str());
-    musics["background"] = LoadMusicStream((path + "background.mp3").c_str());
+    musics["playingMusic"] = LoadMusicStream((path + "playingMusic.mp3").c_str());
+    musics["MenuMusic"] = LoadMusicStream((path + "MenuMusic.mp3").c_str());
 
     SetMusicVol(musicVolume);
 }

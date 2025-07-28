@@ -2,20 +2,61 @@
 #include "raylib.h"
 #include <string>
 
+// Base class Button (interface)
 class Button {
 public:
-    Button(const std::string& text, float x, float y, float width = 200, float height = 60);
+    Button(const std::string& text, float x, float y);
+    virtual ~Button();
 
-    void Draw();
-    bool Update();  // Returns true if clicked (released inside)
+    virtual void Draw() = 0;
+    virtual bool Update() = 0;  // Returns true if clicked (released inside)
+
+protected:
+    std::string label;          // Text hiển thị trên button
+    float posX, posY;           // Vị trí button
+    
+    Color normalTextColor = BLACK;
+    Color hoverTextColor = BLACK;
+    
+    bool hovered = false;       // Trạng thái hover
+    bool pressed = false;       // Trạng thái pressed
+};
+
+// Rectangular Button
+class RecButton : public Button {
+public:
+    RecButton(const std::string& text, float x, float y, float width = 303, float height = 100);
+    ~RecButton();
+
+    void Draw() override;
+    bool Update() override;
 
 private:
-    Rectangle bounds;
-    std::string label;
+    Rectangle bounds;           // Vùng clickable và vẽ của button rectangular
+};
 
-    Color normalColor = LIGHTGRAY;
-    Color hoverColor = GRAY;
-    Color textColor = BLACK;
+// Circle Button
+class CircleButton : public Button {
+public:
+    enum ButtonType {
+        NORMAL,     // Button thường (chỉ text)
+        PLUS,       // Nút +
+        MINUS,      // Nút -
+        BACK        // Nút back (mũi tên)
+    };
 
-    bool hovered = false;
+    CircleButton(const std::string& text, float x, float y, float r = 50);
+    CircleButton(float x, float y, float r = 50.0f);
+    CircleButton(float x, float y, float r, ButtonType type);
+    ~CircleButton();
+
+    void Draw() override;
+    bool Update() override;
+
+private:
+    Vector2 center;             // Tâm của button tròn
+    float radius;               // Bán kính
+    ButtonType buttonType;      // Loại button
+    
+    bool IsPointInCircle(Vector2 point, Vector2 cent, float r);
 };
