@@ -1,10 +1,11 @@
 #include "EasyMap.h"
 
-EasyMap::EasyMap() {
+EasyMap::EasyMap()
+{
     MapTexture = LoadTexture("map/Easy.png");
     std::ifstream fi("map/Easy.txt");
-    for(int i = 0; i < 15; ++i)
-        for(int j = 0; j < 214; ++j)
+    for (int i = 0; i < 15; ++i)
+        for (int j = 0; j < 214; ++j)
             fi >> Map[j][i];
     player = new Mario({400, 200});
     camera.target = player->getPosition();
@@ -13,7 +14,8 @@ EasyMap::EasyMap() {
     camera.zoom = 1;
 }
 
-EasyMap::~EasyMap() {
+EasyMap::~EasyMap()
+{
     delete player;
     UnloadTexture(MapTexture);
 }
