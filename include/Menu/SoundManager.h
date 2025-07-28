@@ -26,6 +26,9 @@ public:
     void SetSFXVolume(float volume);    // 0.0f → 1.0f
     void SetMusicVol(float volume);     // 0.0f → 1.0f
 
+    float GetSFXVolume() const { return sfxVolume; }
+    float GetMusicVolume() const { return musicVolume; }
+
     void PauseMusic();
     void ResumeMusic();
 

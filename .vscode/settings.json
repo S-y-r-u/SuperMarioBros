@@ -60,6 +60,10 @@
 		"xlocnum": "cpp",
 		"xloctime": "cpp",
 		"xstring": "cpp",
-		"*.m": "cpp"
+		"*.m": "cpp",
+		"algorithm": "cpp",
+		"map": "cpp",
+		"optional": "cpp",
+		"xtree": "cpp"
 	}
 }

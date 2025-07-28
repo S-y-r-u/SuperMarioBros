@@ -21,6 +21,7 @@ void UI::Process()
     Menu *menu = new Menu();
     ChoosingStageState *choosingStage = new ChoosingStageState();
     GameManager *gameManager = new GameManager();
+    SettingState *settingMenu = new SettingState();
 
     Program_state = menuState;
     int previousState = menuState;  // Track previous state để quản lý music
@@ -72,8 +73,7 @@ void UI::Process()
         }
         else if (Program_state == settingState)
         {
-            // Xử lý setting state (nếu có)
-            // Program_state = settingMenu->Update();
+            Program_state = settingMenu->Update();
         }
 
         // Draw
@@ -94,7 +94,7 @@ void UI::Process()
         }
         else if (Program_state == settingState)
         {
-            // settingMenu->Draw();
+            settingMenu->Draw();
         }
 
         EndDrawing();
@@ -108,6 +108,7 @@ void UI::Process()
     delete menu;
     delete choosingStage;
     delete gameManager;
+    delete settingMenu;
 
     CloseAudioDevice();
     CloseWindow();

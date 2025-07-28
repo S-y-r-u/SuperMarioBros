@@ -1,4 +1,4 @@
-#include "Menu.h"
+#include "Menu/Menu.h"
 #include "raylib.h"
 #include <cmath>
 
@@ -73,6 +73,7 @@ void MenuImages::Load() {
     buttonBackTexture = LoadTexture("Menu/Back.png");
     buttonPlusTexture = LoadTexture("Menu/Plus.png");
     buttonMinusTexture = LoadTexture("Menu/Minus.png");
+    SettingTexture = LoadTexture("Menu/Setting.png");
 
     // Set rectangles
     menu_background = {0, 0, (float)menuTexture.width, (float)menuTexture.height};
@@ -81,6 +82,7 @@ void MenuImages::Load() {
     button_plus = {0, 0, (float)buttonPlusTexture.width, (float)buttonPlusTexture.height};
     button_minus = {0, 0, (float)buttonMinusTexture.width, (float)buttonMinusTexture.height};
     button_back = {0, 0, (float)buttonBackTexture.width, (float)buttonBackTexture.height};
+    setting_texture = {0, 0, (float)SettingTexture.width, (float)SettingTexture.height};
 }
 
 void MenuImages::Unload() {

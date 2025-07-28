@@ -1,4 +1,4 @@
-#include "GameManager.h"
+#include "Menu/GameManager.h"
 #include "raylib.h"
 
 constexpr int NUM_MONITORED_KEYS = 16;

@@ -1,7 +1,7 @@
 #pragma once
 #include "Constants.h"
-#include "Button.h" 
-#include "Menu.h"
+#include "Menu/Button.h" 
+#include "Menu/Menu.h"
 
 class ChoosingStageState {
 public:

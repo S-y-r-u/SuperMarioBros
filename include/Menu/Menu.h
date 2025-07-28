@@ -1,7 +1,7 @@
 #pragma once
 #include "raylib.h"
 #include "Constants.h"
-#include "Button.h"
+#include "Menu/Button.h"
 
 class Menu {
 private:
@@ -35,6 +35,7 @@ struct MenuImages
     Texture2D buttonBackTexture;
     Texture2D buttonPlusTexture;
     Texture2D buttonMinusTexture;
+    Texture2D SettingTexture;
 
     Rectangle menu_title;
     Rectangle menu_background;
@@ -42,7 +43,8 @@ struct MenuImages
     Rectangle button_plus;
     Rectangle button_minus;
     Rectangle button_back;
-    
+    Rectangle setting_texture;
+
     void Load();
     void Unload();
     

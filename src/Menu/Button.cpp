@@ -1,5 +1,5 @@
-#include "Button.h"
-#include "Menu.h"
+#include "Menu/Button.h"
+#include "Menu/Menu.h"
 #include <cmath>
 
 // Base Button class

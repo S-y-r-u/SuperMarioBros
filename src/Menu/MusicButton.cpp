@@ -1,0 +1,137 @@
+#include "Menu/MusicButton.h"
+#include "Menu/Menu.h"
+#include "raylib.h"
+#include <algorithm>
+#include <cstdio>
+
+// MusicButton implementation
+MusicButton::MusicButton(const std::string& text, float x, float y, float sliderW, float sliderH)
+    : Button(text, x, y), sliderWidth(sliderW), sliderHeight(sliderH), 
+      volume(0.5f), isDragging(false), knobRadius(sliderHeight / 2 + 5) {
+    
+    // Thiết lập slider track
+    sliderTrack = {x, y, sliderWidth, sliderHeight};
+    
+    // Thiết lập knob position ban đầu
+    UpdateKnobPosition();
+    
+    // Tạo nút + và -
+    float buttonY = y + sliderHeight / 2;
+    float buttonRadius = 15.0f;
+    
+    minusButton = new CircleButton(x - 20, buttonY, buttonRadius, CircleButton::MINUS);
+    plusButton = new CircleButton(x + sliderWidth + 20, buttonY, buttonRadius, CircleButton::PLUS);
+}
+
+MusicButton::~MusicButton() {
+    delete plusButton;
+    delete minusButton;
+}
+
+void MusicButton::SetVolume(float vol) {
+    volume = std::max(0.0f, std::min(1.0f, vol));
+    UpdateKnobPosition();
+}
+
+void MusicButton::UpdateKnobPosition() {
+    float knobX = sliderTrack.x + (volume * (sliderTrack.width - knobRadius * 2)) + knobRadius;
+    float knobY = sliderTrack.y + sliderTrack.height / 2;
+    sliderKnob = {knobX - knobRadius, knobY - knobRadius, knobRadius * 2, knobRadius * 2};
+}
+
+void MusicButton::UpdateVolumeFromKnob() {
+    float knobCenterX = sliderKnob.x + sliderKnob.width / 2;
+    float relativePos = (knobCenterX - sliderTrack.x - knobRadius) / (sliderTrack.width - knobRadius * 2);
+    volume = std::max(0.0f, std::min(1.0f, relativePos));
+}
+
+bool MusicButton::IsPointInKnob(Vector2 point) {
+    Vector2 knobCenter = {sliderKnob.x + sliderKnob.width / 2, sliderKnob.y + sliderKnob.height / 2};
+    float dx = point.x - knobCenter.x;
+    float dy = point.y - knobCenter.y;
+    return (dx * dx + dy * dy) <= (knobRadius * knobRadius);
+}
+
+void MusicButton::Draw() {
+    MenuImages& menuImg = MenuImages::GetInstance();
+    
+    // Vẽ label
+    if (!label.empty()) {
+        Font font = GetFontDefault();
+        int fontSize = 20;
+        Vector2 textSize = MeasureTextEx(font, label.c_str(), fontSize, 1.0f);
+        Vector2 textPos = {posX, posY - 30};
+        DrawTextEx(font, label.c_str(), textPos, fontSize, 1.0f, BLACK);
+    }
+    
+    // Vẽ slider track (thanh dài)
+    DrawRectangleRec(sliderTrack, LIGHTGRAY);
+    DrawRectangleLinesEx(sliderTrack, 2, DARKGRAY);
+    
+    // Vẽ phần đã fill (màu xanh)
+    Rectangle filledTrack = {
+        sliderTrack.x, 
+        sliderTrack.y, 
+        volume * sliderTrack.width, 
+        sliderTrack.height
+    };
+    DrawRectangleRec(filledTrack, BLUE);
+    
+    // Vẽ knob (hình tròn)
+    Vector2 knobCenter = {sliderKnob.x + sliderKnob.width / 2, sliderKnob.y + sliderKnob.height / 2};
+    Color knobColor = (hovered || isDragging) ? GRAY : WHITE;
+    DrawCircleV(knobCenter, knobRadius, knobColor);
+    DrawCircleLinesV(knobCenter, knobRadius, DARKGRAY);
+    
+    // Vẽ volume percentage
+    char volumeText[10];
+    sprintf(volumeText, "%.0f%%", volume * 100);
+    Vector2 volumeTextPos = {posX + sliderWidth + 40, posY + sliderHeight/2 - 10};
+    DrawText(volumeText, volumeTextPos.x, volumeTextPos.y, 16, BLACK);
+    
+    // Vẽ nút + và -
+    minusButton->Draw();
+    plusButton->Draw();
+}
+
+bool MusicButton::Update() {
+    Vector2 mousePos = GetMousePosition();
+    bool valueChanged = false;
+    
+    // Xử lý nút + và -
+    if (plusButton->Update()) {
+        SetVolume(volume + 0.1f);
+        valueChanged = true;
+    }
+    if (minusButton->Update()) {
+        SetVolume(volume - 0.1f);
+        valueChanged = true;
+    }
+    
+    // Xử lý slider
+    hovered = CheckCollisionPointRec(mousePos, sliderTrack) || IsPointInKnob(mousePos);
+    
+    if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT) && IsPointInKnob(mousePos)) {
+        isDragging = true;
+        pressed = true;
+    }
+    
+    if (isDragging && IsMouseButtonDown(MOUSE_BUTTON_LEFT)) {
+        // Cập nhật vị trí knob theo mouse
+        float newKnobX = std::max(sliderTrack.x + knobRadius, 
+                                 std::min(mousePos.x, sliderTrack.x + sliderTrack.width - knobRadius));
+        sliderKnob.x = newKnobX - knobRadius;
+        UpdateVolumeFromKnob();
+        valueChanged = true;
+    }
+    
+    if (IsMouseButtonReleased(MOUSE_BUTTON_LEFT)) {
+        if (isDragging) {
+            isDragging = false;
+            pressed = false;
+            valueChanged = true;
+        }
+    }
+    
+    return valueChanged;
+}
