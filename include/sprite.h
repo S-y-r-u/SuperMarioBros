@@ -80,11 +80,15 @@ namespace Mario_Sprite
             // x3
             extern Rectangle s1;
             extern Rectangle s2;
-            //
             extern Rectangle s3;
             extern Rectangle s4;
             extern Rectangle s5;
             extern Rectangle s6;
+            //
+            extern Rectangle s7;
+            extern Rectangle s8;
+            extern Rectangle s9;
+            extern Rectangle s10;
             extern std::vector<Rectangle> small_to_super;
         }
     }
@@ -193,6 +197,14 @@ namespace Mario_Sprite
             extern Rectangle s2;
             extern Rectangle s3;
             extern Rectangle s4;
+            extern Rectangle s5;
+            extern Rectangle s6;
+            extern Rectangle s7;
+            extern Rectangle s8;
+            extern Rectangle s9;
+            extern Rectangle s10;
+            extern Rectangle s11;
+            extern Rectangle s12;
             //
             extern std::vector<Rectangle> stance_to_fire;
         }
@@ -208,6 +220,14 @@ namespace Mario_Sprite
             extern Rectangle c2;
             extern Rectangle c3;
             extern Rectangle c4;
+            extern Rectangle c5;
+            extern Rectangle c6;
+            extern Rectangle c7;
+            extern Rectangle c8;
+            extern Rectangle c9;
+            extern Rectangle c10;
+            extern Rectangle c11;
+            extern Rectangle c12;
             //
             extern std::vector<Rectangle> crouch_to_fire;
         }
@@ -223,6 +243,14 @@ namespace Mario_Sprite
             extern Rectangle j2;
             extern Rectangle j3;
             extern Rectangle j4;
+            extern Rectangle j5;
+            extern Rectangle j6;
+            extern Rectangle j7;
+            extern Rectangle j8;
+            extern Rectangle j9;
+            extern Rectangle j10;
+            extern Rectangle j11;
+            extern Rectangle j12;
             //
             extern std::vector<Rectangle> jump_to_fire;
         }
@@ -240,6 +268,14 @@ namespace Mario_Sprite
             extern Rectangle w2;
             extern Rectangle w3;
             extern Rectangle w4;
+            extern Rectangle w5;
+            extern Rectangle w6;
+            extern Rectangle w7;
+            extern Rectangle w8;
+            extern Rectangle w9;
+            extern Rectangle w10;
+            extern Rectangle w11;
+            extern Rectangle w12;
             //
             extern std::vector<Rectangle> walk_to_fire;
         }
@@ -255,6 +291,14 @@ namespace Mario_Sprite
             extern Rectangle s2;
             extern Rectangle s3;
             extern Rectangle s4;
+            extern Rectangle s5;
+            extern Rectangle s6;
+            extern Rectangle s7;
+            extern Rectangle s8;
+            extern Rectangle s9;
+            extern Rectangle s10;
+            extern Rectangle s11;
+            extern Rectangle s12;
             //
             extern std::vector<Rectangle> slide_to_fire;
         }
@@ -294,8 +338,14 @@ namespace Mario_Sprite
             // x6
             extern Rectangle h3;
             extern Rectangle h4;
-            //
             extern Rectangle h5;
+            extern Rectangle h6;
+            extern Rectangle h7;
+            extern Rectangle h8;
+            extern Rectangle h9;
+            extern Rectangle h10;
+            //
+            extern Rectangle h11;
             extern std::vector<Rectangle> hit_;
         }
     }
@@ -453,8 +503,14 @@ namespace Mario_Sprite
             // x6
             extern Rectangle h3;
             extern Rectangle h4;
-            //
             extern Rectangle h5;
+            extern Rectangle h6;
+            extern Rectangle h7;
+            extern Rectangle h8;
+            extern Rectangle h9;
+            extern Rectangle h10;
+            //
+            extern Rectangle h11;
             extern std::vector<Rectangle> hit_;
         }
     }
@@ -528,11 +584,15 @@ namespace Luigi_Sprite
             // x3
             extern Rectangle s1;
             extern Rectangle s2;
-            //
             extern Rectangle s3;
             extern Rectangle s4;
             extern Rectangle s5;
             extern Rectangle s6;
+            //
+            extern Rectangle s7;
+            extern Rectangle s8;
+            extern Rectangle s9;
+            extern Rectangle s10;
             extern std::vector<Rectangle> small_to_super;
         }
     }
@@ -641,6 +701,14 @@ namespace Luigi_Sprite
             extern Rectangle s2;
             extern Rectangle s3;
             extern Rectangle s4;
+            extern Rectangle s5;
+            extern Rectangle s6;
+            extern Rectangle s7;
+            extern Rectangle s8;
+            extern Rectangle s9;
+            extern Rectangle s10;
+            extern Rectangle s11;
+            extern Rectangle s12;
             //
             extern std::vector<Rectangle> stance_to_fire;
         }
@@ -656,6 +724,14 @@ namespace Luigi_Sprite
             extern Rectangle c2;
             extern Rectangle c3;
             extern Rectangle c4;
+            extern Rectangle c5;
+            extern Rectangle c6;
+            extern Rectangle c7;
+            extern Rectangle c8;
+            extern Rectangle c9;
+            extern Rectangle c10;
+            extern Rectangle c11;
+            extern Rectangle c12;
             //
             extern std::vector<Rectangle> crouch_to_fire;
         }
@@ -671,6 +747,14 @@ namespace Luigi_Sprite
             extern Rectangle j2;
             extern Rectangle j3;
             extern Rectangle j4;
+            extern Rectangle j5;
+            extern Rectangle j6;
+            extern Rectangle j7;
+            extern Rectangle j8;
+            extern Rectangle j9;
+            extern Rectangle j10;
+            extern Rectangle j11;
+            extern Rectangle j12;
             //
             extern std::vector<Rectangle> jump_to_fire;
         }
@@ -688,6 +772,14 @@ namespace Luigi_Sprite
             extern Rectangle w2;
             extern Rectangle w3;
             extern Rectangle w4;
+            extern Rectangle w5;
+            extern Rectangle w6;
+            extern Rectangle w7;
+            extern Rectangle w8;
+            extern Rectangle w9;
+            extern Rectangle w10;
+            extern Rectangle w11;
+            extern Rectangle w12;
             //
             extern std::vector<Rectangle> walk_to_fire;
         }
@@ -703,6 +795,14 @@ namespace Luigi_Sprite
             extern Rectangle s2;
             extern Rectangle s3;
             extern Rectangle s4;
+            extern Rectangle s5;
+            extern Rectangle s6;
+            extern Rectangle s7;
+            extern Rectangle s8;
+            extern Rectangle s9;
+            extern Rectangle s10;
+            extern Rectangle s11;
+            extern Rectangle s12;
             //
             extern std::vector<Rectangle> slide_to_fire;
         }
@@ -742,8 +842,14 @@ namespace Luigi_Sprite
             // x6
             extern Rectangle h3;
             extern Rectangle h4;
-            //
             extern Rectangle h5;
+            extern Rectangle h6;
+            extern Rectangle h7;
+            extern Rectangle h8;
+            extern Rectangle h9;
+            extern Rectangle h10;
+            //
+            extern Rectangle h11;
             extern std::vector<Rectangle> hit_;
         }
     }
@@ -816,6 +922,9 @@ namespace Luigi_Sprite
             extern Rectangle w10;
             extern Rectangle w11;
             extern Rectangle w12;
+            extern Rectangle w13;
+            extern Rectangle w14;
+            extern Rectangle w15;
             extern std::vector<Rectangle> walk_;
         }
         namespace Enter_Pipe
@@ -898,8 +1007,14 @@ namespace Luigi_Sprite
             // x6
             extern Rectangle h3;
             extern Rectangle h4;
-            //
             extern Rectangle h5;
+            extern Rectangle h6;
+            extern Rectangle h7;
+            extern Rectangle h8;
+            extern Rectangle h9;
+            extern Rectangle h10;
+            //
+            extern Rectangle h11;
             extern std::vector<Rectangle> hit_;
         }
     }
