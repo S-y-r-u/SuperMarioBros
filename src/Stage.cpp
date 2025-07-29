@@ -67,6 +67,22 @@ void Stage::Run()
             i++;
     }
 
+    for (size_t i = 0; i < blocks.size();)
+    {
+        if (blocks[i]->Get_Is_Delete())
+            blocks.erase(blocks.begin() + i);
+        else
+            i++;
+    }
+
+    for (size_t i = 0; i < enemies.size();)
+    {
+        if (!enemies[i]->Get_Is_Active())
+            enemies.erase(enemies.begin() + i);
+        else
+            i++;
+    }
+
     for (Item *item : items)
         item->Update_();
     for (Block *block : blocks)
