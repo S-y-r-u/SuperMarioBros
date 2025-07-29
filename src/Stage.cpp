@@ -49,6 +49,23 @@ void Stage::Run()
 
     Check_Item_Vs_Ground();
     Check_Item_Vs_Block();
+    Check_Enemy_Vs_Ground();
+
+    for (Item *item : items)
+    {
+        Rectangle player_rec = player->get_draw_rec();
+        Rectangle rec_item = item->Get_Draw_Rec();
+        if (CheckCollisionRecs(player_rec, rec_item))
+            item->Activate_(*player);
+    }
+
+    for (size_t i = 0; i < items.size();)
+    {
+        if (items[i]->Get_Is_Delete())
+            items.erase(items.begin() + i);
+        else
+            i++;
+    }
 
     for (Item *item : items)
         item->Update_();
@@ -293,3 +310,61 @@ void Stage::Check_Item_Vs_Block()
     }
 }
 
+void Stage::Check_Enemy_Vs_Ground()
+{
+    for (Enemy *enemy : enemies)
+    {
+        if (Latiku *latiku = dynamic_cast<Latiku *>(enemy))
+            continue;
+
+        if (!enemy || !enemy->Get_Is_Active() || enemy->Get_Is_Dead())
+            continue;
+
+        Rectangle rec_enemy = enemy->Get_Draw_Rec();
+        Vector2 prev = enemy->Get_Previous_Pos();
+        float w = rec_enemy.width;
+        float h = rec_enemy.height;
+
+        enemy->Notify_Fall(GetFrameTime());
+
+        bool avoid_branch = false;
+
+        for (int i = 0; i < 15; i++)
+        {
+            for (int j = 0; j < 214; j++)
+            {
+                int id = Map[j][i];
+                if (id == 0)
+                    continue;
+
+                Rectangle rec_map = {j * 16.0f * scale_screen, i * 16.0f * scale_screen, 16.0f * scale_screen, 16.0f * scale_screen};
+
+                if (!CheckCollisionRecs(rec_enemy, rec_map))
+                    continue;
+
+                // Va chạm từ trên xuống
+                if (prev.y <= rec_map.y &&
+                    i > 0 &&
+                    Map[j][i - 1] == 0)
+                {
+                    enemy->Set_Pos({enemy->Get_Pos().x, rec_map.y});
+                    enemy->Notify_On_Ground();
+                }
+                // Va chạm từ bên trái
+                else if (prev.x + w / 2.0f <= rec_map.x && !avoid_branch)
+                {
+                    enemy->Set_Pos({rec_map.x - w / 2.0f, enemy->Get_Pos().y});
+                    enemy->Notify_Change_Direct();
+                    avoid_branch = true;
+                }
+                // Va chạm từ bên phải
+                else if (prev.x - w / 2.0f >= rec_map.x + rec_map.width && !avoid_branch)
+                {
+                    enemy->Set_Pos({rec_map.x + rec_map.width + w / 2.0f, enemy->Get_Pos().y});
+                    enemy->Notify_Change_Direct();
+                    avoid_branch = true;
+                }
+            }
+        }
+    }
+}

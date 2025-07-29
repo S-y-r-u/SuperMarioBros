@@ -44,6 +44,8 @@ void Spiny::Draw() const
     DrawTexturePro(sprite_.sprite, src_rec, dest, {dest.width / 2.0f, dest.height}, 0.0f, WHITE);
 }
 
+Vector2 Spiny::Get_Previous_Pos() const { return previous_frame_pos; }
+
 // Được gọi khi Spiny bắt đầu rơi
 void Spiny::Notify_Fall(float dt)
 {

@@ -23,7 +23,7 @@ public:
 
     void Update_() override;
     //
-    void Activate_(Character &character) override;
+    void Activate_(Player &player) override;
 
     void Fall_();
     void Move_();

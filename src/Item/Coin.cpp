@@ -3,8 +3,6 @@
 Coin::Coin(Vector2 pos)
     : Item(pos), m_rec(Item_Sprite::Coin::Blinking::blinking_) {}
 
-void Coin::Appear_() {}
-
 void Coin::Update_()
 {
     frame_++;
@@ -16,7 +14,8 @@ void Coin::Update_()
     rec_ = m_rec[type_];
 }
 
-void Coin::Activate_(Character &character)
+void Coin::Activate_(Player &player)
 {
+    player.collectCoin();
     is_delete = 1;
 }

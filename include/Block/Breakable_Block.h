@@ -10,7 +10,7 @@ private:
     float delta_time;
     Vector2 before_pos;
     Vector2 up_pos_left, down_pos_left;
-    const float Move_ = 2.0f;
+    const float Move_ = 120.0f;
     const float Break_Height = 30.0f;
     float rotation;
     const float Rotation_Speed = 30.0f;
@@ -20,7 +20,7 @@ public:
 
     void Draw_() override;
     void Update_() override;
-    void On_Hit(std::vector<Item*> &item, Character &character) override;
+    void On_Hit(std::vector<Item *> &item, Player &player) override {}
 
     bool Get_Elapse() override;
     bool Get_Is_Delete() const override;

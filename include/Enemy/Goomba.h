@@ -29,6 +29,7 @@ public:
     void Draw() const override;
     void Update(float dt) override;
     void Set_Pos(Vector2 pos) override;
+    Vector2 Get_Previous_Pos() const override;
 
     void Notify_Fall(float dt) override;
     void Notify_On_Ground() override;

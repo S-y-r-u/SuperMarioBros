@@ -4,6 +4,7 @@
 #include "Constants.h"
 #include "Abstract_Block_State.h"
 #include "Item/Spawn_Item.h"
+#include "Player.h"
 
 class Block
 {
@@ -27,7 +28,7 @@ public:
 
     void Update_();
     void Draw_();
-    void On_Hit(std::vector<Item *> &item, Character &character);
+    void On_Hit(std::vector<Item *> &item, Player &player);
 
     void Set_State(A_Block_State *new_state);
 

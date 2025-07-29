@@ -5,6 +5,10 @@ Normal_Block::Normal_Block(Block &block)
 {
     before_pos = m_block.Get_Pos();
     rec_ = Item_Sprite::Brown_Brick::type_2;
+    if (m_block.Get_Type_Item() == "")
+        has_item = 0;
+    else
+        has_item = 1;
 }
 
 void Normal_Block::Draw_()
@@ -29,16 +33,32 @@ void Normal_Block::Update_()
     Change_State();
 }
 
-void Normal_Block::On_Hit(std::vector<Item*> &item, Character &character)
+void Normal_Block::On_Hit(std::vector<Item *> &item, Player &player)
 {
     if (m_block.Get_Item_Count() > 0)
     {
-        Spawn_Item::Item_Spawn(m_block.Get_Type_Item(), item, m_block.Get_Pos(), character);
+        Spawn_Item::Item_Spawn(m_block.Get_Type_Item(), item, m_block.Get_Pos(), player);
         m_block.Decrease_Item();
         elapse_ = true;
         delta_time = 0.0f;
     }
-    change_state = 1;
+    else if (m_block.Get_Item_Count() == 0 && (player.get_form() == PlayerForm::Small || player.get_form() == PlayerForm::Invincible))
+    {
+        elapse_ = true;
+        delta_time = 0.0f;
+    }
+    else
+    {
+        change_state = 1;
+        if (has_item)
+        {
+            is_break = 0;
+            elapse_ = true;
+            delta_time = 0.0f;
+        }
+        else
+            is_break = 1;
+    }
 }
 
 void Normal_Block::Elapse_()
@@ -62,8 +82,19 @@ void Normal_Block::Elapse_()
 
 void Normal_Block::Change_State()
 {
-    if (change_state)
+    if (change_state || is_break)
         m_block.Set_State(m_block.GetBreakableState());
+    else if (change_state || !is_break)
+    {
+        float t_max = 2 * Push_Height / Physics::gravity_;
+
+        if (elapse_ && delta_time >= t_max)
+        {
+            elapse_ = false;
+            m_block.Set_Pos(before_pos);
+            m_block.Set_State(m_block.GetUnbreakableState());
+        }
+    }
 }
 
 Rectangle Normal_Block::Get_Draw_Rec() const { return {m_block.Get_Pos().x - rec_.width * scale_screen / 2.0f, m_block.Get_Pos().y - rec_.height * scale_screen, rec_.width * scale_screen, rec_.height * scale_screen}; }

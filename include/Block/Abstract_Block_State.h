@@ -1,6 +1,7 @@
 #pragma once
 #include "Constants.h"
 #include "Item/Item.h"
+#include "Player.h"
 #include <raylib.h>
 #include <string>
 #include <vector>
@@ -16,7 +17,7 @@ public:
 
     virtual void Draw_() = 0;
     virtual void Update_() = 0;
-    virtual void On_Hit(std::vector<Item *> &item, Character &character) = 0;
+    virtual void On_Hit(std::vector<Item *> &item, Player &player) = 0;
 
     virtual bool Get_Elapse() = 0;
     virtual bool Get_Is_Delete() const;

@@ -11,8 +11,9 @@ void Flower::Update_()
     Appear_();
 }
 
-void Flower::Activate_(Character &character)
+void Flower::Activate_(Player &player)
 {
+    player.getFlower();
     is_delete = 1;
 }
 

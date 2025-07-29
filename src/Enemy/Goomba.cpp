@@ -38,6 +38,8 @@ bool Goomba::Can_Be_Stomped() const { return true; }
 // Cho phép Goomba bị bắn hoặc tấn công
 bool Goomba::Can_Be_Fired_Or_Hit() const { return true; }
 
+Vector2 Goomba::Get_Previous_Pos() const { return previous_frame_pos; }
+
 // Thông báo rằng Goomba bắt đầu rơi
 void Goomba::Notify_Fall(float dt)
 {

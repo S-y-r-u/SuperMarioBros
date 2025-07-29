@@ -13,5 +13,5 @@ public:
     void Update_() override;
     void Appear_() override;
     //
-    void Activate_(Character &character) override;
+    void Activate_(Player &player) override;
 };

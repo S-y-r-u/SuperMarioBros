@@ -22,9 +22,6 @@ void Unbreakable_Block::Draw_()
         WHITE);
 }
 
-void Unbreakable_Block::Update_() {}
-
-void Unbreakable_Block::On_Hit(std::vector<Item *> &item, Character &character) {}
-
 bool Unbreakable_Block::Get_Elapse() { return false; }
+
 Rectangle Unbreakable_Block::Get_Draw_Rec() const { return {m_block.Get_Pos().x - rec_.width * scale_screen / 2.0f, m_block.Get_Pos().y - rec_.height * scale_screen, rec_.width * scale_screen, rec_.height * scale_screen}; }

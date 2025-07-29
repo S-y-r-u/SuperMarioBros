@@ -33,9 +33,9 @@ void Star::Move_()
         return;
     previous_frame_pos = pos_;
     if (direct_)
-        pos_.x += Mush_Room_And_Star_Speed;
+        pos_.x += Mush_Room_And_Star_Speed * GetFrameTime();
     else
-        pos_.x -= Mush_Room_And_Star_Speed;
+        pos_.x -= Mush_Room_And_Star_Speed * GetFrameTime();
     if (pos_.x >= 214 * 48.0f - rec_.width * scale_screen / 2.0f)
     {
         pos_.x = 214 * 48.0f - rec_.width * scale_screen / 2.0f;
@@ -77,8 +77,9 @@ void Star::Update_()
     Be_Delete();
 }
 
-void Star::Activate_(Character &character)
+void Star::Activate_(Player &player)
 {
+    player.getStar();
     is_delete = 1;
 }
 

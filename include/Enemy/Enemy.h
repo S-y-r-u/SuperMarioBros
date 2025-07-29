@@ -22,6 +22,7 @@ public:
 
     virtual void Update(float dt) = 0;
     virtual void Draw() const = 0;
+    virtual Vector2 Get_Previous_Pos() const {}
 
     Rectangle Get_Draw_Rec() const;
     Vector2 Get_Pos() const;

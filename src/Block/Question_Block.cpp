@@ -41,12 +41,12 @@ void Question_Block::Update_()
     Change_State();
 }
 
-void Question_Block::On_Hit(std::vector<Item *> &item, Character &character)
+void Question_Block::On_Hit(std::vector<Item *> &item, Player &player)
 {
     if (m_block.Get_Item_Count() > 0)
     {
         m_block.Decrease_Item();
-        Spawn_Item::Item_Spawn(m_block.Get_Type_Item(), item, m_block.Get_Pos(), character);
+        Spawn_Item::Item_Spawn(m_block.Get_Type_Item(), item, m_block.Get_Pos(), player);
         elapse_ = true;
         delta_time = 0.0f;
     }

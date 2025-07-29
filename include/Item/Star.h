@@ -23,7 +23,7 @@ public:
     void Appear_() override;
     void Update_() override;
     //
-    void Activate_(Character &character) override;
+    void Activate_(Player &player) override;
 
     Vector2 Get_Previous_Frame_Pos() override;
     bool Get_Direct() const;

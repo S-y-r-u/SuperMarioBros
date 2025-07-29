@@ -34,4 +34,7 @@ void HiddenCoin::Appear_()
     pos_.y = before_pos.y + delta_y;
 }
 
-void HiddenCoin::Activate_(Character &character) {}
+void HiddenCoin::Activate_(Player &player)
+{
+    player.collectCoin();
+}

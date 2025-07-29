@@ -28,7 +28,8 @@ public:
 
     void Update(float dt) override;
     void Draw() const override;
-
+    Vector2 Get_Previous_Pos() const override;
+    
     void Notify_Fall(float dt) override;
     void Notify_On_Ground() override;
     void Notify_Jump();

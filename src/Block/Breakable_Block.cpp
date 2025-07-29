@@ -48,8 +48,6 @@ void Breakable_BLock::Update_()
     Be_Delete();
 }
 
-void Breakable_BLock::On_Hit(std::vector<Item *> &item, Character &character) {}
-
 bool Breakable_BLock::Get_Elapse() { return false; }
 
 bool Breakable_BLock::Get_Is_Delete() const { return is_delete; }
@@ -62,10 +60,10 @@ void Breakable_BLock::Fall_()
     float down_delta_y = 0.5f * delta_time * delta_time * Physics::gravity_;
 
     up_pos_left.y = before_pos.y + up_delta_y;
-    up_pos_left.x -= Move_;
+    up_pos_left.x -= Move_ * GetFrameTime();
 
     down_pos_left.y = before_pos.y + down_delta_y;
-    down_pos_left.x -= Move_;
+    down_pos_left.x -= Move_ * GetFrameTime();
 
     rotation += Rotation_Speed;
     if (rotation >= 360.0f)

@@ -55,9 +55,9 @@ void Mush_Room::Jump_()
     float deltaY = -Mushroom_Ini_Velo * delta_time + 0.5 * delta_time * delta_time * Physics::gravity_;
     pos_.y = before_pos.y + deltaY;
     if (direct_)
-        pos_.x += Mush_Room_And_Star_Speed;
+        pos_.x += Mush_Room_And_Star_Speed * GetFrameTime();
     else
-        pos_.x -= Mush_Room_And_Star_Speed;
+        pos_.x -= Mush_Room_And_Star_Speed * GetFrameTime();
 }
 
 void Mush_Room::Fall_()
@@ -76,9 +76,9 @@ void Mush_Room::Move_()
         return;
     previous_frame_pos = pos_;
     if (direct_)
-        pos_.x += Mush_Room_And_Star_Speed;
+        pos_.x += Mush_Room_And_Star_Speed * GetFrameTime();
     else
-        pos_.x -= Mush_Room_And_Star_Speed;
+        pos_.x -= Mush_Room_And_Star_Speed * GetFrameTime();
     if (pos_.x >= 214 * 48.0f - rec_.width * scale_screen / 2.0f)
     {
         pos_.x = 214 * 48.0f - rec_.width * scale_screen / 2.0f;
@@ -120,8 +120,9 @@ void Mush_Room::Update_()
     Be_Delete();
 }
 
-void Mush_Room::Activate_(Character &character)
+void Mush_Room::Activate_(Player &player)
 {
+    player.getMushroom();
     is_delete = 1;
 }
 

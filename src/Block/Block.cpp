@@ -37,9 +37,9 @@ void Block::Update_()
     current_state_->Update_();
 }
 
-void Block::On_Hit(std::vector<Item *> &item, Character &character)
+void Block::On_Hit(std::vector<Item *> &item, Player &player)
 {
-    current_state_->On_Hit(item, character);
+    current_state_->On_Hit(item, player);
 }
 
 void Block::Set_State(A_Block_State *new_state)
