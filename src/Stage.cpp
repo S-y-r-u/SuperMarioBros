@@ -1,4 +1,5 @@
 #include "Stage.h"
+#include "algorithm"
 
 Stage::Stage()
 {
@@ -44,7 +45,7 @@ void Stage::Run()
     Check_Player_Vs_Ground();
     player->update(GetFrameTime());
 
-    camera.target = player->getPosition();
+    camera.target.x = std::max(camera.target.x, player->getPosition().x - Screen_w / 2.0f);
 
     Check_Item_Vs_Ground();
     Check_Item_Vs_Block();
