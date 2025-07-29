@@ -10,6 +10,8 @@
 #include "Enemy/Enemy.h"
 #include "Enemy/Goomba.h"
 #include "Enemy/Latiku.h"
+#include "Enemy/PiranhaPlant.h"
+#include "Enemy/KoopaTroopa.h"
 #include <vector>
 #include <algorithm>
 

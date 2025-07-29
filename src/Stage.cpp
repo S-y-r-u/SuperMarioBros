@@ -332,7 +332,8 @@ void Stage::Check_Enemy_Vs_Ground()
     {
         if (Latiku *latiku = dynamic_cast<Latiku *>(enemy))
             continue;
-
+        if(PiranhaPlant *piranha = dynamic_cast<PiranhaPlant *>(enemy))
+            continue;
         if (!enemy || !enemy->Get_Is_Active() || enemy->Get_Is_Dead())
             continue;
 

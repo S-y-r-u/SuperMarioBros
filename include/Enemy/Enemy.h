@@ -32,10 +32,12 @@ public:
 
     virtual bool Can_Be_Stomped() const = 0;
     virtual bool Can_Be_Fired_Or_Hit() const = 0;
+    virtual bool Can_Be_Kicked() const { return false; };
 
     virtual void Notify_Fall(float dt);
     virtual void Notify_On_Ground();
     void Notify_Change_Direct();
     virtual void Notify_Be_Stomped() {}
     virtual void Notify_Be_Fired_Or_Hit() {}
+    virtual void Notify_Be_Kicked(int direction) {}
 };
