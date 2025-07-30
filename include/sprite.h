@@ -344,8 +344,10 @@ namespace Mario_Sprite
             extern Rectangle h8;
             extern Rectangle h9;
             extern Rectangle h10;
-            //
+            extern Rectangle h10;
             extern Rectangle h11;
+            //
+            extern Rectangle h12;
             extern std::vector<Rectangle> hit_;
         }
     }
@@ -509,8 +511,10 @@ namespace Mario_Sprite
             extern Rectangle h8;
             extern Rectangle h9;
             extern Rectangle h10;
-            //
             extern Rectangle h11;
+            extern Rectangle h12;
+            //
+            extern Rectangle h13;
             extern std::vector<Rectangle> hit_;
         }
     }
@@ -680,8 +684,6 @@ namespace Luigi_Sprite
             // x2
             extern Rectangle s14;
             extern Rectangle s15;
-            extern Rectangle s16;
-            extern Rectangle s17;
             //
             extern std::vector<Rectangle> small_to_super;
         }
@@ -848,8 +850,10 @@ namespace Luigi_Sprite
             extern Rectangle h8;
             extern Rectangle h9;
             extern Rectangle h10;
-            //
             extern Rectangle h11;
+            extern Rectangle h12;
+            //
+            extern Rectangle h13;
             extern std::vector<Rectangle> hit_;
         }
     }
@@ -1013,8 +1017,10 @@ namespace Luigi_Sprite
             extern Rectangle h8;
             extern Rectangle h9;
             extern Rectangle h10;
-            //
             extern Rectangle h11;
+            extern Rectangle h12;
+            //
+            extern Rectangle h13;
             extern std::vector<Rectangle> hit_;
         }
     }
