@@ -26,7 +26,7 @@ void Question_Block::Draw_()
 void Question_Block::Animation_()
 {
     frame_++;
-    if (frame_ >= 10)
+    if (frame_ >= 12)
     {
         type_ = (type_ + 1) % m_rec.size();
         frame_ = 0;

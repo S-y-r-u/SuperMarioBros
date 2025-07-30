@@ -7,7 +7,7 @@ private:
     float delta_time;
     Vector2 before_pos;
     std::vector<Rectangle> m_rec;
-    const float Push_Height = 48.0f;
+    const float Push_Height = 60.0f;
 
 public:
     HiddenCoin(Vector2 pos);

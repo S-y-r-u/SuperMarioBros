@@ -5,6 +5,7 @@ Coin::Coin(Vector2 pos)
 
 void Coin::Update_()
 {
+    appear_animation = 0;
     frame_++;
     if (frame_ >= 10)
     {

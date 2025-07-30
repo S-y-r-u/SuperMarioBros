@@ -10,7 +10,7 @@ private:
     float delta_time;
     bool elapse_;
     bool change_state;
-    bool has_item, is_break;
+    bool is_break;
 
 public:
     Normal_Block(Block &m_block);

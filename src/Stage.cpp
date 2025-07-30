@@ -55,8 +55,21 @@ void Stage::Run()
     {
         Rectangle player_rec = player->get_draw_rec();
         Rectangle rec_item = item->Get_Draw_Rec();
-        if (CheckCollisionRecs(player_rec, rec_item))
+        if (CheckCollisionRecs(player_rec, rec_item) && !item->Is_Appear_Animation())
             item->Activate_(*player);
+    }
+
+    for (Block *block : blocks)
+    {
+        Rectangle player_rec = player->get_draw_rec();
+        Rectangle rec_block = block->Get_Draw_Rec();
+        if (CheckCollisionRecs(player_rec, rec_block))
+        {
+            block->On_Hit(items, *player);
+            player->Set_Pos({player->getPosition().x, rec_block.y + rec_block.width + 1.0f});
+            player->Set_Velocity({player->get_Velocity().x, 0.0f});
+            break;
+        }
     }
 
     for (size_t i = 0; i < items.size();)
@@ -332,7 +345,7 @@ void Stage::Check_Enemy_Vs_Ground()
     {
         if (Latiku *latiku = dynamic_cast<Latiku *>(enemy))
             continue;
-        if(PiranhaPlant *piranha = dynamic_cast<PiranhaPlant *>(enemy))
+        if (PiranhaPlant *piranha = dynamic_cast<PiranhaPlant *>(enemy))
             continue;
         if (!enemy || !enemy->Get_Is_Active() || enemy->Get_Is_Dead())
             continue;

@@ -6,9 +6,9 @@ Normal_Block::Normal_Block(Block &block)
     before_pos = m_block.Get_Pos();
     rec_ = Item_Sprite::Brown_Brick::type_2;
     if (m_block.Get_Type_Item() == "")
-        has_item = 0;
+        is_break = 1;
     else
-        has_item = 1;
+        is_break = 0;
 }
 
 void Normal_Block::Draw_()
@@ -41,6 +41,11 @@ void Normal_Block::On_Hit(std::vector<Item *> &item, Player &player)
         m_block.Decrease_Item();
         elapse_ = true;
         delta_time = 0.0f;
+        if (m_block.Get_Item_Count() == 0)
+        {
+            change_state = 1;
+            return;
+        }
     }
     else if (m_block.Get_Item_Count() == 0 && (player.get_form() == PlayerForm::Small || player.get_form() == PlayerForm::Invincible))
     {
@@ -50,14 +55,6 @@ void Normal_Block::On_Hit(std::vector<Item *> &item, Player &player)
     else
     {
         change_state = 1;
-        if (has_item)
-        {
-            is_break = 0;
-            elapse_ = true;
-            delta_time = 0.0f;
-        }
-        else
-            is_break = 1;
     }
 }
 
@@ -71,28 +68,29 @@ void Normal_Block::Elapse_()
     Vector2 tmp = m_block.Get_Pos();
     tmp.y = before_pos.y + delta_y;
     m_block.Set_Pos(tmp);
-
-    float t_max = 2 * Push_Height / Physics::gravity_;
-    if (delta_time >= t_max)
-    {
-        elapse_ = false;
-        m_block.Set_Pos(before_pos);
-    }
 }
 
 void Normal_Block::Change_State()
 {
-    if (change_state || is_break)
+    float t_max = 2 * Push_Height / Physics::gravity_;
+    
+    if (change_state && is_break)
         m_block.Set_State(m_block.GetBreakableState());
-    else if (change_state || !is_break)
+    else if (change_state && !is_break)
     {
-        float t_max = 2 * Push_Height / Physics::gravity_;
-
         if (elapse_ && delta_time >= t_max)
         {
             elapse_ = false;
             m_block.Set_Pos(before_pos);
             m_block.Set_State(m_block.GetUnbreakableState());
+        }
+    }
+    else
+    {
+        if (delta_time >= t_max)
+        {
+            elapse_ = false;
+            m_block.Set_Pos(before_pos);
         }
     }
 }

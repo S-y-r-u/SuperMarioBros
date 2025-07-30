@@ -25,6 +25,7 @@ void Flower::Appear_()
     if (pos_.y <= before_pos.y - Tile_Size)
     {
         is_appear = 1;
+        appear_animation = 0;
         pos_.y = before_pos.y - Tile_Size;
     }
 }

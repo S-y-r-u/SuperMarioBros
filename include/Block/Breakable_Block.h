@@ -11,9 +11,9 @@ private:
     Vector2 before_pos;
     Vector2 up_pos_left, down_pos_left;
     const float Move_ = 120.0f;
-    const float Break_Height = 30.0f;
+    const float Break_Height = 45.0f;
     float rotation;
-    const float Rotation_Speed = 30.0f;
+    const float Rotation_Speed = 20.0f;
 
 public:
     Breakable_BLock(Block &block);

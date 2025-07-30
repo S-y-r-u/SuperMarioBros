@@ -114,7 +114,7 @@ void Latiku::Be_Fired_Or_Hit()
 {
     if (state_ == Latiku_State::be_fired_or_hit)
     {
-        delta_time += 0.12f;
+        delta_time += 0.14f;
 
         // Phương trình rơi tự do: y = y0 + v0*t + 0.5*g*t^2
         float deltaY = -Push_Height * delta_time + 0.5f * delta_time * delta_time * Physics::gravity_;

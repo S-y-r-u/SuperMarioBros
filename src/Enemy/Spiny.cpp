@@ -187,7 +187,7 @@ void Spiny::Jump_(float dt)
         return;
 
     previous_frame_pos = position_;
-    delta_time += 0.16f;
+    delta_time += 0.18f;
 
     float deltaY = -Ini_Velo * delta_time + 0.5 * delta_time * delta_time * Physics::gravity_;
     position_.y = before_pos.y + deltaY;

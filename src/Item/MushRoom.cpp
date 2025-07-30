@@ -22,7 +22,7 @@ Mush_Room::Mush_Room(Vector2 pos, State_MushRoom state)
 
 void Mush_Room::Notify_Fall()
 {
-    if (!jump_)
+    if (!jump_ && !fall_)
     {
         fall_ = 1;
         before_pos = pos_;
