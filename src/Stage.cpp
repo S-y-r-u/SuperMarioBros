@@ -28,13 +28,13 @@ void Stage::Run()
 {
     if (IsKeyPressed(KEY_A))
         Keyboard.emplace_back(KEY_A);
-    else if (IsKeyReleased(KEY_A))
+    if (IsKeyReleased(KEY_A))
         Keyboard.erase(std::remove(Keyboard.begin(), Keyboard.end(), KEY_A), Keyboard.end());
-    else if (IsKeyPressed(KEY_D))
+    if (IsKeyPressed(KEY_D))
         Keyboard.emplace_back(KEY_D);
-    else if (IsKeyReleased(KEY_D))
+    if (IsKeyReleased(KEY_D))
         Keyboard.erase(std::remove(Keyboard.begin(), Keyboard.end(), KEY_D), Keyboard.end());
-    else if (IsKeyPressed(KEY_W))
+    if (IsKeyPressed(KEY_W))
         player->Jump();
     if (Keyboard.empty())
         player->StopMoving();
