@@ -46,7 +46,8 @@ void Stage::Run()
     player->update(GetFrameTime());
 
     camera.target.x = std::max(camera.target.x, player->getPosition().x - Screen_w / 2.0f);
-
+    Check_Block_Vs_Block();
+    Check_Player_Vs_Block();
     Check_Item_Vs_Ground();
     Check_Item_Vs_Block();
     Check_Enemy_Vs_Ground();
@@ -59,18 +60,6 @@ void Stage::Run()
             item->Activate_(*player);
     }
 
-    for (Block *block : blocks)
-    {
-        Rectangle player_rec = player->get_draw_rec();
-        Rectangle rec_block = block->Get_Draw_Rec();
-        if (CheckCollisionRecs(player_rec, rec_block))
-        {
-            block->On_Hit(items, *player);
-            player->Set_Pos({player->getPosition().x, rec_block.y + rec_block.width + 1.0f});
-            player->Set_Velocity({player->get_Velocity().x, 0.0f});
-            break;
-        }
-    }
 
     for (size_t i = 0; i < items.size();)
     {
@@ -121,6 +110,85 @@ void Stage::Draw()
     for (Enemy *enemy : enemies)
         enemy->Draw();
     EndMode2D();
+}
+
+void Stage::Check_Player_Vs_Block()
+{
+    Rectangle preRec = player->get_draw_rec();
+    Vector2 prevPos = player->getPosition();
+    Vector2 velocity = player->get_Velocity();
+    float deltaTime = GetFrameTime();
+
+    Vector2 sufPos = prevPos;
+    sufPos.x += velocity.x * deltaTime;
+    velocity.y += 500.0f * deltaTime; // Gravity effect
+    sufPos.y += velocity.y * deltaTime;
+    Rectangle playerRec = {sufPos.x, sufPos.y, preRec.width, preRec.height};
+
+    bool isOnGround = player->Get_isGround(); // Lấy trạng thái hiện tại
+    Vector2 correctedPos = sufPos;
+    for (Block *block : blocks)
+    {
+        Rectangle rec_map = block->Get_Draw_Rec();
+        if (!CheckCollisionRecs(playerRec, rec_map))
+            continue;
+
+        // Tính toán độ sâu va chạm
+        float overlapX = std::min(playerRec.x + playerRec.width - rec_map.x,
+                                    rec_map.x + rec_map.width - playerRec.x);
+        float overlapY = std::min(playerRec.y + playerRec.height - rec_map.y,
+                                    rec_map.y + rec_map.height - playerRec.y);
+        // std::cout << isOnGround << " " << overlapX << " " << overlapY << std::endl;
+
+        // Xác định hướng va chạm
+        if (overlapX < overlapY)
+        {
+            // Va chạm ngang
+            if (playerRec.x < rec_map.x )
+            {
+                if (!block->Surrounded_Block[2])
+                {
+                    // Va chạm từ bên trái
+                    correctedPos.x = rec_map.x - playerRec.width;
+                    velocity.x = 0;
+                }
+            }
+            else 
+            {
+                if (!block->Surrounded_Block[3])
+                {   
+                // Va chạm từ bên phải
+                correctedPos.x = rec_map.x + rec_map.width;
+                velocity.x = 0;
+                }
+            }
+        }
+        else
+        {
+            // Va chạm dọc
+            if (playerRec.y < rec_map.y && velocity.y >= 0 && !block->Surrounded_Block[0])
+            {
+                // Va chạm từ trên xuống (đáp xuống mặt đất)
+                correctedPos.y = rec_map.y - playerRec.height;
+                velocity.y = 0.f;
+                isOnGround = true;
+
+            }
+            else if (playerRec.y > rec_map.y  && !block->Surrounded_Block[1] && velocity.y < 0)
+            {
+                // Va chạm từ dưới lên (đụng đầu)
+                correctedPos.y = rec_map.y + rec_map.height;
+                velocity.y = 0.f;
+                block->On_Hit(items, *player);
+            }
+            // Nếu đang nhảy (velocity.y < 0) và chạm cạnh trên, không đặt isOnGround
+        }
+    }
+
+    // Cập nhật trạng thái player
+    player->Set_Pos(correctedPos);
+    player->Set_Velocity(velocity);
+    player->Set_isGround(isOnGround);
 }
 
 void Stage::Check_Player_Vs_Ground()
@@ -398,3 +466,48 @@ void Stage::Check_Enemy_Vs_Ground()
         }
     }
 }
+
+void Stage::Check_Block_Vs_Block()
+{
+    const float Tile_Size = 16.0f * 3.0f; // scale_screen = 3.0f
+    
+    for (Block *mainblock : blocks) {
+        // Reset surrounded blocks state
+        mainblock->Surrounded_Block = {false, false, false, false}; // top, bottom, left, right
+        
+        Vector2 mainPos = mainblock->Get_Pos();
+        
+        for (Block *block : blocks) {
+            if (mainblock == block) continue; // Skip checking with itself
+            
+            Vector2 blockPos = block->Get_Pos();
+            
+            // Calculate position differences
+            float dx = blockPos.x - mainPos.x;
+            float dy = blockPos.y - mainPos.y;
+            
+            // Check if blocks are adjacent (within tile size tolerance)
+            const float tolerance = Tile_Size * 0.1f; // Small tolerance for floating point comparison
+            
+            // Check top (block above mainblock)
+            if (abs(dx) <= tolerance && dy < 0 && abs(dy) <= Tile_Size + tolerance) {
+                mainblock->Surrounded_Block[0] = true; // top
+            }
+            // Check bottom (block below mainblock) 
+            else if (abs(dx) <= tolerance && dy > 0 && abs(dy) <= Tile_Size + tolerance) {
+                mainblock->Surrounded_Block[1] = true; // bottom
+            }
+            // Check left (block to the left of mainblock)
+            else if (abs(dy) <= tolerance && dx < 0 && abs(dx) <= Tile_Size + tolerance) {
+                mainblock->Surrounded_Block[2] = true; // left
+            }
+            // Check right (block to the right of mainblock)
+            else if (abs(dy) <= tolerance && dx > 0 && abs(dx) <= Tile_Size + tolerance) {
+                mainblock->Surrounded_Block[3] = true; // right
+            }
+        }
+    }
+}
+
+
+

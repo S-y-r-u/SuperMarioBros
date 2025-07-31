@@ -87,7 +87,8 @@ void Player :: update(float dt){
         else state = AnimationState :: Stance;
     }
     else state = AnimationState :: Jump;
-
+    if (currentFrame >= getAnimationFrame().size())
+        currentFrame = 0;
     frameTimer += dt;
     if(frameTimer >= animationSpeed){
         frameTimer = 0.0f;

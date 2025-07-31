@@ -43,4 +43,5 @@ public:
     void Check_Enemy_Vs_Ground();
     void Check_Item_Vs_Block();
     void Check_Item_Vs_Ground();
+    void Check_Block_Vs_Block();
 };

@@ -25,7 +25,7 @@ private:
 public:
     Block(Vector2 pos, int item_count, const std::string &type_item, const std::string &type_block);
     ~Block();
-
+    std::vector<bool> Surrounded_Block{0,0,0,0}; // top bot left right
     void Update_();
     void Draw_();
     void On_Hit(std::vector<Item *> &item, Player &player);
