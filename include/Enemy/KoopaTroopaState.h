@@ -9,7 +9,7 @@ public:
     virtual void Exit(KoopaTroopa* koopa) {}
     virtual void Update(KoopaTroopa* koopa, float dt) = 0;
     virtual void OnStomped(KoopaTroopa* koopa) {}
-    virtual void OnFired(KoopaTroopa* koopa) {}
+    virtual void OnFired(KoopaTroopa* koopa) ;
 };
 
 // ------ WALKING ------
@@ -39,13 +39,15 @@ public:
 // ------ DYING ------
 class KoopaDyingState : public KoopaState {
 private:
-    float dying_timer = 0.5f;
+    float dying_down_timer = 3.0f;
+    float dying_up_timer = 0.2f;
 
 public:
     void Enter(KoopaTroopa* koopa) override;
     void Update(KoopaTroopa* koopa, float dt) override;
 };
 
+// ------ FLYING ------
 class KoopaFlyingState : public KoopaState {
 private:
     float fly_timer = 0.0f;

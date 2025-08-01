@@ -1,6 +1,11 @@
 #include "Enemy/KoopaTroopaState.h"
 #include "Enemy/KoopaTroopa.h"
 
+// Common function 
+void KoopaState::OnFired(KoopaTroopa* koopa) {
+    koopa->SetState(new KoopaDyingState());
+}
+
 // ---------- WALKING ----------
 void KoopaWalkingState::Enter(KoopaTroopa* koopa) {
     koopa->rec_ = koopa->walking_frames_[0];
@@ -28,7 +33,7 @@ void KoopaWalkingState::OnStomped(KoopaTroopa* koopa) {
 // ---------- SHELL IDLE ----------
 void KoopaShellIdleState::Enter(KoopaTroopa* koopa) {
     koopa->rec_ = koopa->shell_idle_frames_[0];
-    koopa->velocity_.y = 20.f; // dừng lại
+    koopa->velocity_.y = 100.f; // dừng lại
     koopa->velocity_.x = 0;
     koopa->current_frame = 0;
     koopa->frame_timer = 0;
@@ -56,7 +61,7 @@ void KoopaShellIdleState::OnStomped(KoopaTroopa* koopa) {
 // ---------- SHELL MOVING ----------
 void KoopaShellMovingState::Enter(KoopaTroopa* koopa) {
     koopa->rec_ = koopa->shell_moving_frames_[0];
-    koopa->velocity_.x = (koopa->velocity_.x >= 0) ? 200.0f : -200.0f;
+    koopa->velocity_.x = (koopa->velocity_.x >= 0) ? 500.0f : -500.0f;
     koopa->velocity_.y = 0; // dừng lại
     koopa->current_frame = 0;
     koopa->frame_timer = 0;
@@ -65,7 +70,6 @@ void KoopaShellMovingState::Enter(KoopaTroopa* koopa) {
 void KoopaShellMovingState::Update(KoopaTroopa* koopa, float dt) {
     koopa->frame_timer ++;
     if (koopa->frame_timer >= 12) {
-        std::cout << koopa->velocity_.x << std::endl;
         koopa->current_frame = (koopa->current_frame + 1) % koopa->shell_moving_frames_.size();
         koopa->rec_ = koopa->shell_moving_frames_[koopa->current_frame];
         koopa->frame_timer = 0;
@@ -82,15 +86,23 @@ void KoopaShellMovingState::OnStomped(KoopaTroopa* koopa) {
 void KoopaDyingState::Enter(KoopaTroopa* koopa) {
     koopa->rec_ = koopa->be_dying_frame_;
     koopa->velocity_.x = 0;
-    koopa->velocity_.y = 200.0f; // rơi xuống
+    koopa->velocity_.y = -800.0f; //upward movement
     koopa->is_dead = true;
 }
 
 void KoopaDyingState::Update(KoopaTroopa* koopa, float dt) {
     // gravity đã xử lý ngoài
-    dying_timer -= dt;
-    if (dying_timer <= 0.0f) {
+
+    if (dying_up_timer > 0.0f) dying_up_timer -= dt;
+    if (dying_up_timer <= 0.0f) dying_down_timer -= dt;
+    if (dying_down_timer <= 0.0f) {
         koopa->is_active = false;
+    }
+    if (dying_up_timer > 0.0f) {
+        koopa->velocity_.y = -800.0f; // upward movement
+    }
+    else if (dying_up_timer <= 0.0f) {
+        koopa->velocity_.y = 800.0f; // downward movement
     }
 }
 

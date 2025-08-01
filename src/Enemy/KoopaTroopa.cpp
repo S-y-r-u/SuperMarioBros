@@ -42,7 +42,9 @@ void KoopaTroopa::Notify_Fall(float dt) {
 void KoopaTroopa::Update(float dt) {
     if (!is_active) return;
     // Apply velocity to position
-    // std::cout << velocity_.y << std::endl;
+    if (is_dead) {
+        if (current_state_) current_state_->Update(this, dt);
+    }
     before_pos_ = position_; // Lưu vị trí trước khi cập nhật
     position_ = Vector2Add(position_, Vector2Scale(velocity_, dt));
 
@@ -61,20 +63,23 @@ void KoopaTroopa::Draw() const {
 }
 
 void KoopaTroopa::Notify_Be_Stomped() {
+    if (!Get_Is_Active() || Get_Is_Dead()) return;
     if (current_state_) current_state_->OnStomped(this);
 }
 
 void KoopaTroopa::Notify_Be_Fired_Or_Hit() {
+    if (!Get_Is_Active() || Get_Is_Dead()) return;
     if (current_state_) current_state_->OnFired(this);
 }
 
 void KoopaTroopa::Set_Pos(Vector2 pos) {
+    if (!Get_Is_Active() || Get_Is_Dead()) return;
     position_ = pos;
 }
 
 
 void KoopaTroopa::Notify_Be_Kicked(int direction) {
-    // direction: 1 for right, -1 for left{
+    // direction: 1 for right, -1 for left
     if (current_state_ && Can_Be_Kicked()) {
         velocity_.x = 200.0f * direction; // Set velocity based on kick direction
         SetState(new KoopaShellMovingState()); // Chuyển sang trạng thái shell
@@ -82,7 +87,7 @@ void KoopaTroopa::Notify_Be_Kicked(int direction) {
 }
 
 bool KoopaTroopa::Can_Be_Kicked() const {
-    return !(dynamic_cast<KoopaShellMovingState*>(current_state_) == nullptr);
+    return (dynamic_cast<KoopaShellIdleState*>(current_state_) != nullptr);
 }
 
 void KoopaTroopa::Notify_On_Ground() {
