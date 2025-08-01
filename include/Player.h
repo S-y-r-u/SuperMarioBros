@@ -13,12 +13,14 @@ class Player : public Character{
         AnimationState state;
         float JumpForce;
         float friction;
+
         bool isTransforming;
         PlayerForm targetForm;
-
+        Rectangle previous_frame_rec ;
         int currentFrame;
         float frameTimer;
         float animationSpeed;
+
         virtual std::vector<Rectangle>& getAnimationFrame() const = 0;
 
     public:
@@ -26,6 +28,7 @@ class Player : public Character{
         virtual ~Player();
 
         Rectangle get_draw_rec() override;
+        Rectangle Get_Previous_Rec() override;
         AnimationState get_state() const;
         PlayerForm get_form() const;
         Vector2 get_Velocity() const { return velocity; }

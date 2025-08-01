@@ -116,19 +116,22 @@ void Stage::Draw()
 
 void Stage::Check_Player_Vs_Block()
 {
-    Rectangle preRec = player->get_draw_rec();
+    // rectangle của frame trước
+    Rectangle preRec = player->Get_Previous_Rec();
+
+    // current Rectangle
+    Rectangle currentRec = player->get_draw_rec();
     Vector2 prevPos = player->getPosition();
     Vector2 velocity = player->get_Velocity();
     float deltaTime = GetFrameTime();
 
+    // compute next
     Vector2 sufPos = prevPos;
     sufPos.x += velocity.x * deltaTime;
     velocity.y += 500.0f * deltaTime; // Gravity effect
     sufPos.y += velocity.y * deltaTime;
-    Rectangle playerRec = {sufPos.x, sufPos.y, preRec.width, preRec.height};
+    Rectangle playerRec = {sufPos.x, sufPos.y, currentRec.width, currentRec.height};
 
-    bool isOnGround = player->Get_isGround(); // Lấy trạng thái hiện tại
-    Vector2 correctedPos = sufPos;
     for (Block *block : blocks)
     {
         Rectangle rec_map = block->Get_Draw_Rec();
@@ -143,16 +146,16 @@ void Stage::Check_Player_Vs_Block()
         // std::cout << isOnGround << " " << overlapX << " " << overlapY << std::endl;
 
         // Xác định hướng va chạm
-        if (overlapX < overlapY)
+        if (overlapX < overlapY && velocity.x != 0)
         {
             // Va chạm ngang
-            if (playerRec.x < rec_map.x )
+            if ( prevPos.x + preRec.width <= rec_map.x)
             {
                 if (!block->Surrounded_Block[2])
                 {
                     // Va chạm từ bên trái
-                    correctedPos.x = rec_map.x - playerRec.width;
-                    velocity.x = 0;
+                    player->Set_Pos({rec_map.x - playerRec.width, player->getPosition().y});
+                    player->Set_Velocity({0, player->get_Velocity().y});
                 }
             }
             else 
@@ -160,53 +163,50 @@ void Stage::Check_Player_Vs_Block()
                 if (!block->Surrounded_Block[3])
                 {   
                 // Va chạm từ bên phải
-                correctedPos.x = rec_map.x + rec_map.width;
-                velocity.x = 0;
+                player->Set_Pos({rec_map.x + rec_map.width, player->getPosition().y});
+                player->Set_Velocity({0, player->get_Velocity().y});
                 }
             }
         }
         else
         {
             // Va chạm dọc
-            if (playerRec.y < rec_map.y && velocity.y >= 0 && !block->Surrounded_Block[0])
+            if (prevPos.y + preRec.height < rec_map.y && !block->Surrounded_Block[0] && player->get_Velocity().y >= 0)
             {
                 // Va chạm từ trên xuống (đáp xuống mặt đất)
-                correctedPos.y = rec_map.y - playerRec.height;
-                velocity.y = 0.f;
-                isOnGround = true;
+                player->Set_Pos({player->getPosition().x, rec_map.y - playerRec.height});
+                player->Set_Velocity({player->get_Velocity().x, 0.f});
+                player->Set_isGround(true);
 
             }
-            else if (playerRec.y > rec_map.y  && !block->Surrounded_Block[1] && velocity.y < 0)
+            else if (prevPos.y > rec_map.y + rec_map.height  && !block->Surrounded_Block[1] && player->get_Velocity().y < 0)
             {
                 // Va chạm từ dưới lên (đụng đầu)
-                correctedPos.y = rec_map.y + rec_map.height;
-                velocity.y = 0.f;
+                player->Set_Pos({player->getPosition().x, rec_map.y + rec_map.height});
+                player->Set_Velocity({player->get_Velocity().x, 0.f});
                 block->On_Hit(items, *player);
             }
-            // Nếu đang nhảy (velocity.y < 0) và chạm cạnh trên, không đặt isOnGround
         }
     }
-
-    // Cập nhật trạng thái player
-    player->Set_Pos(correctedPos);
-    player->Set_Velocity(velocity);
-    player->Set_isGround(isOnGround);
 }
 
 void Stage::Check_Player_Vs_Ground()
 {
-    Rectangle preRec = player->get_draw_rec();
+    // rectangle của frame trước
+    Rectangle preRec = player->Get_Previous_Rec();
+
+    // current Rectangle
+    Rectangle currentRec = player->get_draw_rec();
     Vector2 prevPos = player->getPosition();
     Vector2 velocity = player->get_Velocity();
     float deltaTime = GetFrameTime();
 
+    // compute next
     Vector2 sufPos = prevPos;
     sufPos.x += velocity.x * deltaTime;
     velocity.y += 500.0f * deltaTime; // Gravity effect
     sufPos.y += velocity.y * deltaTime;
-
-    bool isOnGround = player->Get_isGround(); // Lấy trạng thái hiện tại
-    Vector2 correctedPos = sufPos;
+    Rectangle playerRec = {sufPos.x, sufPos.y, currentRec.width, currentRec.height};
     for (int i = 0; i < sizeof(Map[0]) / sizeof(Map[0][0]); i++)
     {
         for (int j = 0; j < sizeof(Map) / sizeof(Map[0]); j++)
@@ -216,8 +216,6 @@ void Stage::Check_Player_Vs_Ground()
                 continue;
 
             Rectangle rec_map = {j * 16.0f * scale_screen, i * 16.0f * scale_screen, 16.0f * scale_screen, 16.0f * scale_screen};
-
-            Rectangle playerRec = {sufPos.x, sufPos.y, preRec.width, preRec.height};
             if (!CheckCollisionRecs(playerRec, rec_map))
                 continue;
 
@@ -226,51 +224,51 @@ void Stage::Check_Player_Vs_Ground()
                                       rec_map.x + rec_map.width - playerRec.x);
             float overlapY = std::min(playerRec.y + playerRec.height - rec_map.y,
                                       rec_map.y + rec_map.height - playerRec.y);
-            // std::cout << isOnGround << " " << overlapX << " " << overlapY << std::endl;
 
             // Xác định hướng va chạm
-            if (overlapX < overlapY)
+            if (overlapX < overlapY && velocity.x != 0)
             {
                 // Va chạm ngang
-                if (playerRec.x < rec_map.x)
+                if ( prevPos.x + preRec.width < rec_map.x  )
                 {
                     // Va chạm từ bên trái
-                    correctedPos.x = rec_map.x - playerRec.width;
-                    velocity.x = 0;
+                    if (Map[j-1][i] == 0)
+                    {
+                        player->Set_Pos({rec_map.x - currentRec.width, player->getPosition().y});
+                        player->Set_Velocity({0, player->get_Velocity().y});
+                    }
                 }
-                else
-                {
+                else{
                     // Va chạm từ bên phải
-                    correctedPos.x = rec_map.x + rec_map.width;
-                    velocity.x = 0;
+                    if (Map[j+1][i] == 0)
+                    {
+                        player->Set_Pos({rec_map.x + rec_map.width , player->getPosition().y});
+                        player->Set_Velocity({0, player->get_Velocity().y});
+                    }
                 }
             }
             else
             {
                 // Va chạm dọc
-                if (playerRec.y < rec_map.y && velocity.y >= 0 && Map[j][i - 1] == 0)
-                {
+                if (prevPos.y + preRec.height < rec_map.y && Map[j][i-1] == 0 && player->get_Velocity().y >= 0)
+                {  
                     // Va chạm từ trên xuống (đáp xuống mặt đất)
-                    correctedPos.y = rec_map.y - playerRec.height;
-                    velocity.y = 0.f;
-                    isOnGround = true;
+                    player->Set_Pos({player->getPosition().x, rec_map.y - currentRec.height});
+                    player->Set_Velocity({player->get_Velocity().x, -500.0f * deltaTime});
+                    player->Set_isGround(true);
                 }
-                else if (playerRec.y > rec_map.y && Map[j][i + 1] == 0)
+                else if (prevPos.y > rec_map.y + rec_map.height && Map[j][i+1] == 0 && player->get_Velocity().y < 0)
                 {
                     // Va chạm từ dưới lên (đụng đầu)
-                    correctedPos.y = rec_map.y + rec_map.height;
-                    velocity.y = 0.f;
+                    player->Set_Pos({player->getPosition().x, rec_map.y + rec_map.height});
+                    player->Set_Velocity({player->get_Velocity().x, 0.f});
                 }
-                // Nếu đang nhảy (velocity.y < 0) và chạm cạnh trên, không đặt isOnGround
             }
         }
     }
 
-    // Cập nhật trạng thái player
-    player->Set_Pos(correctedPos);
-    player->Set_Velocity(velocity);
-    player->Set_isGround(isOnGround);
 }
+
 
 void Stage::Check_Item_Vs_Ground()
 {

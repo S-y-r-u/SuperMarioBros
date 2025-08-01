@@ -25,6 +25,10 @@ Rectangle Player :: get_draw_rec(){
     return {position.x, position.y, frame[currentFrame].width * scale_screen, frame[currentFrame].height * scale_screen};
 }
 
+Rectangle Player:: Get_Previous_Rec(){
+    return previous_frame_rec;
+}
+
 AnimationState Player :: get_state() const{
     return state;
 }
@@ -108,6 +112,7 @@ void Player :: draw(){
     if(isFacingLeft){
         source.width *= (-1);
     }
+    previous_frame_rec = source ;
 
     Rectangle dest;
     dest.width = abs(source.width) * scale_screen;
