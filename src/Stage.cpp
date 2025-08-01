@@ -42,10 +42,12 @@ void Stage::Run()
         player->MoveLeft();
     else
         player->MoveRight();
-    Check_Player_Vs_Ground();
+    
     player->update(GetFrameTime());
 
     camera.target.x = std::max(camera.target.x, player->getPosition().x - Screen_w / 2.0f);
+    Check_Player_Vs_Ground();
+    Check_Player_Vs_Enemy();
     Check_Block_Vs_Block();
     Check_Player_Vs_Block();
     Check_Item_Vs_Ground();
@@ -143,7 +145,6 @@ void Stage::Check_Player_Vs_Block()
                                     rec_map.x + rec_map.width - playerRec.x);
         float overlapY = std::min(playerRec.y + playerRec.height - rec_map.y,
                                     rec_map.y + rec_map.height - playerRec.y);
-        // std::cout << isOnGround << " " << overlapX << " " << overlapY << std::endl;
 
         // Xác định hướng va chạm
         if (overlapX < overlapY && velocity.x != 0)
@@ -269,6 +270,81 @@ void Stage::Check_Player_Vs_Ground()
 
 }
 
+void Stage::Check_Player_Vs_Enemy()
+{
+    Rectangle playerRec = player->get_draw_rec();
+    
+    for (Enemy *enemy : enemies)
+    {
+        if (!enemy || !enemy->Get_Is_Active() || enemy->Get_Is_Dead())
+            continue;
+            
+        Rectangle enemyRec = enemy->Get_Draw_Rec();
+        
+        if (!CheckCollisionRecs(playerRec, enemyRec))
+            continue;
+
+        // Tính toán độ sâu va chạm
+        float overlapX = std::min(playerRec.x + playerRec.width - enemyRec.x,
+                                  enemyRec.x + enemyRec.width - playerRec.x);
+        float overlapY = std::min(playerRec.y + playerRec.height - enemyRec.y,
+                                  enemyRec.y + enemyRec.height - playerRec.y);
+
+        // Xác định hướng va chạm
+        if (overlapX < overlapY)
+        {
+
+            // Va chạm ngang (trái/phải)
+            if (playerRec.x + playerRec.width / 2 < enemyRec.x + enemyRec.width / 2)
+            {
+                // Player ở bên trái enemy
+                // Xử lý va chạm từ bên trái
+                if (enemy->Can_Be_Kicked()) 
+                {
+                    enemy->Notify_Be_Kicked(1);
+                }
+                else
+                {
+                    player->Set_Pos({player->getPosition().x, 200.0f}); 
+                }
+            }
+            else
+            {
+                // Player ở bên phải enemy
+                // Xử lý va chạm từ bên phải
+                if (enemy->Can_Be_Kicked()) 
+                {       
+                    enemy->Notify_Be_Kicked(-1);
+                }
+                else  
+                {
+                    player->Set_Pos({player->getPosition().x, 200.0f}); 
+                }
+            }
+        }
+        else
+        {
+            // Va chạm dọc (trên/dưới)
+            if (playerRec.y + playerRec.height / 2 < enemyRec.y + enemyRec.height / 2)
+            {
+                // Player ở phía trên enemy - nhảy lên đầu enemy
+                if (enemy->Can_Be_Stomped())
+                {
+                    player ->Set_Velocity({player->get_Velocity().x, -player->get_Velocity().y });
+                    enemy->Notify_Be_Stomped();
+                }
+                else {
+                    player->Set_Pos({player->getPosition().x, 200.0f}); 
+                }
+            }
+            else
+            {
+                player->Set_Pos({player->getPosition().x, 200.0f}); // Đẩy player lên trên nếu va chạm từ dưới
+                // Player ở phía dưới enemy
+            }
+        }
+    }
+}
 
 void Stage::Check_Item_Vs_Ground()
 {

@@ -42,6 +42,7 @@ public:
 
     void Check_Player_Vs_Ground();
     void Check_Player_Vs_Block();
+    void Check_Player_Vs_Enemy();
     void Check_Enemy_Vs_Ground();
     void Check_Item_Vs_Block();
     void Check_Item_Vs_Ground();
