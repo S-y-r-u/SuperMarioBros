@@ -110,6 +110,8 @@ void Stage::Draw()
     for (Enemy *enemy : enemies)
         enemy->Draw();
     EndMode2D();
+
+    information.Draw();
 }
 
 void Stage::Check_Player_Vs_Block()

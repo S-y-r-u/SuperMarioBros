@@ -1,6 +1,7 @@
 #pragma once
 #include "raylib.h"
 #include <vector>
+#include <string>
 
 struct SpriteSheet
 {
@@ -1156,6 +1157,39 @@ namespace Font_Sprite
         extern std::vector<Rectangle> num;
     }
 
+    namespace Character
+    {
+        extern Rectangle A;
+        extern Rectangle B;
+        extern Rectangle C;
+        extern Rectangle D;
+        extern Rectangle E;
+        extern Rectangle F;
+        extern Rectangle G;
+        extern Rectangle H;
+        extern Rectangle I;
+        extern Rectangle J;
+        extern Rectangle K;
+        extern Rectangle L;
+        extern Rectangle M;
+        extern Rectangle N;
+        extern Rectangle O;
+        extern Rectangle P;
+        extern Rectangle Q;
+        extern Rectangle R;
+        extern Rectangle S;
+        extern Rectangle T;
+        extern Rectangle U;
+        extern Rectangle V;
+        extern Rectangle W;
+        extern Rectangle X;
+        extern Rectangle Y;
+        extern Rectangle Z;
+        extern std::vector<Rectangle> character;
+    }
+
+    void DrawText(std::string s, float x, float y);
+    
     // Coin frame
     namespace Coin
     {

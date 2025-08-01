@@ -54,6 +54,7 @@ EasyMap::EasyMap()
     }
     fi.close();
     player = new Mario({400, 200});
+    information.SetWorld("EASY");
     camera.target = {0, 0};
     camera.offset = {0, 0};
     camera.rotation = 0;

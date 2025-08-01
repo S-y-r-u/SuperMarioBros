@@ -1103,17 +1103,61 @@ namespace Font_Sprite
 
     namespace Number
     {
-        Rectangle n0 = {1, 1, 10, 10};
-        Rectangle n1 = {11, 1, 8, 10};
-        Rectangle n2 = {19, 1, 10, 10};
-        Rectangle n3 = {28, 1, 10, 10};
-        Rectangle n4 = {37, 1, 10, 10};
-        Rectangle n5 = {46, 1, 10, 10};
-        Rectangle n6 = {55, 1, 10, 10};
-        Rectangle n7 = {64, 1, 10, 10};
-        Rectangle n8 = {73, 1, 10, 10};
-        Rectangle n9 = {82, 1, 10, 10};
+        Rectangle n0 = {2, 2, 8, 8};
+        Rectangle n1 = {11, 2, 8, 8};
+        Rectangle n2 = {20, 2, 8, 8};
+        Rectangle n3 = {29, 2, 8, 8};
+        Rectangle n4 = {38, 2, 8, 8};
+        Rectangle n5 = {47, 2, 8, 8};
+        Rectangle n6 = {56, 2, 8, 8};
+        Rectangle n7 = {65, 2, 8, 8};
+        Rectangle n8 = {74, 2, 8, 8};
+        Rectangle n9 = {83, 2, 8, 8};
         std::vector<Rectangle> num = {n0, n1, n2, n3, n4, n5, n6, n7, n8, n9};
+    }
+
+    namespace Character
+    {
+        Rectangle A = {2, 11, 8, 8};
+        Rectangle B = {11, 11, 8, 8};
+        Rectangle C = {20, 11, 8, 8};
+        Rectangle D = {29, 11, 8, 8};
+        Rectangle E = {38, 11, 8, 8};
+        Rectangle F = {47, 11, 8, 8};
+        Rectangle G = {56, 11, 8, 8};
+        Rectangle H = {65, 11, 8, 8};
+        Rectangle I = {74, 11, 8, 8};
+        Rectangle J = {83, 11, 8, 8};
+        Rectangle K = {92, 11, 8, 8};
+        Rectangle L = {101, 11, 8, 8};
+        Rectangle M = {110, 11, 8, 8};
+        Rectangle N = {2, 20, 8, 8};
+        Rectangle O = {11, 20, 8, 8};
+        Rectangle P = {20, 20, 8, 8};
+        Rectangle Q = {29, 20, 8, 8};
+        Rectangle R = {38, 20, 8, 8};
+        Rectangle S = {47, 20, 8, 8};
+        Rectangle T = {56, 20, 8, 8};
+        Rectangle U = {65, 20, 8, 8};
+        Rectangle V = {74, 20, 8, 8};
+        Rectangle W = {83, 20, 8, 8};
+        Rectangle X = {92, 20, 8, 8};
+        Rectangle Y = {101, 20, 8, 8};
+        Rectangle Z = {110, 20, 8, 8};
+        std::vector<Rectangle> character = {A, B, C, D, E, F, G, H, I, J, K, L, M, N, O, P, Q, R, S, T, U, V, W, X, Y, Z};
+    }
+
+    void DrawText(std::string s, float x, float y) {
+        for(char c : s) {
+            Rectangle source;
+            if(c >= '0' && c <= '9')
+                source = Number::num[c - '0'];
+            else
+                source = Character::character[c - 'A'];
+            Rectangle dest = {x, y, 24, 24};
+            DrawTexturePro(font_.sprite, source, dest, {0.0f, 0.0f}, 0.0f, WHITE);
+            x += 25;
+        }
     }
 
     namespace Coin

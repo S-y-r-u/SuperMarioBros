@@ -14,6 +14,7 @@
 #include "Enemy/KoopaTroopa.h"
 #include <vector>
 #include <algorithm>
+#include "PlayerInformation.h"
 
 class Stage
 {
@@ -25,6 +26,7 @@ protected:
     Texture MapTexture;
     int Map[214][15];
     Player *player;
+    PlayerInformation information;
     Camera2D camera = {0};
     std::vector<KeyboardKey> Keyboard;
 
