@@ -7,10 +7,13 @@ class PlayerInformation {
         int score;
         int coins;
         std::string world;
-        int time;
+        float time;
         int lives;
     public:
         PlayerInformation(); 
         void SetWorld(const std::string &world);
-        void Draw() const;      
+        void UpdateScore(const int &s);
+        void UpdateCoins(const int &c);
+        void UpdateTime(const float &dt);
+        void Draw() const;
 };

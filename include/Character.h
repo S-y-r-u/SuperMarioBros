@@ -17,6 +17,7 @@ class Character{
         Character(Vector2 startPos);
         virtual ~Character();
 
+        float getGravity() const{ return gravity;}
         Vector2 getPosition() const;
         void Set_Pos(Vector2 newPos) { position = newPos; }
         virtual Rectangle get_draw_rec() = 0;

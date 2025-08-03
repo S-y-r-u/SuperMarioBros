@@ -44,6 +44,7 @@ void Stage::Run()
         player->MoveRight();
     
     player->update(GetFrameTime());
+    information.UpdateTime(GetFrameTime());
 
     camera.target.x = std::max(camera.target.x, player->getPosition().x - Screen_w / 2.0f);
     Check_Player_Vs_Ground();
@@ -130,7 +131,7 @@ void Stage::Check_Player_Vs_Block()
     // compute next
     Vector2 sufPos = prevPos;
     sufPos.x += velocity.x * deltaTime;
-    velocity.y += 500.0f * deltaTime; // Gravity effect
+    velocity.y += player->getGravity() * deltaTime; // Gravity effect
     sufPos.y += velocity.y * deltaTime;
     Rectangle playerRec = {sufPos.x, sufPos.y, currentRec.width, currentRec.height};
 
@@ -205,7 +206,7 @@ void Stage::Check_Player_Vs_Ground()
     // compute next
     Vector2 sufPos = prevPos;
     sufPos.x += velocity.x * deltaTime;
-    velocity.y += 500.0f * deltaTime; // Gravity effect
+    velocity.y += player->getGravity() * deltaTime; // Gravity effect
     sufPos.y += velocity.y * deltaTime;
     Rectangle playerRec = {sufPos.x, sufPos.y, currentRec.width, currentRec.height};
     for (int i = 0; i < sizeof(Map[0]) / sizeof(Map[0][0]); i++)
