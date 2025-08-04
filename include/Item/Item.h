@@ -12,7 +12,7 @@ constexpr float Tile_Size = 16.0f * scale_screen;
 class Item
 {
 private:
-    SpriteSheet item_;
+    const SpriteSheet& item_;
 
 protected:
     Vector2 pos_;
