@@ -23,7 +23,7 @@ enum class Difficulty {
 
 namespace Physics
 {
-    constexpr float gravity_ = 10.0f;
+    constexpr float gravity_ = 1000.0f;
 }
 
 

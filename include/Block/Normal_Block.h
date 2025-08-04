@@ -6,19 +6,20 @@ class Normal_Block : public A_Block_State
 {
 private:
     Block &m_block;
-    Vector2 before_pos;
-    float delta_time;
     bool elapse_;
     bool change_state;
     bool is_break;
+
+    Vector2 before_pos;
+    float velocity_y;
+    const float Push_Height = 150.0f;
 
 public:
     Normal_Block(Block &m_block);
 
     void Draw_() override;
     void Update_() override;
-    // Kiểm tra điều kiện của character
-    void On_Hit(std::vector<Item *> &item, Player &player) override;
+    void On_Hit(std::vector<Item *> &item, Player &player, PlayerInformation &info) override;
 
     bool Get_Elapse() override;
     Rectangle Get_Draw_Rec() const override;

@@ -7,9 +7,11 @@ class Question_Block : public A_Block_State
 private:
     Block &m_block;
     std::vector<Rectangle> m_rec;
-    int frame_, type_;
+    float frame_;
+    int type_;
     Vector2 before_pos;
-    float delta_time;
+    float velocity_y;
+    const float Push_Height = 150.0f;
     bool elapse_;
 
 public:
@@ -17,7 +19,7 @@ public:
 
     void Draw_() override;
     void Update_() override;
-    void On_Hit(std::vector<Item *> &item, Player &player) override;
+    void On_Hit(std::vector<Item *> &item, Player &player, PlayerInformation &info) override;
 
     bool Get_Elapse() override;
     Rectangle Get_Draw_Rec() const override;

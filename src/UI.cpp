@@ -8,13 +8,13 @@ UI::UI()
 void UI::Process()
 {
     InitWindow(Screen_w, Screen_h, "Mario Game");
-    SetTargetFPS(60);
+    SetTargetFPS(120);
     InitAudioDevice();
 
     MenuImages::GetInstance().Load();
     SoundManager::GetInstance().LoadSounds();
     SoundManager::GetInstance().LoadMusic();
-    
+
     // Bắt đầu với menu music
     SoundManager::GetInstance().PlayMusic("MenuMusic", true);
 
@@ -24,7 +24,7 @@ void UI::Process()
     SettingState *settingMenu = new SettingState();
 
     Program_state = menuState;
-    int previousState = menuState;  // Track previous state để quản lý music
+    int previousState = menuState; // Track previous state để quản lý music
 
     gameManager->Load_Texture();
 
@@ -35,7 +35,7 @@ void UI::Process()
         {
             // Stop current music
             SoundManager::GetInstance().StopMusic();
-            
+
             // Play appropriate music for new state
             if (Program_state == menuState || Program_state == settingState)
             {
@@ -49,7 +49,7 @@ void UI::Process()
             // {
             //     SoundManager::GetInstance().PlayMusic("playingMusic", true);
             // }
-            
+
             previousState = Program_state;
         }
         SoundManager::GetInstance().Update();
@@ -58,7 +58,7 @@ void UI::Process()
         {
             Program_state = menu->Update();
         }
-        else if (Program_state == choosingStageState) 
+        else if (Program_state == choosingStageState)
         {
             int nextState = choosingStage->Update();
             if (nextState == gameManagerState)

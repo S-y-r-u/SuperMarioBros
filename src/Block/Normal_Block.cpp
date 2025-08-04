@@ -1,14 +1,15 @@
 #include "Block/Normal_Block.h"
 
 Normal_Block::Normal_Block(Block &block)
-    : m_block(block), delta_time(0.0f), elapse_(0), change_state(0)
+    : m_block(block),
+      elapse_(false),
+      change_state(false),
+      velocity_y(0.0f)
 {
     before_pos = m_block.Get_Pos();
     rec_ = Item_Sprite::Brown_Brick::type_2;
-    if (m_block.Get_Type_Item() == "")
-        is_break = 1;
-    else
-        is_break = 0;
+
+    is_break = (m_block.Get_Type_Item() == "");
 }
 
 void Normal_Block::Draw_()
@@ -18,6 +19,7 @@ void Normal_Block::Draw_()
         m_block.Get_Pos().y,
         rec_.width * scale_screen,
         rec_.height * scale_screen};
+
     DrawTexturePro(
         m_block.Get_Sprite().sprite,
         rec_,
@@ -33,28 +35,29 @@ void Normal_Block::Update_()
     Change_State();
 }
 
-void Normal_Block::On_Hit(std::vector<Item *> &item, Player &player)
+void Normal_Block::On_Hit(std::vector<Item *> &item, Player &player, PlayerInformation &info)
 {
     if (m_block.Get_Item_Count() > 0)
     {
-        Spawn_Item::Item_Spawn(m_block.Get_Type_Item(), item, m_block.Get_Pos(), player);
+        Spawn_Item::Item_Spawn(m_block.Get_Type_Item(), item, m_block.Get_Pos(), player, info);
         m_block.Decrease_Item();
         elapse_ = true;
-        delta_time = 0.0f;
+        velocity_y = -Push_Height; // đẩy lên
         if (m_block.Get_Item_Count() == 0)
         {
-            change_state = 1;
+            change_state = true;
             return;
         }
     }
-    else if (m_block.Get_Item_Count() == 0 && (player.get_form() == PlayerForm::Small || player.get_form() == PlayerForm::Invincible))
+    else if (m_block.Get_Item_Count() == 0 &&
+             (player.get_form() == PlayerForm::Small || player.get_form() == PlayerForm::Invincible))
     {
         elapse_ = true;
-        delta_time = 0.0f;
+        velocity_y = -Push_Height; // đẩy lên
     }
     else
     {
-        change_state = 1;
+        change_state = true;
     }
 }
 
@@ -63,38 +66,45 @@ void Normal_Block::Elapse_()
     if (!elapse_)
         return;
 
-    delta_time += 0.14f;
-    float delta_y = -Push_Height * delta_time + 0.5f * delta_time * delta_time * Physics::gravity_;
+    float dt = GetFrameTime();
+    velocity_y += Physics::gravity_ * dt;
+
     Vector2 tmp = m_block.Get_Pos();
-    tmp.y = before_pos.y + delta_y;
+    tmp.y += velocity_y * dt;
+
+    // Nếu đã về lại vị trí cũ (hoặc vượt quá)
+    if (tmp.y >= before_pos.y)
+    {
+        tmp.y = before_pos.y;
+        velocity_y = 0.0f;
+        elapse_ = false;
+    }
+
     m_block.Set_Pos(tmp);
 }
 
 void Normal_Block::Change_State()
 {
-    float t_max = 2 * Push_Height / Physics::gravity_;
-    
     if (change_state && is_break)
+    {
         m_block.Set_State(m_block.GetBreakableState());
-    else if (change_state && !is_break)
-    {
-        if (elapse_ && delta_time >= t_max)
-        {
-            elapse_ = false;
-            m_block.Set_Pos(before_pos);
-            m_block.Set_State(m_block.GetUnbreakableState());
-        }
     }
-    else
+    else if (change_state && !is_break && !elapse_)
     {
-        if (delta_time >= t_max)
-        {
-            elapse_ = false;
-            m_block.Set_Pos(before_pos);
-        }
+        m_block.Set_State(m_block.GetUnbreakableState());
     }
 }
 
-Rectangle Normal_Block::Get_Draw_Rec() const { return {m_block.Get_Pos().x - rec_.width * scale_screen / 2.0f, m_block.Get_Pos().y - rec_.height * scale_screen, rec_.width * scale_screen, rec_.height * scale_screen}; }
+Rectangle Normal_Block::Get_Draw_Rec() const
+{
+    return {
+        m_block.Get_Pos().x - rec_.width * scale_screen / 2.0f,
+        m_block.Get_Pos().y - rec_.height * scale_screen,
+        rec_.width * scale_screen,
+        rec_.height * scale_screen};
+}
 
-bool Normal_Block::Get_Elapse() { return elapse_; }
+bool Normal_Block::Get_Elapse()
+{
+    return elapse_ || change_state;
+}

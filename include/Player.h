@@ -30,12 +30,13 @@ class Player : public Character{
         Rectangle get_draw_rec() override;
         Rectangle Get_Previous_Rec() override;
         AnimationState get_state() const;
-        PlayerForm get_form() const;
+        PlayerForm get_form() const; 
         Vector2 get_Velocity() const { return velocity; }
         void Set_Velocity(Vector2 newVelocity) { velocity = newVelocity; }
         bool Get_isGround() const { return isGround; }
         void Set_isGround(bool value) { isGround = value; }
-
+        bool Get_isTransforming() const { return isTransforming; }
+    
         void MoveRight() override;
         void MoveLeft() override;
         void StopMoving() override;

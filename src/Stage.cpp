@@ -26,6 +26,16 @@ Stage::~Stage()
 
 void Stage::Run()
 {
+    Player_Update();
+
+    if (!player->Get_isTransforming())
+    {
+        Non_Player_Update();
+    }
+}
+
+void Stage::Player_Update()
+{
     if (IsKeyPressed(KEY_A))
         Keyboard.emplace_back(KEY_A);
     if (IsKeyReleased(KEY_A))
@@ -42,27 +52,36 @@ void Stage::Run()
         player->MoveLeft();
     else
         player->MoveRight();
-    
-    player->update(GetFrameTime());
-    information.UpdateTime(GetFrameTime());
 
-    camera.target.x = std::max(camera.target.x, player->getPosition().x - Screen_w / 2.0f);
+    player->update(GetFrameTime());
+    information.Update(GetFrameTime());
+
+    Score_Manager &score_manager = Score_Manager::GetInstance();
+    score_manager.Update();
+
     Check_Player_Vs_Ground();
     Check_Player_Vs_Enemy();
     Check_Block_Vs_Block();
     Check_Player_Vs_Block();
+}
+
+void Stage::Non_Player_Update()
+{
+    camera.target.x = std::max(camera.target.x, player->getPosition().x - Screen_w / 2.0f);
+
     Check_Item_Vs_Ground();
     Check_Item_Vs_Block();
     Check_Enemy_Vs_Ground();
+    Check_Enemy_Vs_Block();
+    Check_Enemy_Vs_Enemy();
 
     for (Item *item : items)
     {
         Rectangle player_rec = player->get_draw_rec();
         Rectangle rec_item = item->Get_Draw_Rec();
         if (CheckCollisionRecs(player_rec, rec_item) && !item->Is_Appear_Animation())
-            item->Activate_(*player);
+            item->Activate_(*player, information);
     }
-
 
     for (size_t i = 0; i < items.size();)
     {
@@ -90,8 +109,10 @@ void Stage::Run()
 
     for (Item *item : items)
         item->Update_();
+
     for (Block *block : blocks)
         block->Update_();
+
     size_t size_before = enemies.size();
     for (size_t i = 0; i < size_before; ++i)
     {
@@ -108,10 +129,16 @@ void Stage::Draw()
 
     for (Item *item : items)
         item->Draw_();
+
     for (Block *block : blocks)
         block->Draw_();
+
     for (Enemy *enemy : enemies)
         enemy->Draw();
+
+    Score_Manager &score_manager = Score_Manager::GetInstance();
+    score_manager.Draw();
+
     EndMode2D();
 
     information.Draw();
@@ -143,15 +170,15 @@ void Stage::Check_Player_Vs_Block()
 
         // Tính toán độ sâu va chạm
         float overlapX = std::min(playerRec.x + playerRec.width - rec_map.x,
-                                    rec_map.x + rec_map.width - playerRec.x);
+                                  rec_map.x + rec_map.width - playerRec.x);
         float overlapY = std::min(playerRec.y + playerRec.height - rec_map.y,
-                                    rec_map.y + rec_map.height - playerRec.y);
+                                  rec_map.y + rec_map.height - playerRec.y);
 
         // Xác định hướng va chạm
         if (overlapX < overlapY && velocity.x != 0)
         {
             // Va chạm ngang
-            if ( prevPos.x + preRec.width <= rec_map.x)
+            if (prevPos.x + preRec.width <= rec_map.x)
             {
                 if (!block->Surrounded_Block[2])
                 {
@@ -160,13 +187,13 @@ void Stage::Check_Player_Vs_Block()
                     player->Set_Velocity({0, player->get_Velocity().y});
                 }
             }
-            else 
+            else
             {
                 if (!block->Surrounded_Block[3])
-                {   
-                // Va chạm từ bên phải
-                player->Set_Pos({rec_map.x + rec_map.width, player->getPosition().y});
-                player->Set_Velocity({0, player->get_Velocity().y});
+                {
+                    // Va chạm từ bên phải
+                    player->Set_Pos({rec_map.x + rec_map.width, player->getPosition().y});
+                    player->Set_Velocity({0, player->get_Velocity().y});
                 }
             }
         }
@@ -179,14 +206,13 @@ void Stage::Check_Player_Vs_Block()
                 player->Set_Pos({player->getPosition().x, rec_map.y - playerRec.height});
                 player->Set_Velocity({player->get_Velocity().x, 0.f});
                 player->Set_isGround(true);
-
             }
-            else if (prevPos.y > rec_map.y + rec_map.height  && !block->Surrounded_Block[1] && player->get_Velocity().y < 0)
+            else if (prevPos.y > rec_map.y + rec_map.height && !block->Surrounded_Block[1] && player->get_Velocity().y < 0)
             {
                 // Va chạm từ dưới lên (đụng đầu)
                 player->Set_Pos({player->getPosition().x, rec_map.y + rec_map.height});
                 player->Set_Velocity({player->get_Velocity().x, 0.f});
-                block->On_Hit(items, *player);
+                block->On_Hit(items, *player, information);
             }
         }
     }
@@ -231,20 +257,21 @@ void Stage::Check_Player_Vs_Ground()
             if (overlapX < overlapY && velocity.x != 0)
             {
                 // Va chạm ngang
-                if ( prevPos.x + preRec.width < rec_map.x  )
+                if (prevPos.x + preRec.width < rec_map.x)
                 {
                     // Va chạm từ bên trái
-                    if (Map[j-1][i] == 0)
+                    if (Map[j - 1][i] == 0)
                     {
                         player->Set_Pos({rec_map.x - currentRec.width, player->getPosition().y});
                         player->Set_Velocity({0, player->get_Velocity().y});
                     }
                 }
-                else{
+                else
+                {
                     // Va chạm từ bên phải
-                    if (Map[j+1][i] == 0)
+                    if (Map[j + 1][i] == 0)
                     {
-                        player->Set_Pos({rec_map.x + rec_map.width , player->getPosition().y});
+                        player->Set_Pos({rec_map.x + rec_map.width, player->getPosition().y});
                         player->Set_Velocity({0, player->get_Velocity().y});
                     }
                 }
@@ -252,14 +279,14 @@ void Stage::Check_Player_Vs_Ground()
             else
             {
                 // Va chạm dọc
-                if (prevPos.y + preRec.height < rec_map.y && Map[j][i-1] == 0 && player->get_Velocity().y >= 0)
-                {  
+                if (prevPos.y + preRec.height < rec_map.y && Map[j][i - 1] == 0 && player->get_Velocity().y >= 0)
+                {
                     // Va chạm từ trên xuống (đáp xuống mặt đất)
                     player->Set_Pos({player->getPosition().x, rec_map.y - currentRec.height});
                     player->Set_Velocity({player->get_Velocity().x, -500.0f * deltaTime});
                     player->Set_isGround(true);
                 }
-                else if (prevPos.y > rec_map.y + rec_map.height && Map[j][i+1] == 0 && player->get_Velocity().y < 0)
+                else if (prevPos.y > rec_map.y + rec_map.height && Map[j][i + 1] == 0 && player->get_Velocity().y < 0)
                 {
                     // Va chạm từ dưới lên (đụng đầu)
                     player->Set_Pos({player->getPosition().x, rec_map.y + rec_map.height});
@@ -268,20 +295,19 @@ void Stage::Check_Player_Vs_Ground()
             }
         }
     }
-
 }
 
 void Stage::Check_Player_Vs_Enemy()
 {
     Rectangle playerRec = player->get_draw_rec();
-    
+
     for (Enemy *enemy : enemies)
     {
         if (!enemy || !enemy->Get_Is_Active() || enemy->Get_Is_Dead())
             continue;
-            
+
         Rectangle enemyRec = enemy->Get_Draw_Rec();
-        
+
         if (!CheckCollisionRecs(playerRec, enemyRec))
             continue;
 
@@ -300,26 +326,26 @@ void Stage::Check_Player_Vs_Enemy()
             {
                 // Player ở bên trái enemy
                 // Xử lý va chạm từ bên trái
-                if (enemy->Can_Be_Kicked()) 
+                if (enemy->Can_Be_Kicked())
                 {
-                    enemy->Notify_Be_Kicked(1);
+                    enemy->Notify_Be_Kicked(1, information);
                 }
                 else
                 {
-                    player->Set_Pos({player->getPosition().x, 200.0f}); 
+                    player->Set_Pos({player->getPosition().x, 200.0f});
                 }
             }
             else
             {
                 // Player ở bên phải enemy
                 // Xử lý va chạm từ bên phải
-                if (enemy->Can_Be_Kicked()) 
-                {       
-                    enemy->Notify_Be_Kicked(-1);
-                }
-                else  
+                if (enemy->Can_Be_Kicked())
                 {
-                    player->Set_Pos({player->getPosition().x, 200.0f}); 
+                    enemy->Notify_Be_Kicked(-1, information);
+                }
+                else
+                {
+                    player->Set_Pos({player->getPosition().x, 200.0f});
                 }
             }
         }
@@ -331,11 +357,12 @@ void Stage::Check_Player_Vs_Enemy()
                 // Player ở phía trên enemy - nhảy lên đầu enemy
                 if (enemy->Can_Be_Stomped())
                 {
-                    player ->Set_Velocity({player->get_Velocity().x, -player->get_Velocity().y });
-                    enemy->Notify_Be_Stomped();
+                    player->Set_Velocity({player->get_Velocity().x, -player->get_Velocity().y});
+                    enemy->Notify_Be_Stomped(information);
                 }
-                else {
-                    player->Set_Pos({player->getPosition().x, 200.0f}); 
+                else
+                {
+                    player->Set_Pos({player->getPosition().x, 200.0f});
                 }
             }
             else
@@ -414,12 +441,11 @@ void Stage::Check_Item_Vs_Block()
         bool avoid_branch = 0;
         if (item->Is_Appear_Animation())
             continue;
+        if (!item->Can_Move())
+            continue;
 
         Mush_Room *mush_room = dynamic_cast<Mush_Room *>(item);
         Star *star = dynamic_cast<Star *>(item);
-
-        if (!mush_room && !star)
-            continue;
 
         Rectangle rec_item = item->Get_Draw_Rec();
         Vector2 prev = item->Get_Previous_Frame_Pos();
@@ -484,15 +510,78 @@ void Stage::Check_Item_Vs_Block()
     }
 }
 
+void Stage::Check_Enemy_Vs_Block()
+{
+    for (Enemy *enemy : enemies)
+    {
+        if (!enemy->Get_Is_Active() || enemy->Get_Is_Dead() || !enemy->Need_Check_Ground_Block())
+            continue;
+
+        Rectangle rec_enemy = enemy->Get_Draw_Rec();
+        Vector2 prev = enemy->Get_Previous_Pos();
+        float w = rec_enemy.width;
+        float h = rec_enemy.height;
+
+        bool avoid_branch = false;
+
+        for (Block *block : blocks)
+        {
+            Rectangle rec_block = block->Get_Draw_Rec();
+
+            if (!CheckCollisionRecs(rec_enemy, rec_block))
+                continue;
+
+            if (!block->Get_Elapse()) // Nếu block đứng yên
+            {
+                if (prev.y <= rec_block.y)
+                {
+                    enemy->Set_Pos({enemy->Get_Pos().x, rec_block.y});
+                    enemy->Notify_On_Ground();
+                }
+                else if (prev.x + w / 2.0f <= rec_block.x && !avoid_branch)
+                {
+                    enemy->Set_Pos({rec_block.x - w / 2.0f, enemy->Get_Pos().y});
+                    enemy->Notify_Change_Direct();
+                    avoid_branch = true;
+                }
+                else if (prev.x - w / 2.0f >= rec_block.x + rec_block.width && !avoid_branch)
+                {
+                    enemy->Set_Pos({rec_block.x + rec_block.width + w / 2.0f, enemy->Get_Pos().y});
+                    enemy->Notify_Change_Direct();
+                    avoid_branch = true;
+                }
+            }
+            else // Nếu block đang "nảy" lên
+            {
+                if (enemy->Can_Jump())
+                {
+                    if ((enemy->Get_Velocity().x > 0 && prev.x + w / 2.0f > rec_block.x) || (enemy->Get_Velocity().x < 0 && prev.x - w / 2.0f < rec_block.x + rec_block.width))
+                    {
+                        enemy->Set_Pos({enemy->Get_Pos().x, rec_block.y});
+                        enemy->Notify_Jump();
+
+                        if ((enemy->Get_Velocity().x > 0 && rec_enemy.x < rec_block.x + rec_block.width / 2.0f) ||
+                            (enemy->Get_Velocity().x < 0 && rec_enemy.x >= rec_block.x + rec_block.width / 2.0f))
+                        {
+                            enemy->Notify_Change_Direct();
+                        }
+                    }
+                }
+                else
+                {
+                    enemy->Notify_Be_Fired_Or_Hit(information);
+                    break;
+                }
+            }
+        }
+    }
+}
+
 void Stage::Check_Enemy_Vs_Ground()
 {
     for (Enemy *enemy : enemies)
     {
-        if (Latiku *latiku = dynamic_cast<Latiku *>(enemy))
-            continue;
-        if (PiranhaPlant *piranha = dynamic_cast<PiranhaPlant *>(enemy))
-            continue;
-        if (!enemy || !enemy->Get_Is_Active() || enemy->Get_Is_Dead())
+        if (!enemy || !enemy->Get_Is_Active() || enemy->Get_Is_Dead() || !enemy->Need_Check_Ground_Block())
             continue;
 
         Rectangle rec_enemy = enemy->Get_Draw_Rec();
@@ -544,47 +633,87 @@ void Stage::Check_Enemy_Vs_Ground()
     }
 }
 
-void Stage::Check_Block_Vs_Block()
+void Stage::Check_Enemy_Vs_Enemy()
 {
-    const float Tile_Size = 16.0f * 3.0f; // scale_screen = 3.0f
-    
-    for (Block *mainblock : blocks) {
-        // Reset surrounded blocks state
-        mainblock->Surrounded_Block = {false, false, false, false}; // top, bottom, left, right
-        
-        Vector2 mainPos = mainblock->Get_Pos();
-        
-        for (Block *block : blocks) {
-            if (mainblock == block) continue; // Skip checking with itself
-            
-            Vector2 blockPos = block->Get_Pos();
-            
-            // Calculate position differences
-            float dx = blockPos.x - mainPos.x;
-            float dy = blockPos.y - mainPos.y;
-            
-            // Check if blocks are adjacent (within tile size tolerance)
-            const float tolerance = Tile_Size * 0.1f; // Small tolerance for floating point comparison
-            
-            // Check top (block above mainblock)
-            if (abs(dx) <= tolerance && dy < 0 && abs(dy) <= Tile_Size + tolerance) {
-                mainblock->Surrounded_Block[0] = true; // top
+    for (int i = 0; i < enemies.size(); i++)
+    {
+        Enemy *enemy1 = enemies[i];
+        if (!enemy1 || !enemy1->Get_Is_Active() || enemy1->Get_Is_Dead())
+            continue;
+        Rectangle rec_enemy1 = enemy1->Get_Draw_Rec();
+
+        for (int j = i + 1; j < enemies.size(); j++)
+        {
+            Enemy *enemy2 = enemies[j];
+            if (enemy1 == enemy2 || !enemy2->Get_Is_Active() || enemy2->Get_Is_Dead())
+                continue;
+            Rectangle rec_enemy2 = enemy2->Get_Draw_Rec();
+
+            if (!CheckCollisionRecs(rec_enemy1, rec_enemy2))
+                continue;
+            if (enemy1->Kill_Other_Enemies())
+            {
+                enemy2->Notify_Be_Fired_Or_Hit(information);
             }
-            // Check bottom (block below mainblock) 
-            else if (abs(dx) <= tolerance && dy > 0 && abs(dy) <= Tile_Size + tolerance) {
-                mainblock->Surrounded_Block[1] = true; // bottom
+            else if (enemy2->Kill_Other_Enemies())
+            {
+                enemy1->Notify_Be_Fired_Or_Hit(information);
             }
-            // Check left (block to the left of mainblock)
-            else if (abs(dy) <= tolerance && dx < 0 && abs(dx) <= Tile_Size + tolerance) {
-                mainblock->Surrounded_Block[2] = true; // left
-            }
-            // Check right (block to the right of mainblock)
-            else if (abs(dy) <= tolerance && dx > 0 && abs(dx) <= Tile_Size + tolerance) {
-                mainblock->Surrounded_Block[3] = true; // right
+            else
+            {
+                enemy1->Notify_Change_Direct();
+                enemy2->Notify_Change_Direct();
+                break;
             }
         }
     }
 }
 
+void Stage::Check_Block_Vs_Block()
+{
+    const float Tile_Size = 16.0f * 3.0f; // scale_screen = 3.0f
 
+    for (Block *mainblock : blocks)
+    {
+        // Reset surrounded blocks state
+        mainblock->Surrounded_Block = {false, false, false, false}; // top, bottom, left, right
 
+        Vector2 mainPos = mainblock->Get_Pos();
+
+        for (Block *block : blocks)
+        {
+            if (mainblock == block)
+                continue; // Skip checking with itself
+
+            Vector2 blockPos = block->Get_Pos();
+
+            // Calculate position differences
+            float dx = blockPos.x - mainPos.x;
+            float dy = blockPos.y - mainPos.y;
+
+            // Check if blocks are adjacent (within tile size tolerance)
+            const float tolerance = Tile_Size * 0.1f; // Small tolerance for floating point comparison
+
+            // Check top (block above mainblock)
+            if (abs(dx) <= tolerance && dy < 0 && abs(dy) <= Tile_Size + tolerance)
+            {
+                mainblock->Surrounded_Block[0] = true; // top
+            }
+            // Check bottom (block below mainblock)
+            else if (abs(dx) <= tolerance && dy > 0 && abs(dy) <= Tile_Size + tolerance)
+            {
+                mainblock->Surrounded_Block[1] = true; // bottom
+            }
+            // Check left (block to the left of mainblock)
+            else if (abs(dy) <= tolerance && dx < 0 && abs(dx) <= Tile_Size + tolerance)
+            {
+                mainblock->Surrounded_Block[2] = true; // left
+            }
+            // Check right (block to the right of mainblock)
+            else if (abs(dy) <= tolerance && dx > 0 && abs(dx) <= Tile_Size + tolerance)
+            {
+                mainblock->Surrounded_Block[3] = true; // right
+            }
+        }
+    }
+}

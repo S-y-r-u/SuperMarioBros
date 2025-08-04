@@ -6,6 +6,7 @@ class Flower : public Item
 private:
     bool is_appear;
     Vector2 before_pos;
+    const int Score_Flower = 1000;
 
 public:
     Flower(Vector2 pos);
@@ -13,5 +14,7 @@ public:
     void Update_() override;
     void Appear_() override;
     //
-    void Activate_(Player &player) override;
+    void Activate_(Player &player, PlayerInformation &info) override;
+
+    bool Can_Move() const override;
 };

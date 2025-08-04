@@ -15,6 +15,7 @@
 #include <vector>
 #include <algorithm>
 #include "PlayerInformation.h"
+#include "DrawScore.h"
 
 class Stage
 {
@@ -40,10 +41,14 @@ public:
     void Run();
     void Draw();
 
+    void Player_Update();
+    void Non_Player_Update();
     void Check_Player_Vs_Ground();
     void Check_Player_Vs_Block();
     void Check_Player_Vs_Enemy();
     void Check_Enemy_Vs_Ground();
+    void Check_Enemy_Vs_Block();
+    void Check_Enemy_Vs_Enemy();
     void Check_Item_Vs_Block();
     void Check_Item_Vs_Ground();
     void Check_Block_Vs_Block();

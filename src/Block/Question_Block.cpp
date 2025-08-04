@@ -1,7 +1,11 @@
 #include "Block/Question_Block.h"
 
 Question_Block::Question_Block(Block &block)
-    : m_block(block), m_rec(Item_Sprite::Question_Brick::question_), frame_(0), type_(0), delta_time(0.0f), elapse_(0)
+    : m_block(block),
+      m_rec(Item_Sprite::Question_Brick::question_),
+      frame_(0.0f), type_(0),
+      velocity_y(0.0f),
+      elapse_(false)
 {
     before_pos = m_block.Get_Pos();
     rec_ = m_rec[type_];
@@ -25,11 +29,11 @@ void Question_Block::Draw_()
 
 void Question_Block::Animation_()
 {
-    frame_++;
-    if (frame_ >= 12)
+    frame_ += GetFrameTime();
+    if (frame_ >= 1 / 6.0f)
     {
         type_ = (type_ + 1) % m_rec.size();
-        frame_ = 0;
+        frame_ = 0.0f;
     }
     rec_ = m_rec[type_];
 }
@@ -41,14 +45,14 @@ void Question_Block::Update_()
     Change_State();
 }
 
-void Question_Block::On_Hit(std::vector<Item *> &item, Player &player)
+void Question_Block::On_Hit(std::vector<Item *> &item, Player &player, PlayerInformation &info)
 {
     if (m_block.Get_Item_Count() > 0)
     {
         m_block.Decrease_Item();
-        Spawn_Item::Item_Spawn(m_block.Get_Type_Item(), item, m_block.Get_Pos(), player);
+        Spawn_Item::Item_Spawn(m_block.Get_Type_Item(), item, m_block.Get_Pos(), player, info);
         elapse_ = true;
-        delta_time = 0.0f;
+        velocity_y = -Push_Height; // Đẩy lên
     }
 }
 
@@ -57,30 +61,40 @@ void Question_Block::Elapse_()
     if (!elapse_)
         return;
 
-    delta_time += 0.14f;
-    float delta_y = -Push_Height * delta_time + 0.5f * delta_time * delta_time * Physics::gravity_;
+    float dt = GetFrameTime();
+    velocity_y += Physics::gravity_ * dt;
+
     Vector2 tmp = m_block.Get_Pos();
-    tmp.y = before_pos.y + delta_y;
+    tmp.y += velocity_y * dt;
+
+    if (tmp.y >= before_pos.y)
+    {
+        tmp.y = before_pos.y;
+        velocity_y = 0.0f;
+        elapse_ = false;
+    }
+
     m_block.Set_Pos(tmp);
 }
 
 void Question_Block::Change_State()
 {
-    float t_max = 2 * Push_Height / Physics::gravity_;
-
-    if (m_block.Get_Item_Count() == 0 && elapse_ && delta_time >= t_max)
+    if (m_block.Get_Item_Count() == 0 && !elapse_)
     {
-        elapse_ = false;
-        m_block.Set_Pos(before_pos);
         m_block.Set_State(m_block.GetUnbreakableState());
-    }
-    else if (elapse_ && delta_time >= t_max)
-    {
-        elapse_ = false;
-        m_block.Set_Pos(before_pos);
     }
 }
 
-bool Question_Block::Get_Elapse() { return elapse_; }
+bool Question_Block::Get_Elapse()
+{
+    return elapse_;
+}
 
-Rectangle Question_Block::Get_Draw_Rec() const { return {m_block.Get_Pos().x - rec_.width * scale_screen / 2.0f, m_block.Get_Pos().y - rec_.height * scale_screen, rec_.width * scale_screen, rec_.height * scale_screen}; }
+Rectangle Question_Block::Get_Draw_Rec() const
+{
+    return {
+        m_block.Get_Pos().x - rec_.width * scale_screen / 2.0f,
+        m_block.Get_Pos().y - rec_.height * scale_screen,
+        rec_.width * scale_screen,
+        rec_.height * scale_screen};
+}

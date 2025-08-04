@@ -2,48 +2,62 @@
 #include <iostream>
 
 Star::Star(Vector2 pos)
-    : Item(pos), direct_(1), is_appear(0), delta_time(0.0f), before_pos(pos)
+    : Item(pos),
+      direct_(true),
+      is_appear(false),
+      before_pos(pos),
+      velocity_({0.0f, -Star_Ini_Velo}),
+      previous_frame_pos(pos)
 {
     rec_ = Item_Sprite::Star::invincible_star;
 }
 
 void Star::Notify_On_Ground()
 {
-    if (delta_time != 0.0f)
+    if (velocity_.y != -Star_Ini_Velo)
     {
-        delta_time = 0.0f;
+        velocity_.y = -Star_Ini_Velo;
         before_pos = pos_;
     }
 }
 
-void Star::Notify_Change_Direct() { direct_ = !direct_; }
-
-void Star::Fall_()
+void Star::Notify_Change_Direct()
 {
-    if (!is_appear)
-        return;
-    delta_time += 0.14f;
-    float deltaY = -Star_Ini_Velo * delta_time + 0.5 * delta_time * delta_time * Physics::gravity_;
-    pos_.y = before_pos.y + deltaY;
+    direct_ = !direct_;
 }
 
-void Star::Move_()
+void Star::Fall_(float dt)
 {
     if (!is_appear)
         return;
-    previous_frame_pos = pos_;
+
+    velocity_.y += Physics::gravity_ * dt;
+    pos_.y += velocity_.y * dt;
+}
+
+void Star::Move_(float dt)
+{
+    if (!is_appear)
+        return;
+
+    float speed = Mush_Room_And_Star_Speed * dt;
     if (direct_)
-        pos_.x += Mush_Room_And_Star_Speed * GetFrameTime();
+        pos_.x += speed;
     else
-        pos_.x -= Mush_Room_And_Star_Speed * GetFrameTime();
-    if (pos_.x >= 214 * 48.0f - rec_.width * scale_screen / 2.0f)
+        pos_.x -= speed;
+
+    // Va chạm biên
+    float left_bound = rec_.width * scale_screen / 2.0f;
+    float right_bound = 214 * 48.0f - left_bound;
+
+    if (pos_.x >= right_bound)
     {
-        pos_.x = 214 * 48.0f - rec_.width * scale_screen / 2.0f;
+        pos_.x = right_bound;
         direct_ = !direct_;
     }
-    else if (pos_.x <= rec_.width * scale_screen / 2.0f)
+    else if (pos_.x <= left_bound)
     {
-        pos_.x = rec_.width * scale_screen / 2.0f;
+        pos_.x = left_bound;
         direct_ = !direct_;
     }
 }
@@ -52,37 +66,59 @@ void Star::Appear_()
 {
     if (is_appear)
         return;
+
     pos_.y -= Appear_Animation;
+
     if (pos_.y <= before_pos.y - Tile_Size)
     {
-        appear_animation = 0;
-        is_appear = 1;
+        appear_animation = false;
+        is_appear = true;
         pos_.y = before_pos.y - Tile_Size;
         before_pos = pos_;
         previous_frame_pos = pos_;
+
+        // Bắt đầu nhảy lên
+        velocity_.y = -Star_Ini_Velo;
     }
 }
 
 void Star::Be_Delete()
 {
     if (pos_.y - rec_.height * scale_screen >= Screen_h)
-        is_delete = 1;
+        is_delete = true;
 }
 
 void Star::Update_()
 {
+    float dt = GetFrameTime();
+    previous_frame_pos = pos_;
+
     Appear_();
-    Move_();
-    Fall_();
+    Move_(dt);
+    Fall_(dt);
     Be_Delete();
 }
 
-void Star::Activate_(Player &player)
+void Star::Activate_(Player &player, PlayerInformation &info)
 {
+    Score_Manager &score_manager = Score_Manager::GetInstance();
+    score_manager.AddScore({player.getPosition().x + player.get_draw_rec().width, player.getPosition().y}, Score_Star);
     player.getStar();
-    is_delete = 1;
+    info.UpdateScore(Score_Star);
+    is_delete = true;
 }
 
-Vector2 Star::Get_Previous_Frame_Pos() { return previous_frame_pos; }
+Vector2 Star::Get_Previous_Frame_Pos()
+{
+    return previous_frame_pos;
+}
 
-bool Star::Get_Direct() const { return direct_; }
+bool Star::Get_Direct() const
+{
+    return direct_;
+}
+
+bool Star::Can_Move() const
+{
+    return true;
+}

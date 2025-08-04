@@ -2,9 +2,11 @@
 #include "Constants.h"
 #include "Sprite.h"
 #include "Player.h"
+#include "PlayerInformation.h"
+#include "DrawScore.h"
 
 constexpr float Mush_Room_And_Star_Speed = 120.0f;
-constexpr float Appear_Animation = 1.5f;
+constexpr float Appear_Animation = 0.75f;
 constexpr float Tile_Size = 16.0f * scale_screen;
 
 class Item
@@ -15,7 +17,8 @@ private:
 protected:
     Vector2 pos_;
     Rectangle rec_;
-    int frame_, type_;
+    float frame_;
+    int type_;
     bool appear_animation;
     bool is_delete;
 
@@ -26,7 +29,7 @@ public:
     virtual void Update_() = 0;
     virtual void Appear_() = 0;
     //
-    virtual void Activate_(Player &player) = 0;
+    virtual void Activate_(Player &player, PlayerInformation &info) = 0;
 
     Vector2 Get_Pos() const;
     void Set_Pos(Vector2 pos);
@@ -35,6 +38,7 @@ public:
     Rectangle Get_Draw_Rec() const;
     bool Is_Appear_Animation() const;
     bool Get_Is_Delete() const;
+    virtual bool Can_Move() const = 0;
 
     virtual void Notify_Fall() {}
     virtual void Notify_On_Ground() {}

@@ -6,7 +6,10 @@
 #include "Block/Unbreakable_Block.h"
 
 Block::Block(Vector2 pos, int item_count, const std::string &type_item, const std::string &type_block)
-    : sprite_(Item_Sprite::item_), pos_(pos), item_count_(item_count), type_item_(type_item)
+    : sprite_(Item_Sprite::item_),
+      pos_(pos),
+      item_count_(item_count),
+      type_item_(type_item)
 {
     question_state_ = new Question_Block(*this);
     normal_state_ = new Normal_Block(*this);
@@ -37,9 +40,9 @@ void Block::Update_()
     current_state_->Update_();
 }
 
-void Block::On_Hit(std::vector<Item *> &item, Player &player)
+void Block::On_Hit(std::vector<Item *> &item, Player &player, PlayerInformation &info)
 {
-    current_state_->On_Hit(item, player);
+    current_state_->On_Hit(item, player, info);
 }
 
 void Block::Set_State(A_Block_State *new_state)

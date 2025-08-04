@@ -1,61 +1,84 @@
 #pragma once
+#include "Enemy.h"
 class KoopaTroopa;
 
-class KoopaState {
+class KoopaState
+{
 public:
     virtual ~KoopaState() = default;
 
-    virtual void Enter(KoopaTroopa* koopa) {}
-    virtual void Exit(KoopaTroopa* koopa) {}
-    virtual void Update(KoopaTroopa* koopa, float dt) = 0;
-    virtual void OnStomped(KoopaTroopa* koopa) {}
-    virtual void OnFired(KoopaTroopa* koopa) ;
+    virtual void Enter(KoopaTroopa *koopa) {}
+    virtual void Exit(KoopaTroopa *koopa) {}
+    virtual void Update(KoopaTroopa *koopa, float dt) = 0;
+    virtual void OnStomped(KoopaTroopa *koopa) {}
+    virtual void OnFired(KoopaTroopa *koopa);
+    virtual int Get_Score() const = 0;
 };
 
 // ------ WALKING ------
-class KoopaWalkingState : public KoopaState {
+class KoopaWalkingState : public KoopaState
+{
+private:
+    const int Score_Walking = 100;
+
 public:
-    void Enter(KoopaTroopa* koopa) override;
-    void Update(KoopaTroopa* koopa, float dt) override;
-    void OnStomped(KoopaTroopa* koopa) override;
+    void Enter(KoopaTroopa *koopa) override;
+    void Update(KoopaTroopa *koopa, float dt) override;
+    void OnStomped(KoopaTroopa *koopa) override;
+    int Get_Score() const override { return Score_Walking; }
 };
 
 // ------ SHELL IDLE ------
-class KoopaShellIdleState : public KoopaState {
+class KoopaShellIdleState : public KoopaState
+{
+private:
+    const int Score_Shell = 100;
+
 public:
-    void Enter(KoopaTroopa* koopa) override;
-    void Update(KoopaTroopa* koopa, float dt) override;
-    void OnStomped(KoopaTroopa* koopa) override; // kick to move
+    void Enter(KoopaTroopa *koopa) override;
+    void Update(KoopaTroopa *koopa, float dt) override;
+    void OnStomped(KoopaTroopa *koopa) override; // kick to move
+    int Get_Score() const override { return Score_Shell; }
 };
 
 // ------ SHELL MOVING ------
-class KoopaShellMovingState : public KoopaState {
+class KoopaShellMovingState : public KoopaState
+{
+private:
+    const int Score_Kicked = 100;
+
 public:
-    void Enter(KoopaTroopa* koopa) override;
-    void Update(KoopaTroopa* koopa, float dt) override;
-    void OnStomped(KoopaTroopa* koopa) override; // stop movement
+    void Enter(KoopaTroopa *koopa) override;
+    void Update(KoopaTroopa *koopa, float dt) override;
+    void OnStomped(KoopaTroopa *koopa) override; // stop movement
+    int Get_Score() const override { return Score_Kicked; }
 };
 
 // ------ DYING ------
-class KoopaDyingState : public KoopaState {
+class KoopaDyingState : public KoopaState
+{
 private:
-    float dying_down_timer = 3.0f;
-    float dying_up_timer = 0.2f;
+    const int Score_Dying_Walking = 200;
+    const int Score_Dying_Flying = 300;
+    int score_;
 
 public:
-    void Enter(KoopaTroopa* koopa) override;
-    void Update(KoopaTroopa* koopa, float dt) override;
+    void Enter(KoopaTroopa *koopa) override;
+    void Update(KoopaTroopa *koopa, float dt) override;
+    int Get_Score() const override { return score_; }
 };
 
 // ------ FLYING ------
-class KoopaFlyingState : public KoopaState {
+class KoopaFlyingState : public KoopaState
+{
 private:
     float fly_timer = 0.0f;
     float fly_interval = 10.5f;
-    float fly_speed = 400.0f;
+    float fly_speed = 240.0f;
 
 public:
-    void Enter(KoopaTroopa* koopa) override;
-    void Update(KoopaTroopa* koopa, float dt) override;
-    void OnStomped(KoopaTroopa* koopa) override;
+    void Enter(KoopaTroopa *koopa) override;
+    void Update(KoopaTroopa *koopa, float dt) override;
+    void OnStomped(KoopaTroopa *koopa) override;
+    int Get_Score() const override { return 0; }
 };

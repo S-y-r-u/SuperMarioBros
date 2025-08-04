@@ -14,17 +14,14 @@ private:
     Goomba_State state_;
     std::vector<Rectangle> m_normal;
 
-    // Dùng trong fall
-    Vector2 before_pos;
     Vector2 previous_frame_pos;
-    float delta_time;
-    const float Push_Height = 25.0f;
-
-    int stomped_timer = 0;
-    const int Stomped_Duration = 30;
+    float stomped_timer;
+    const float Stomped_Duration = 0.5f;
+    const float Push_Velocity = 200.0f; // Vận tốc khi bị bắn hoặc đánh
+    const int Score_Goomba = 100; 
 
 public:
-    Goomba(Vector2 pos, Vector2 velo, float gravity);
+    Goomba(Vector2 pos, float gravity);
 
     void Draw() const override;
     void Update(float dt) override;
@@ -33,16 +30,15 @@ public:
 
     void Notify_Fall(float dt) override;
     void Notify_On_Ground() override;
-    void Notify_Be_Stomped() override;
-    void Notify_Be_Fired_Or_Hit() override;
+    void Notify_Be_Stomped(PlayerInformation& info) override;
+    void Notify_Be_Fired_Or_Hit(PlayerInformation& info) override;
 
     bool Can_Be_Stomped() const override;
     bool Can_Be_Fired_Or_Hit() const override;
 
 private:
-    void Fall_();
     void Move_(float dt);
     void Animate_();
     void Be_Stomped();
-    void Be_Fired_Or_Hit();
+    void Be_Fired_Or_Hit(float dt);
 };

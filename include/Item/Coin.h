@@ -12,5 +12,7 @@ public:
     void Update_() override;
     void Appear_() override {}
     //
-    void Activate_(Player &player) override;
+    void Activate_(Player &player, PlayerInformation &info) override;
+
+    bool Can_Move() const override;
 };

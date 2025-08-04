@@ -1,11 +1,16 @@
 #include "Block/Breakable_Block.h"
 
 Breakable_BLock::Breakable_BLock(Block &block)
-    : m_block(block), delta_time(0.0f), is_delete(false), rotation(0.0f)
+    : m_block(block),
+      is_delete(false),
+      rotation(0.0f)
 {
     rec_ = Item_Sprite::Brown_Brick::break_;
     before_pos = {m_block.Get_Pos().x, m_block.Get_Pos().y - rec_.height};
     up_pos_left = down_pos_left = before_pos;
+
+    up_velocity = {-Move_, -Break_Height}; // bay lên
+    down_velocity = {-Move_, 0.0f};        // rơi xuống từ từ
 }
 
 void Breakable_BLock::Draw_()
@@ -48,23 +53,31 @@ void Breakable_BLock::Update_()
     Be_Delete();
 }
 
-bool Breakable_BLock::Get_Elapse() { return false; }
+bool Breakable_BLock::Get_Elapse() { return true; }
 
 bool Breakable_BLock::Get_Is_Delete() const { return is_delete; }
 
 void Breakable_BLock::Fall_()
 {
-    delta_time += 0.16f;
+    float dt = GetFrameTime();
 
-    float up_delta_y = -Break_Height * delta_time + 0.5f * delta_time * delta_time * Physics::gravity_;
-    float down_delta_y = 0.5f * delta_time * delta_time * Physics::gravity_;
+    // Cập nhật vận tốc theo gia tốc trọng lực
+    up_velocity.y += Physics::gravity_ * dt;
+    down_velocity.y += Physics::gravity_ * dt;
 
-    up_pos_left.y = before_pos.y + up_delta_y;
-    up_pos_left.x -= Move_ * GetFrameTime();
+    // Cập nhật vị trí
+    up_pos_left.x += up_velocity.x * dt;
+    up_pos_left.y += up_velocity.y * dt;
+    // Này bên trên trái
 
-    down_pos_left.y = before_pos.y + down_delta_y;
-    down_pos_left.x -= Move_ * GetFrameTime();
+    down_pos_left.x += down_velocity.x * dt;
+    down_pos_left.y += down_velocity.y * dt;
+    // Này bên dưới trái
 
+    // Cố định block gốc để không vẽ nữa
+    m_block.Set_Pos({0, 0});
+
+    // Xoay
     rotation += Rotation_Speed;
     if (rotation >= 360.0f)
         rotation = 0.0f;
@@ -76,4 +89,11 @@ void Breakable_BLock::Be_Delete()
         is_delete = true;
 }
 
-Rectangle Breakable_BLock::Get_Draw_Rec() const { return {m_block.Get_Pos().x - rec_.width * scale_screen / 2.0f, m_block.Get_Pos().y - rec_.height * scale_screen, rec_.width * scale_screen, rec_.height * scale_screen}; }
+Rectangle Breakable_BLock::Get_Draw_Rec() const
+{
+    return {
+        m_block.Get_Pos().x - Tile_Size / 2.0f,
+        m_block.Get_Pos().y - Tile_Size,
+        Tile_Size,
+        Tile_Size};
+}

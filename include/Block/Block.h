@@ -4,12 +4,11 @@
 #include "Constants.h"
 #include "Abstract_Block_State.h"
 #include "Item/Spawn_Item.h"
-#include "Player.h"
 
 class Block
 {
 private:
-    SpriteSheet sprite_;
+    const SpriteSheet& sprite_;
 
     A_Block_State *question_state_;
     A_Block_State *normal_state_;
@@ -25,10 +24,10 @@ private:
 public:
     Block(Vector2 pos, int item_count, const std::string &type_item, const std::string &type_block);
     ~Block();
-    std::vector<bool> Surrounded_Block{0,0,0,0}; // top bot left right
+    std::vector<bool> Surrounded_Block{0, 0, 0, 0}; // top bot left right
     void Update_();
     void Draw_();
-    void On_Hit(std::vector<Item *> &item, Player &player);
+    void On_Hit(std::vector<Item *> &item, Player &player, PlayerInformation &info);
 
     void Set_State(A_Block_State *new_state);
 
