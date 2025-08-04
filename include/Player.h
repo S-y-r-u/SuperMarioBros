@@ -1,5 +1,6 @@
 #pragma once
 #include "Character.h"
+#include "Menu/SoundManager.h"
 #include <vector>
 
 enum class PlayerForm {Small, Super, Invincible, Invincible_Super_And_Fire, Fire};

@@ -65,10 +65,21 @@ void Player ::Jump()
         return;
     isGround = 0;
     velocity.y = JumpForce;
+    if (form == PlayerForm ::Small)
+    {
+        SoundManager::GetInstance().PlaySoundEffect("jump-small");
+    }
+    else if (form == PlayerForm ::Super)
+    {
+        SoundManager::GetInstance().PlaySoundEffect("jump-super");
+    }
+
 }
 
 void Player ::update(float dt)
 {
+    previous_frame_rec = getAnimationFrame()[currentFrame] ;
+
     if (isTransforming)
     {
         frameTimer += dt;
@@ -86,6 +97,7 @@ void Player ::update(float dt)
                 currentFrame = 0;
             }
         }
+        position.y = position.y + (previous_frame_rec.height - getAnimationFrame()[currentFrame].height) * scale_screen;
         return;
     }
 
@@ -126,6 +138,8 @@ void Player ::update(float dt)
         frameTimer = 0.0f;
         currentFrame = (currentFrame + 1) % getAnimationFrame().size();
     }
+    position.y = position.y + (previous_frame_rec.height - getAnimationFrame()[currentFrame].height)* scale_screen ;
+
 }
 
 void Player ::draw()
@@ -144,15 +158,14 @@ void Player ::draw()
     {
         source.width *= (-1);
     }
-    previous_frame_rec = source;
 
     Rectangle dest;
     dest.width = abs(source.width) * scale_screen;
     dest.height = abs(source.height) * scale_screen;
     dest.x = position.x;
     dest.y = position.y;
-
     DrawTexturePro(texture->sprite, source, dest, {0, 0}, 0.0f, WHITE);
+
 }
 
 void Player ::collectCoin()

@@ -73,7 +73,7 @@ void MenuImages::Load() {
     buttonBackTexture = LoadTexture("Menu/Back.png");
     buttonPlusTexture = LoadTexture("Menu/Plus.png");
     buttonMinusTexture = LoadTexture("Menu/Minus.png");
-    SettingTexture = LoadTexture("Menu/Setting.png");
+    SettingTexture = LoadTexture("Menu/Setting.jpg");
 
     // Set rectangles
     menu_background = {0, 0, (float)menuTexture.width, (float)menuTexture.height};

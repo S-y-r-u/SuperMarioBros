@@ -78,10 +78,9 @@ void MusicButton::Draw() {
     DrawRectangleRec(filledTrack, BLUE);
     
     // Vẽ knob (hình tròn)
-    Vector2 knobCenter = {sliderKnob.x + sliderKnob.width / 2, sliderKnob.y + sliderKnob.height / 2};
     Color knobColor = (hovered || isDragging) ? GRAY : WHITE;
-    DrawCircleV(knobCenter, knobRadius, knobColor);
-    DrawCircleLinesV(knobCenter, knobRadius, DARKGRAY);
+    DrawRectangleRec(sliderKnob, knobColor);
+    DrawRectangleLinesEx(sliderKnob, 2, DARKGRAY);
     
     // Vẽ volume percentage
     char volumeText[10];

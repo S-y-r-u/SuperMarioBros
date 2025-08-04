@@ -13,14 +13,13 @@ public:
     ~SettingState();
     
 private:
-    Texture* MenuTexture;           // Background menu
-    Texture* SettingTexture;        // Setting overlay texture
+    Texture* SettingTexture;           // Background menu
     
     CircleButton backButton;        // Nút back để quay về menu
     MusicButton* musicVolumeSlider; // Slider điều chỉnh nhạc
     MusicButton* soundVolumeSlider; // Slider điều chỉnh sound effects
     
-    // Vị trí để vẽ SettingTexture
-    float settingX;
-    float settingY;
+    float bgX = 0.0f;
+    float scrollSpeed = 50.0f; // pixels per second
+
 };
