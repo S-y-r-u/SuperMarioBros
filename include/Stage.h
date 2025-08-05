@@ -12,6 +12,7 @@
 #include "Enemy/Latiku.h"
 #include "Enemy/PiranhaPlant.h"
 #include "Enemy/KoopaTroopa.h"
+#include "Enemy/BomberBill.h"
 #include <vector>
 #include <algorithm>
 #include "PlayerInformation.h"

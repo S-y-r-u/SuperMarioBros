@@ -1364,3 +1364,9 @@ namespace Enemies_Sprite
         Rectangle be_fired_or_hit = {213, 150, 16, 16};
     }
 }
+
+namespace BomberBill_Sprite
+{
+    SpriteSheet bomber_bill_;
+    Rectangle normal_m = {0, 0, 29, 23};
+}

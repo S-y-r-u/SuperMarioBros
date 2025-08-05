@@ -1406,3 +1406,10 @@ namespace Enemies_Sprite
         extern Rectangle be_fired_or_hit;
     }
 }
+
+namespace BomberBill_Sprite
+{
+    extern SpriteSheet bomber_bill_;
+    
+    extern Rectangle normal_m;
+}

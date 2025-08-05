@@ -358,7 +358,7 @@ void Stage::Check_Player_Vs_Enemy()
             {
                 if (enemy->Can_Be_Kicked())
                 {
-                    player->Set_Velocity({player->get_Velocity().x, -player->get_Velocity().y / 1.5f});
+                    player->Set_Velocity({player->get_Velocity().x, fmax(-player->get_Velocity().y,-300.0f)});
                     player->Set_Pos({player->getPosition().x,player->getPosition().y -30.0f});
                     SoundManager::GetInstance().PlaySoundEffect("kick");
                     enemy->Notify_Be_Kicked(-1, information);
@@ -366,7 +366,7 @@ void Stage::Check_Player_Vs_Enemy()
                 // Player ở phía trên enemy - nhảy lên đầu enemy
                 else if (enemy->Can_Be_Stomped())
                 {
-                    player->Set_Velocity({player->get_Velocity().x, -player->get_Velocity().y / 2.0f});
+                    player->Set_Velocity({player->get_Velocity().x, fmax(-player->get_Velocity().y,-300.0f) });
                     enemy->Notify_Be_Stomped(information);
                     SoundManager::GetInstance().PlaySoundEffect("stomp");
                 }

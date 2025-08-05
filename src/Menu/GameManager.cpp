@@ -79,6 +79,7 @@ void GameManager::Load_Texture()
     Font_Sprite::font_.Load_("../resources/sprite/Font.png");
     Enemies_Sprite::enemies_.Load_("../resources/sprite/Enemies.png");
     Screen_Sprite::screen_.Load_("../resources/sprite/GameOver_TimeUp.png");
+    BomberBill_Sprite::bomber_bill_.Load_("../resources/sprite/BomberBill.png");
 }
 
 void GameManager::Unload_Texture()
@@ -89,4 +90,5 @@ void GameManager::Unload_Texture()
     Font_Sprite::font_.Unload_();
     Enemies_Sprite::enemies_.Unload_();
     Screen_Sprite::screen_.Unload_();
+    BomberBill_Sprite::bomber_bill_.Unload_();
 }
