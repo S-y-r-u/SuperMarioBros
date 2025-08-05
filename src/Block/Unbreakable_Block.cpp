@@ -25,3 +25,9 @@ void Unbreakable_Block::Draw_()
 bool Unbreakable_Block::Get_Elapse() { return false; }
 
 Rectangle Unbreakable_Block::Get_Draw_Rec() const { return {m_block.Get_Pos().x - rec_.width * scale_screen / 2.0f, m_block.Get_Pos().y - rec_.height * scale_screen, rec_.width * scale_screen, rec_.height * scale_screen}; }
+
+void Unbreakable_Block::On_Hit(std::vector<Item *> &item, Player &player, PlayerInformation &info)
+{
+    // Unbreakable block does not respond to hits
+    SoundManager::GetInstance().PlaySoundEffect("bump");
+}

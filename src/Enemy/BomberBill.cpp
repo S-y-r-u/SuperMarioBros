@@ -1,17 +1,20 @@
 #include "Enemy/BomberBill.h"
 
 BomberBill::BomberBill(Vector2 startPos, float maxDistance, float speed)
-    : Enemy(startPos, {speed, 0}, 0.0f), // Không có trọng lực, bay ngang với tốc độ speed
+    : Enemy(startPos, {speed, 0}, 0.0f), // Không có trọng lực ban đầu
       max_distance(maxDistance),
       initial_x(startPos.x),
       moving_right(true),
       run_speed(speed),
       asprite_(BomberBill_Sprite::bomber_bill_),
       animation_timer(0.0f),
-      m_normal(BomberBill_Sprite::bomber_bill_normal),
-      current_frame(0)
+      current_frame(0),
+      state_(BomberBill_State::Flying),
+      death_timer(0.0f),
+      fall_speed(300.0f)
 {
     // Khởi tạo vector chứa 6 frame animation
+    m_normal = BomberBill_Sprite::bomber_bill_normal;
     
     // Thiết lập sprite rectangle ban đầu
     rec_ = m_normal[0]; // Frame đầu tiên
@@ -22,36 +25,60 @@ BomberBill::~BomberBill() {}
 
 void BomberBill::Update(float dt)
 {
-    if (!is_active || is_dead)
+    if (!is_active)
         return;
 
     // Lưu vị trí trước đó
     previous_frame_pos = position_;
 
-    // Cập nhật animation
-    Update_Animation(dt);
-
-    // Kiểm tra nếu đã bay quá khoảng cách cho phép
-    if (moving_right && (position_.x - initial_x) >= max_distance)
+    switch (state_)
     {
-        // Quay đầu - bay sang trái
-        moving_right = false;
-        velocity_.x = -run_speed;
-    }
-    // Kiểm tra nếu đã bay về vị trí ban đầu
-    else if (!moving_right && (position_.x - initial_x) <= -max_distance)
-    {
-        // Quay đầu - bay sang phải
-        moving_right = true;
-        velocity_.x = run_speed;
-    }
+    case BomberBill_State::Flying:
+        // Cập nhật animation bình thường
+        Update_Animation(dt);
 
-    // Cập nhật vị trí - chỉ di chuyển theo x, y giữ nguyên
-    position_.x += velocity_.x * dt;
+        // Kiểm tra nếu đã bay quá khoảng cách cho phép
+        if (moving_right && (position_.x - initial_x) >= max_distance)
+        {
+            moving_right = false;
+            velocity_.x = -run_speed;
+        }
+        else if (!moving_right && (position_.x - initial_x) <= -max_distance)
+        {
+            moving_right = true;
+            velocity_.x = run_speed;
+        }
+
+        // Cập nhật vị trí - chỉ di chuyển theo x
+        position_.x += velocity_.x * dt;
+        break;
+
+    case BomberBill_State::Dying:
+        // Rơi xuống với trọng lực
+        velocity_.y += fall_speed * dt;
+        position_.x += velocity_.x * dt;
+        position_.y += velocity_.y * dt;
+
+        // Đếm thời gian chết
+        death_timer += dt;
+        if (death_timer >= death_duration)
+        {
+            state_ = BomberBill_State::Dead;
+            is_active = false; // Biến mất
+        }
+        break;
+
+    case BomberBill_State::Dead:
+        // Không làm gì - đã biến mất
+        break;
+    }
 }
 
 void BomberBill::Update_Animation(float dt)
 {
+    if (state_ != BomberBill_State::Flying)
+        return;
+
     animation_timer += dt;
     
     if (animation_timer >= frame_duration)
@@ -63,25 +90,39 @@ void BomberBill::Update_Animation(float dt)
     }
 }
 
+void BomberBill::Start_Death_Animation()
+{
+    state_ = BomberBill_State::Dying;
+    velocity_.x *= 0.5f; // Giảm tốc độ ngang khi chết
+    velocity_.y = -100.0f; // Bật lên một chút trước khi rơi
+    death_timer = 0.0f;
+    
+    // Có thể thay đổi sprite thành sprite chết nếu có
+    // rec_ = BomberBill_Sprite::death_sprite; // Nếu có sprite riêng cho chết
+}
+
 void BomberBill::Draw() const
 {
-    if (!is_active || is_dead)
+    if (!is_active)
         return;
 
     Rectangle destRec = Get_Draw_Rec();
     Rectangle sourceRec = rec_; // Sử dụng frame hiện tại
     
+    // Thay đổi màu khi đang chết
+    Color tint = (state_ == BomberBill_State::Dying) ? RED : WHITE;
+    
     // Vẽ Bomber Bill với hướng phù hợp
     if (moving_right)
     {
-        // Bay sang phải - vẽ bình thường
         sourceRec.width = -sourceRec.width; // Lật ngang
-        DrawTexturePro(asprite_.sprite, sourceRec, destRec, {0, 0}, 0.0f, WHITE);
+        // Bay sang phải - vẽ bình thường
+        DrawTexturePro(asprite_.sprite, sourceRec, destRec, {0, 0}, 0.0f, tint);
     }
     else
     {
         // Bay sang trái - lật ngang sprite
-        DrawTexturePro(asprite_.sprite, sourceRec, destRec, {0, 0}, 0.0f, WHITE);
+        DrawTexturePro(asprite_.sprite, sourceRec, destRec, {0, 0}, 0.0f, tint);
     }
 }
 
@@ -97,25 +138,44 @@ void BomberBill::Set_Pos(Vector2 pos)
 
 bool BomberBill::Can_Be_Stomped() const
 {
-    return false; // Bomber Bill bay nên không thể bị giẫm
+    return (state_ == BomberBill_State::Flying); // Chỉ có thể giẫm khi đang bay
 }
 
 bool BomberBill::Can_Be_Fired_Or_Hit() const
 {
-    return true; // Có thể bị bắn hoặc đánh
+    return (state_ == BomberBill_State::Flying); // Chỉ có thể bắn khi đang bay
 }
 
 bool BomberBill::Need_Check_Ground_Block() const
 {
-    return false; // Không cần kiểm tra va chạm với đất vì bay trong không khí
+    return (state_ == BomberBill_State::Dying); // Chỉ kiểm tra ground khi đang rơi
 }
 
 void BomberBill::Notify_Fall(float dt)
 {
-    // Bomber Bill bay nên không bị rơi - không làm gì
+    // Chỉ áp dụng trọng lực khi đang chết
+    if (state_ == BomberBill_State::Dying)
+    {
+        velocity_.y += fall_speed * dt;
+    }
 }
 
 void BomberBill::Notify_On_Ground()
 {
-    // Bomber Bill bay nên không chạm đất - không làm gì
+    // Khi chạm đất trong lúc chết, biến mất luôn
+    if (state_ == BomberBill_State::Dying)
+    {
+        state_ = BomberBill_State::Dead;
+        is_active = false;
+    }
+}
+
+void BomberBill::Notify_Be_Stomped(PlayerInformation& info)
+{
+    if (state_ == BomberBill_State::Flying)
+    {
+        Start_Death_Animation();
+        // Thêm điểm cho player
+        // info.AddScore(100); // Ví dụ
+    }
 }

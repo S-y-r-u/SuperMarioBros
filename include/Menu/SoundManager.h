@@ -46,5 +46,5 @@ private:
     bool isLooping = false;
     bool isPaused = false;
     float sfxVolume = 0.5f;
-    float musicVolume = 0.5f;
+    float musicVolume = 0.3f;
 };

@@ -11,8 +11,8 @@ constexpr float scale_screen = 3.0f;
 enum ProgramState {
     menuState = 0,
     settingState = 1,
-    choosingStageState = 2,
-    gameManagerState = 3
+    choosingStageState = 3,
+    gameManagerState = 4
 };
 
 enum class Difficulty {

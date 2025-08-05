@@ -31,7 +31,7 @@ void KoopaWalkingState::Update(KoopaTroopa *koopa, float dt)
     }
 }
 
-void KoopaWalkingState::OnStomped(KoopaTroopa *koopa)
+void KoopaWalkingState::OnStomped(KoopaTroopa *koopa , PlayerInformation &info)
 {
     koopa->SetState(new KoopaShellIdleState());
 }
@@ -48,6 +48,7 @@ void KoopaShellIdleState::Enter(KoopaTroopa *koopa)
 
 void KoopaShellIdleState::Update(KoopaTroopa *koopa, float dt)
 {
+    immobile_timer += dt;
     koopa->frame_timer += dt;
 
     koopa->velocity_.y += koopa->gravity_ * dt; // apply gravity
@@ -63,16 +64,29 @@ void KoopaShellIdleState::Update(KoopaTroopa *koopa, float dt)
     }
 }
 
-void KoopaShellIdleState::OnStomped(KoopaTroopa *koopa)
+void KoopaShellIdleState::OnStomped(KoopaTroopa *koopa , PlayerInformation &info)
 {
-    koopa->SetState(new KoopaShellMovingState());
+    OnKicked(koopa,1,info); // Khi bị giẫm sẽ chuyển sang trạng thái shell moving
+}
+
+void KoopaShellIdleState::OnKicked(KoopaTroopa *koopa , int direction, PlayerInformation &info)
+{
+    if (immobile_timer >= InChange_Frame_Time)
+    {
+        koopa->velocity_.x = 1.0f * direction;        // Set velocity based on kick direction
+        koopa->SetState(new KoopaShellMovingState()); // Chuyển sang trạng thái shell
+        info.UpdateScore(koopa->current_state_->Get_Score());
+        Rectangle dest_rec = koopa->Get_Draw_Rec();
+        Score_Manager &score_manager = Score_Manager::GetInstance();
+        score_manager.AddScore({dest_rec.x, dest_rec.y}, koopa->current_state_->Get_Score());
+    }
 }
 
 // ---------- SHELL MOVING ----------
 void KoopaShellMovingState::Enter(KoopaTroopa *koopa)
 {
     koopa->rec_ = koopa->shell_moving_frames_[0];
-    koopa->velocity_.x = (koopa->velocity_.x >= 0) ? 900.0f : -900.0f;
+    koopa->velocity_.x = (koopa->velocity_.x >= 0) ? 600.0f : -600.0f;
     koopa->velocity_.y = 0; // dừng lại
     koopa->current_frame = 0;
     koopa->frame_timer = 0;
@@ -90,7 +104,7 @@ void KoopaShellMovingState::Update(KoopaTroopa *koopa, float dt)
     koopa->velocity_.y += koopa->gravity_ * dt; // apply gravity
 }
 
-void KoopaShellMovingState::OnStomped(KoopaTroopa *koopa)
+void KoopaShellMovingState::OnStomped(KoopaTroopa *koopa , PlayerInformation &info)
 {
     // đá lại thì dừng
     koopa->SetState(new KoopaShellIdleState());
@@ -166,7 +180,7 @@ void KoopaFlyingState::Update(KoopaTroopa *koopa, float dt)
     }
 }
 
-void KoopaFlyingState::OnStomped(KoopaTroopa *koopa)
+void KoopaFlyingState::OnStomped(KoopaTroopa *koopa , PlayerInformation &info)
 {
     // Khi bị giẫm sẽ thành shell
     koopa->SetState(new KoopaWalkingState());

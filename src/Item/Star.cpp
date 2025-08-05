@@ -105,6 +105,7 @@ void Star::Activate_(Player &player, PlayerInformation &info)
     score_manager.AddScore({player.getPosition().x + player.get_draw_rec().width, player.getPosition().y}, Score_Star);
     player.getStar();
     info.UpdateScore(Score_Star);
+    SoundManager::GetInstance().PlaySoundEffect("powerup");
     is_delete = true;
 }
 

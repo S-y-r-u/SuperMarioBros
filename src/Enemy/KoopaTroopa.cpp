@@ -92,7 +92,7 @@ void KoopaTroopa::Notify_Be_Stomped(PlayerInformation &info)
         return;
     if (current_state_)
     {
-        current_state_->OnStomped(this);
+        current_state_->OnStomped(this, info);
         info.UpdateScore(current_state_->Get_Score());
         Rectangle dest_rec = Get_Draw_Rec();
         Score_Manager &score_manager = Score_Manager::GetInstance();
@@ -125,14 +125,7 @@ void KoopaTroopa::Notify_Be_Kicked(int direction, PlayerInformation &info)
 {
     // direction: 1 for right, -1 for left
     if (current_state_ && Can_Be_Kicked())
-    {
-        velocity_.x = 1.0f * direction;        // Set velocity based on kick direction
-        SetState(new KoopaShellMovingState()); // Chuyển sang trạng thái shell
-        info.UpdateScore(current_state_->Get_Score());
-        Rectangle dest_rec = Get_Draw_Rec();
-        Score_Manager &score_manager = Score_Manager::GetInstance();
-        score_manager.AddScore({dest_rec.x, dest_rec.y}, current_state_->Get_Score());
-    }
+        current_state_->OnKicked(this, direction , info);
 }
 
 bool KoopaTroopa::Can_Be_Kicked() const

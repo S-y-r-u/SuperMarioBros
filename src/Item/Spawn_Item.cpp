@@ -34,13 +34,27 @@ void Spawn_Item::Item_Spawn(const std::string &type_item, std::vector<Item *> &i
             Mush_Room_Spawner(items, pos, State_MushRoom::super_);
         else
             Flower_Spawner(items, pos);
+        SoundManager::GetInstance().PlaySoundEffect("powerup_appears");
     }
     if (type_item == "hidden_coin")
+    {
+        SoundManager::GetInstance().PlaySoundEffect("coin");
         Hidden_Coin_Spawner(items, pos, player, info);
+    }
     if (type_item == "one_up_mushroom")
+    {
+        SoundManager::GetInstance().PlaySoundEffect("1-up");
         Mush_Room_Spawner(items, pos, State_MushRoom::one_up);
+    }
     if (type_item == "posion_mushroom")
+    {
+        SoundManager::GetInstance().PlaySoundEffect("powerup_appears");
         Mush_Room_Spawner(items, pos, State_MushRoom::posion_);
+    }
     if (type_item == "star")
+    {
+        SoundManager::GetInstance().PlaySoundEffect("powerup_appears");
         Star_Spawner(items, pos);
+    }
 }
+

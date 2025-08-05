@@ -54,9 +54,11 @@ void Normal_Block::On_Hit(std::vector<Item *> &item, Player &player, PlayerInfor
     {
         elapse_ = true;
         velocity_y = -Push_Height; // đẩy lên
+        SoundManager::GetInstance().PlaySoundEffect("bump");
     }
     else
     {
+        SoundManager::GetInstance().PlaySoundEffect("breakblock");
         change_state = true;
     }
 }

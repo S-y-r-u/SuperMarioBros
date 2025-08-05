@@ -12,7 +12,7 @@ public:
 
     void Draw_() override;
     void Update_() override {}
-    void On_Hit(std::vector<Item *> &item, Player &player, PlayerInformation &info) override {}
+    void On_Hit(std::vector<Item *> &item, Player &player, PlayerInformation &info) override ;
 
     bool Get_Elapse() override;
     Rectangle Get_Draw_Rec() const override;

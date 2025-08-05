@@ -135,7 +135,7 @@ void Mush_Room::Activate_(Player &player, PlayerInformation &info)
         player.getMushroom();
     }
     info.UpdateScore(Score_One_Up_Super);
-
+    SoundManager::GetInstance().PlaySoundEffect("powerup");
     is_delete = true;
 }
 

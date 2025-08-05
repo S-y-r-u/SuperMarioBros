@@ -34,22 +34,18 @@ void UI::Process()
         if (Program_state != previousState)
         {
             // Stop current music
-            SoundManager::GetInstance().StopMusic();
-
-            // Play appropriate music for new state
-            if (Program_state == menuState || Program_state == settingState)
+            if (Program_state / choosingStageState != previousState / choosingStageState)
             {
-                SoundManager::GetInstance().PlayMusic("MenuMusic", true);
+                SoundManager::GetInstance().StopMusic();
+                if (Program_state / choosingStageState == 0)
+                {
+                    SoundManager::GetInstance().PlayMusic("MenuMusic", true);
+                }
+                else if (Program_state / choosingStageState == 1)
+                {
+                    SoundManager::GetInstance().PlayMusic("playingMusic", true);
+                }
             }
-            else if (Program_state == choosingStageState)
-            {
-                SoundManager::GetInstance().PlayMusic("playingMusic", true);
-            }
-            // else if (Program_state == gameManagerState)
-            // {
-            //     SoundManager::GetInstance().PlayMusic("playingMusic", true);
-            // }
-
             previousState = Program_state;
         }
         SoundManager::GetInstance().Update();

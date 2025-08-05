@@ -54,6 +54,7 @@ void Question_Block::On_Hit(std::vector<Item *> &item, Player &player, PlayerInf
         elapse_ = true;
         velocity_y = -Push_Height; // Đẩy lên
     }
+    else SoundManager::GetInstance().PlaySoundEffect("bump");
 }
 
 void Question_Block::Elapse_()

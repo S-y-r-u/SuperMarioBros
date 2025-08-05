@@ -61,8 +61,8 @@ EasyMap::EasyMap()
     camera.zoom = 1;
     enemies.push_back(new Goomba({240, 100}, 500.0f));
     enemies.push_back(new Goomba({340, 100}, 500.0f));
-    // enemies.push_back(new Latiku({200, 100}, 40.f, player, &enemies));
-    //  enemies.push_back(new PiranhaPlant({500, 400}, player));
+    enemies.push_back(new Latiku({200, 100}, 40.f, player, &enemies));
+     enemies.push_back(new PiranhaPlant({500, 400}, player));
     enemies.push_back(new KoopaTroopa({140, 400}, 1));  
     enemies.push_back(new KoopaTroopa({520, 400}, 1));
     enemies.push_back(new BomberBill({1800, 470}, 200.0f));

@@ -79,8 +79,9 @@ void Stage::Non_Player_Update()
     {
         Rectangle player_rec = player->get_draw_rec();
         Rectangle rec_item = item->Get_Draw_Rec();
-        if (CheckCollisionRecs(player_rec, rec_item) && !item->Is_Appear_Animation())
+        if (CheckCollisionRecs(player_rec, rec_item) && !item->Is_Appear_Animation()){
             item->Activate_(*player, information);
+        }
     }
 
     for (size_t i = 0; i < items.size();)

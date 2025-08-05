@@ -1,6 +1,13 @@
 #pragma once
 #include "Enemy/Enemy.h"
 
+enum class BomberBill_State
+{
+    Flying,
+    Dying,
+    Dead
+};
+
 class BomberBill : public Enemy
 {
 private:
@@ -16,6 +23,12 @@ private:
     float animation_timer;
     int current_frame;
     const float frame_duration = 0.1f; // Thời gian mỗi frame (100ms)
+    
+    // Death animation variables
+    BomberBill_State state_;
+    float death_timer;
+    const float death_duration = 1.0f; // Thời gian rơi trước khi biến mất
+    float fall_speed;
 
 public:
     BomberBill(Vector2 startPos, float maxDistance = 300.0f, float speed = 300.0f);
@@ -32,7 +45,9 @@ public:
 
     void Notify_Fall(float dt) override;
     void Notify_On_Ground() override;
+    void Notify_Be_Stomped(PlayerInformation& info) override;
 
 private:
     void Update_Animation(float dt);
+    void Start_Death_Animation();
 };

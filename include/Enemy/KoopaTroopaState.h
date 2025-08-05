@@ -10,8 +10,9 @@ public:
     virtual void Enter(KoopaTroopa *koopa) {}
     virtual void Exit(KoopaTroopa *koopa) {}
     virtual void Update(KoopaTroopa *koopa, float dt) = 0;
-    virtual void OnStomped(KoopaTroopa *koopa) {}
+    virtual void OnStomped(KoopaTroopa *koopa, PlayerInformation &info) {}
     virtual void OnFired(KoopaTroopa *koopa);
+    virtual void OnKicked(KoopaTroopa *koopa , int direction , PlayerInformation &info) {}
     virtual int Get_Score() const = 0;
 };
 
@@ -24,7 +25,7 @@ private:
 public:
     void Enter(KoopaTroopa *koopa) override;
     void Update(KoopaTroopa *koopa, float dt) override;
-    void OnStomped(KoopaTroopa *koopa) override;
+    void OnStomped(KoopaTroopa *koopa, PlayerInformation &info) override;
     int Get_Score() const override { return Score_Walking; }
 };
 
@@ -33,11 +34,14 @@ class KoopaShellIdleState : public KoopaState
 {
 private:
     const int Score_Shell = 100;
+    const float InChange_Frame_Time = 1.0f; // seconds
+    float immobile_timer = 0.0f;
 
 public:
     void Enter(KoopaTroopa *koopa) override;
     void Update(KoopaTroopa *koopa, float dt) override;
-    void OnStomped(KoopaTroopa *koopa) override; // kick to move
+    void OnStomped(KoopaTroopa *koopa, PlayerInformation &info) override; // kick to move
+    void OnKicked(KoopaTroopa *koopa , int direction , PlayerInformation &info) override;
     int Get_Score() const override { return Score_Shell; }
 };
 
@@ -50,7 +54,7 @@ private:
 public:
     void Enter(KoopaTroopa *koopa) override;
     void Update(KoopaTroopa *koopa, float dt) override;
-    void OnStomped(KoopaTroopa *koopa) override; // stop movement
+    void OnStomped(KoopaTroopa *koopa, PlayerInformation &info) override; // stop movement
     int Get_Score() const override { return Score_Kicked; }
 };
 
@@ -80,6 +84,6 @@ private:
 public:
     void Enter(KoopaTroopa *koopa) override;
     void Update(KoopaTroopa *koopa, float dt) override;
-    void OnStomped(KoopaTroopa *koopa) override;
+    void OnStomped(KoopaTroopa *koopa , PlayerInformation &info) override;
     int Get_Score() const override { return 0; }
 };

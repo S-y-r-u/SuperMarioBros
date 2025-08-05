@@ -20,6 +20,7 @@ void Flower::Activate_(Player &player, PlayerInformation &info)
     player.getFlower();
     info.UpdateScore(Score_Flower);
     is_delete = 1;
+    SoundManager::GetInstance().PlaySoundEffect("powerup");
 }
 
 void Flower::Appear_()

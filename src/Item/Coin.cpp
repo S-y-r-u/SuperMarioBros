@@ -20,6 +20,7 @@ void Coin::Activate_(Player &player, PlayerInformation &info)
 {
     info.UpdateCoins(1);
     is_delete = 1;
+    SoundManager::GetInstance().PlaySoundEffect("coin");
 }
 
 bool Coin::Can_Move() const { return false; }
