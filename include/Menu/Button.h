@@ -1,6 +1,7 @@
 #pragma once
 #include "raylib.h"
 #include "sprite.h"
+#include "Menu/CursorManager.h"
 #include <string>
 
 // Base class Button (interface)
@@ -9,7 +10,7 @@ public:
     Button(const std::string& text, float x, float y);
     virtual ~Button();
 
-    virtual void Draw() = 0;
+    virtual void Draw() = 0;            
     virtual bool Update() = 0;  // Returns true if clicked (released inside)
 
 protected:

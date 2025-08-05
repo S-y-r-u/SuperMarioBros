@@ -123,6 +123,8 @@ bool MusicButton::Update()
 
     // Xử lý slider
     hovered = IsPointInKnob(mousePos);
+    if (hovered)
+        CursorManager::Set_Cursor(MOUSE_CURSOR_POINTING_HAND);
 
     if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT) && IsPointInKnob(mousePos))
     {

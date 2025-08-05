@@ -13,8 +13,10 @@
 #include "Enemy/PiranhaPlant.h"
 #include "Enemy/KoopaTroopa.h"
 #include "Enemy/BomberBill.h"
+#include "Enemy/Spawn_Enemy.h"
 #include <vector>
 #include <algorithm>
+#include <unordered_map>
 #include "PlayerInformation.h"
 #include "DrawScore.h"
 
@@ -35,6 +37,7 @@ protected:
     std::vector<Item *> items;
     std::vector<Block *> blocks;
     std::vector<Enemy *> enemies;
+    std::unordered_map<Enemy*, std::vector<Enemy *>> enemy_map;
 
 public:
     Stage();

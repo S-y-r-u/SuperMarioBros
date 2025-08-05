@@ -143,3 +143,8 @@ bool KoopaTroopa::Kill_Other_Enemies() const
 {
     return (dynamic_cast<KoopaShellMovingState *>(current_state_) != nullptr);
 }
+
+void KoopaTroopa::Collision_With_Other_Enemy(Vector2 velo, Vector2 pos)
+{
+    Notify_Change_Direct();
+}

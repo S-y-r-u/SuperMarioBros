@@ -2,15 +2,16 @@
 #include <raymath.h>
 
 // Constructor: khởi tạo Latiku với vị trí, trọng lực, con trỏ tới Player và danh sách kẻ địch
-Latiku::Latiku(Vector2 pos, float gravity, Player *player, std::vector<Enemy *> *enemies)
-    : Enemy(pos, {120.0f, 0}, gravity),
+Latiku::Latiku(Vector2 pos, Player *player, std::vector<Enemy *> *enemies, std::unordered_map<Enemy *, std::vector<Enemy *>> &enemy_map)
+    : Enemy(pos, {120.0f, 0}, 0.0f),
       player(player),
       state_(Latiku_State::fly),
       enemies(enemies),
       base_y(pos.y),
       pos_state(0),
       timer_(0.0f),
-      pos_to_player(hover_radius_front)
+      pos_to_player(hover_radius_front),
+      enemy_map(enemy_map)
 {
     rec_ = Enemies_Sprite::Latiku::fly_;
 }
@@ -52,7 +53,7 @@ void Latiku::Draw() const
 }
 
 // Lakitu bị trúng đạn (fireball, v.v.)
-void Latiku::Notify_Be_Fired_Or_Hit(PlayerInformation& info)
+void Latiku::Notify_Be_Fired_Or_Hit(PlayerInformation &info)
 {
     if (state_ != Latiku_State::be_fired_or_hit)
     {
@@ -90,8 +91,8 @@ void Latiku::Animate_(float dt)
             pos_state = !pos_state;
 
         float target_pos = player->getPosition().x + pos_to_player;
-        if(player->getPosition().x + pos_to_player < rec_.width / 2.0f ||
-           player->getPosition().x + pos_to_player > 214 * 48.0f - rec_.width / 2.0f)
+        if (player->getPosition().x + pos_to_player < rec_.width / 2.0f ||
+            player->getPosition().x + pos_to_player > 214 * 48.0f - rec_.width / 2.0f)
         {
             target_pos = Clamp(target_pos, rec_.width / 2.0f, 214 * 48.0f - rec_.width / 2.0f);
             pos_state = !pos_state;
@@ -128,9 +129,16 @@ void Latiku::Spawn_Spiny()
         position_.x,
         position_.y - rec_.height * scale_screen / 2.0f};
 
-    enemies->push_back(new Spiny(spawn_pos, velo, 0.0f));
+    Spiny *spiny = new Spiny(spawn_pos, velo);
+    enemies->push_back(spiny);
+    enemy_map[spiny] = std::vector<Enemy *>();
 
     state_ = Latiku_State::fly;
     timer_ = 0;
     rec_ = Enemies_Sprite::Latiku::fly_;
+}
+
+bool Latiku::Need_Check_Collision_With_Other_Enemy() const
+{
+    return false;
 }

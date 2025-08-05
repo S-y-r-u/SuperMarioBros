@@ -17,12 +17,13 @@ private:
 
     Vector2 previous_frame_pos;
     bool is_jump;
+    bool prev_ground;
     const float Push_Velocity = 200.0f; 
     const float Jump_Velocity = 400.0f;
     const int Score_Spiny = 100; 
 
 public:
-    Spiny(Vector2 pos, Vector2 velo, float gravity);
+    Spiny(Vector2 pos, Vector2 velo);
 
     void Update(float dt) override;
     void Draw() const override;
@@ -39,6 +40,7 @@ public:
     bool Can_Be_Stomped() const override;
     bool Can_Be_Fired_Or_Hit() const override;
     bool Can_Jump() const override;
+    void Collision_With_Other_Enemy(Vector2 velo, Vector2 pos) override;
 
 private:
     void Animate_();

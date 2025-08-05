@@ -59,15 +59,17 @@ EasyMap::EasyMap()
     camera.offset = {0, 0};
     camera.rotation = 0;
     camera.zoom = 1;
-    enemies.push_back(new Goomba({240, 100}, 500.0f));
-    enemies.push_back(new Goomba({340, 100}, 500.0f));
-    enemies.push_back(new Latiku({200, 100}, 40.f, player, &enemies));
-     enemies.push_back(new PiranhaPlant({500, 400}, player));
-    enemies.push_back(new KoopaTroopa({140, 400}, 1));  
-    enemies.push_back(new KoopaTroopa({520, 400}, 1));
-    enemies.push_back(new BomberBill({1800, 470}, 200.0f));
+    Spawn_Enemy::Spawn_Goomba(enemies, {240, 100}, enemy_map);
+    Spawn_Enemy::Spawn_Goomba(enemies, {340, 100}, enemy_map);
+    Spawn_Enemy::Spawn_Latiku(enemies, {200, 100}, player, enemy_map);
+    // enemies.push_back(new PiranhaPlant({500, 400}, player));
+    Spawn_Enemy::Spawn_KoopaTroopa(enemies, {140, 400}, enemy_map);
+    Spawn_Enemy::Spawn_KoopaTroopa(enemies, {520, 400}, enemy_map, true);
+    Spawn_Enemy::Spawn_BomberBill(enemies, {1800, 470}, enemy_map);
+    // enemies.push_back(new Spiny({500, 400}, {75.0f, 0.0f}, 1));
+    // enemies.push_back(new Spiny({700, 400}, {-75.0f, 0.0f}, 1));
 }
-    
+
 EasyMap::~EasyMap()
 {
     delete player;

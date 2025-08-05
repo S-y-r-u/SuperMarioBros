@@ -3,6 +3,7 @@
 #include "Player.h"
 #include "Spiny.h"
 #include <raymath.h>
+#include <unordered_map>
 
 enum class Latiku_State
 {
@@ -30,9 +31,10 @@ private:
 
     Player *player;
     std::vector<Enemy *> *enemies;
+    std::unordered_map<Enemy *, std::vector<Enemy *>> &enemy_map;
 
 public:
-    Latiku(Vector2 pos, float gravity, Player *player, std::vector<Enemy *> *enemies);
+    Latiku(Vector2 pos, Player *player, std::vector<Enemy *> *enemies, std::unordered_map<Enemy *, std::vector<Enemy *>> &enemy_map);
 
     void Update(float dt) override;
     void Draw() const override;
@@ -45,6 +47,7 @@ public:
     bool Can_Be_Stomped() const override;
     bool Can_Be_Fired_Or_Hit() const override;
     bool Need_Check_Ground_Block() const;
+    bool Need_Check_Collision_With_Other_Enemy() const override;
 
 private:
     void Spawn_Spiny();

@@ -1,9 +1,9 @@
 #include "Enemy/Goomba.h"
 
-Goomba::Goomba(Vector2 pos, float gravity)
-    : Enemy(pos, Vector2{75.0f, 0.0f}, gravity),
+Goomba::Goomba(Vector2 pos)
+    : Enemy(pos, Vector2{75.0f, 0.0f}, 0.0f),
       state_(Goomba_State::normal),
-      m_normal(Enemies_Sprite::Goomba_Brown::Normal::normal_), 
+      m_normal(Enemies_Sprite::Goomba_Brown::Normal::normal_),
       stomped_timer(0.0f)
 {
     rec_ = m_normal[current_frame];
@@ -62,7 +62,7 @@ void Goomba::Notify_On_Ground()
     }
 }
 
-void Goomba::Notify_Be_Stomped(PlayerInformation& info)
+void Goomba::Notify_Be_Stomped(PlayerInformation &info)
 {
     if (state_ == Goomba_State::normal)
     {
@@ -77,7 +77,7 @@ void Goomba::Notify_Be_Stomped(PlayerInformation& info)
     }
 }
 
-void Goomba::Notify_Be_Fired_Or_Hit(PlayerInformation& info)
+void Goomba::Notify_Be_Fired_Or_Hit(PlayerInformation &info)
 {
     if (state_ == Goomba_State::normal)
     {

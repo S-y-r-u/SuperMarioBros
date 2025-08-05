@@ -79,7 +79,8 @@ void Stage::Non_Player_Update()
     {
         Rectangle player_rec = player->get_draw_rec();
         Rectangle rec_item = item->Get_Draw_Rec();
-        if (CheckCollisionRecs(player_rec, rec_item) && !item->Is_Appear_Animation()){
+        if (CheckCollisionRecs(player_rec, rec_item) && !item->Is_Appear_Animation())
+        {
             item->Activate_(*player, information);
         }
     }
@@ -87,7 +88,10 @@ void Stage::Non_Player_Update()
     for (size_t i = 0; i < items.size();)
     {
         if (items[i]->Get_Is_Delete())
+        {
+            delete items[i];
             items.erase(items.begin() + i);
+        }
         else
             i++;
     }
@@ -95,7 +99,10 @@ void Stage::Non_Player_Update()
     for (size_t i = 0; i < blocks.size();)
     {
         if (blocks[i]->Get_Is_Delete())
+        {
+            delete blocks[i];
             blocks.erase(blocks.begin() + i);
+        }
         else
             i++;
     }
@@ -103,7 +110,11 @@ void Stage::Non_Player_Update()
     for (size_t i = 0; i < enemies.size();)
     {
         if (!enemies[i]->Get_Is_Active())
+        {
+            enemy_map.erase(enemies[i]);
+            delete enemies[i];
             enemies.erase(enemies.begin() + i);
+        }
         else
             i++;
     }
@@ -359,15 +370,15 @@ void Stage::Check_Player_Vs_Enemy()
             {
                 if (enemy->Can_Be_Kicked())
                 {
-                    player->Set_Velocity({player->get_Velocity().x, fmax(-player->get_Velocity().y,-300.0f)});
-                    player->Set_Pos({player->getPosition().x,player->getPosition().y -30.0f});
+                    player->Set_Velocity({player->get_Velocity().x, fmax(-player->get_Velocity().y, -300.0f)});
+                    player->Set_Pos({player->getPosition().x, player->getPosition().y - 30.0f});
                     SoundManager::GetInstance().PlaySoundEffect("kick");
                     enemy->Notify_Be_Kicked(-1, information);
                 }
                 // Player ở phía trên enemy - nhảy lên đầu enemy
                 else if (enemy->Can_Be_Stomped())
                 {
-                    player->Set_Velocity({player->get_Velocity().x, fmax(-player->get_Velocity().y,-300.0f) });
+                    player->Set_Velocity({player->get_Velocity().x, fmax(-player->get_Velocity().y, -300.0f)});
                     enemy->Notify_Be_Stomped(information);
                     SoundManager::GetInstance().PlaySoundEffect("stomp");
                 }
@@ -542,7 +553,13 @@ void Stage::Check_Enemy_Vs_Block()
             if (!CheckCollisionRecs(rec_enemy, rec_block))
                 continue;
 
-            if (!block->Get_Elapse()) // Nếu block đứng yên
+            if (prev.y > rec_block.y + rec_block.height && !block->Surrounded_Block[1] && enemy->Get_Velocity().y < 0)
+            {
+                // Va chạm từ dưới lên (đụng đầu)
+                enemy->Set_Pos({enemy->Get_Pos().x, rec_block.y + rec_block.height + h});
+                enemy->Set_Velocity({enemy->Get_Velocity().x, 0.f});
+            }
+            else if (!block->Get_Elapse()) // Nếu block đứng yên
             {
                 if (prev.y <= rec_block.y)
                 {
@@ -649,18 +666,29 @@ void Stage::Check_Enemy_Vs_Enemy()
     for (int i = 0; i < enemies.size(); i++)
     {
         Enemy *enemy1 = enemies[i];
-        if (!enemy1 || !enemy1->Get_Is_Active() || enemy1->Get_Is_Dead())
+        if (!enemy1 || !enemy1->Get_Is_Active() || enemy1->Get_Is_Dead() || !enemy1->Need_Check_Collision_With_Other_Enemy())
             continue;
         Rectangle rec_enemy1 = enemy1->Get_Draw_Rec();
 
         for (int j = i + 1; j < enemies.size(); j++)
         {
             Enemy *enemy2 = enemies[j];
-            if (enemy1 == enemy2 || !enemy2->Get_Is_Active() || enemy2->Get_Is_Dead())
+            if (enemy1 == enemy2 || !enemy2->Get_Is_Active() || enemy2->Get_Is_Dead() || !enemy2->Need_Check_Collision_With_Other_Enemy())
                 continue;
             Rectangle rec_enemy2 = enemy2->Get_Draw_Rec();
 
             if (!CheckCollisionRecs(rec_enemy1, rec_enemy2))
+            {
+                enemy_map[enemy1].erase(std::remove(enemy_map[enemy1].begin(), enemy_map[enemy1].end(), enemy2), enemy_map[enemy1].end());
+                enemy_map[enemy2].erase(std::remove(enemy_map[enemy2].begin(), enemy_map[enemy2].end(), enemy1), enemy_map[enemy2].end());
+                continue;
+            }
+            auto &v1 = enemy_map[enemy1];
+            if (std::find(v1.begin(), v1.end(), enemy2) != v1.end())
+                continue;
+
+            auto &v2 = enemy_map[enemy2];
+            if (std::find(v2.begin(), v2.end(), enemy1) != v2.end())
                 continue;
             if (enemy1->Kill_Other_Enemies())
             {
@@ -670,10 +698,17 @@ void Stage::Check_Enemy_Vs_Enemy()
             {
                 enemy1->Notify_Be_Fired_Or_Hit(information);
             }
+
             else
             {
-                enemy1->Notify_Change_Direct();
-                enemy2->Notify_Change_Direct();
+                Vector2 velo1 = enemy1->Get_Velocity();
+                Vector2 velo2 = enemy2->Get_Velocity();
+                Vector2 pos1 = enemy1->Get_Pos();
+                Vector2 pos2 = enemy2->Get_Pos();
+                enemy1->Collision_With_Other_Enemy(velo2, pos2);
+                enemy2->Collision_With_Other_Enemy(velo1, pos1);
+                enemy_map[enemy1].push_back(enemy2);
+                enemy_map[enemy2].push_back(enemy1);
                 break;
             }
         }

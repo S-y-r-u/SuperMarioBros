@@ -56,6 +56,8 @@ bool RecButton::Update()
 {
     Vector2 mousePos = GetMousePosition();
     hovered = CheckCollisionPointRec(mousePos, bounds);
+    if (hovered)
+        CursorManager::Set_Cursor(MOUSE_CURSOR_POINTING_HAND);
 
     if (hovered && IsMouseButtonPressed(MOUSE_BUTTON_LEFT))
     {
@@ -153,6 +155,8 @@ bool CircleButton::Update()
 {
     Vector2 mousePos = GetMousePosition();
     hovered = IsPointInCircle(mousePos, center, radius);
+    if (hovered)
+        CursorManager::Set_Cursor(MOUSE_CURSOR_POINTING_HAND);
 
     if (hovered && IsMouseButtonPressed(MOUSE_BUTTON_LEFT))
     {

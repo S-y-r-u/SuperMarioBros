@@ -9,6 +9,7 @@ void UI::Process()
 {
     InitWindow(Screen_w, Screen_h, "Mario Game");
     SetTargetFPS(120);
+    SetConfigFlags(FLAG_MSAA_4X_HINT);
     InitAudioDevice();
 
     MenuImages::GetInstance().Load();
@@ -30,6 +31,7 @@ void UI::Process()
 
     while (!WindowShouldClose())
     {
+        type_cursor = 0;
         // Quản lý music khi state thay đổi
         if (Program_state != previousState)
         {
@@ -94,6 +96,7 @@ void UI::Process()
         }
 
         EndDrawing();
+        CursorManager::Update_(); // Cập nhật con trỏ mỗi frame
     }
 
     // Cleanup

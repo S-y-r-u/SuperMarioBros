@@ -46,3 +46,25 @@ bool Enemy::Can_Jump() const { return false; }
 bool Enemy::Need_Check_Ground_Block() const { return true; }
 
 bool Enemy::Kill_Other_Enemies() const { return false; }
+
+void Enemy::Collision_With_Other_Enemy(Vector2 velo, Vector2 pos)
+{
+    if (velocity_.x * velo.x < 0)
+        Notify_Change_Direct();
+    else if(position_.x < pos.x && velocity_.x > 0) 
+        Notify_Change_Direct();
+    else if(position_.x > pos.x && velocity_.x < 0)
+        Notify_Change_Direct();
+}
+
+bool Enemy::Need_Check_Collision_With_Other_Enemy() const
+{
+    return true; // Mặc định là cần kiểm tra va chạm với các enemy khác
+}
+
+void Enemy::Set_Velocity(Vector2 velocity)
+{
+    if (!is_active || is_dead)
+        return;
+    velocity_ = velocity; 
+}

@@ -30,6 +30,7 @@ public:
     Rectangle Get_Draw_Rec() const;
     Vector2 Get_Pos() const;
     Vector2 Get_Velocity() const;
+    void Set_Velocity(Vector2 velocity);
     virtual void Set_Pos(Vector2 pos) {}
     bool Get_Is_Active();
     bool Get_Is_Dead();
@@ -48,4 +49,6 @@ public:
     virtual void Notify_Be_Stomped(PlayerInformation& info) {}
     virtual void Notify_Be_Fired_Or_Hit(PlayerInformation& info) {}
     virtual void Notify_Be_Kicked(int direction, PlayerInformation& info) {}
+    virtual void Collision_With_Other_Enemy(Vector2 velo, Vector2 pos);
+    virtual bool Need_Check_Collision_With_Other_Enemy() const;
 };

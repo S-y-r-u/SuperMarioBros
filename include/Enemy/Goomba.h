@@ -21,7 +21,7 @@ private:
     const int Score_Goomba = 100; 
 
 public:
-    Goomba(Vector2 pos, float gravity);
+    Goomba(Vector2 pos);
 
     void Draw() const override;
     void Update(float dt) override;

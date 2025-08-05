@@ -45,4 +45,5 @@ public:
     bool Can_Be_Fired_Or_Hit() const override { return true; }
     bool Can_Be_Kicked() const override;
     bool Kill_Other_Enemies() const override;
+    void Collision_With_Other_Enemy(Vector2 velo, Vector2 pos) override;
 };

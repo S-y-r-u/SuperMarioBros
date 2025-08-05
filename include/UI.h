@@ -8,6 +8,8 @@
 #include "resource_dir.h"
 #include "Menu/SoundManager.h"
 #include "Menu/SettingState.h"
+#include "Menu/CursorManager.h"
+
 class UI {
 public:
 	UI();
@@ -15,4 +17,5 @@ public:
 private:
 	int Program_state ;
 	Font font;
+	bool type_cursor = 0;
 };
