@@ -33,12 +33,12 @@ void SettingState::Draw() {
 
     
     // Vẽ title
-    const char* titleText = "SETTINGS";
-    int fontSize = 40;
-    int textWidth = MeasureText(titleText, fontSize);
-    int titleX = (Screen_w - textWidth) / 2;
-    int titleY = 200;
-    DrawText(titleText, titleX, titleY, fontSize, BLACK);
+    std::string titleText = "SETTINGS";
+    int font_scale = 6.0f;
+    int size_title = (int)(titleText.size() * 8 * font_scale + 1.0f);
+    int titleX = (Screen_w - size_title) / 2;
+    int titleY = 100;
+    Font_Sprite::DrawText(titleText, titleX, titleY, WHITE, font_scale);
     
     // Vẽ back button
     backButton.Draw();

@@ -1147,16 +1147,27 @@ namespace Font_Sprite
         std::vector<Rectangle> character = {A, B, C, D, E, F, G, H, I, J, K, L, M, N, O, P, Q, R, S, T, U, V, W, X, Y, Z};
     }
 
-    void DrawText(std::string s, float x, float y) {
-        for(char c : s) {
+    void DrawText(std::string s, float x, float y, Color color, float scale)
+    {
+        for (char c : s)
+        {
+            if (c == ' ')
+            {
+                x += 8 * scale + 1.0f; // Adding a small space for space character
+                continue;
+            }
             Rectangle source;
-            if(c >= '0' && c <= '9')
+            if (c >= '0' && c <= '9')
                 source = Number::num[c - '0'];
-            else
+            else if (c >= 'A' && c <= 'Z')
                 source = Character::character[c - 'A'];
-            Rectangle dest = {x, y, 24, 24};
-            DrawTexturePro(font_.sprite, source, dest, {0.0f, 0.0f}, 0.0f, WHITE);
-            x += 25;
+            else if (c == '%')
+                source = Percent::percent;
+            else
+                source = Character::character[c - 'a'];
+            Rectangle dest = {x, y, source.width * scale, source.height * scale};
+            DrawTexturePro(font_.sprite, source, dest, {0.0f, 0.0f}, 0.0f, color);
+            x += source.width * scale + 1.0f; // Adding a small space between characters
         }
     }
 
@@ -1187,6 +1198,11 @@ namespace Font_Sprite
     namespace Clock
     {
         Rectangle clock = {1, 58, 10, 9};
+    }
+
+    namespace Percent
+    {
+        Rectangle percent = {38, 48, 7, 7};
     }
 }
 

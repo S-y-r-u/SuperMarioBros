@@ -16,12 +16,6 @@ void KoopaWalkingState::Enter(KoopaTroopa *koopa)
     koopa->gravity_ = 1000.0f;
     koopa->frame_timer = 0.0f;
     koopa->current_frame = 0;
-    if (koopa->previous_state && dynamic_cast<KoopaFlyingState *>(koopa->previous_state))
-    {
-        Rectangle dest_rec = koopa->Get_Draw_Rec();
-        Score_Manager &score_manager = Score_Manager::GetInstance();
-        score_manager.AddScore({dest_rec.x, dest_rec.y}, Score_Walking);
-    }
 }
 
 void KoopaWalkingState::Update(KoopaTroopa *koopa, float dt)
@@ -50,9 +44,6 @@ void KoopaShellIdleState::Enter(KoopaTroopa *koopa)
     koopa->velocity_.x = 0;
     koopa->current_frame = 0;
     koopa->frame_timer = 0.0f;
-    Score_Manager &score_manager = Score_Manager::GetInstance();
-    Rectangle dest_rec = koopa->Get_Draw_Rec();
-    score_manager.AddScore({dest_rec.x, dest_rec.y}, Score_Shell);
 }
 
 void KoopaShellIdleState::Update(KoopaTroopa *koopa, float dt)
@@ -85,9 +76,6 @@ void KoopaShellMovingState::Enter(KoopaTroopa *koopa)
     koopa->velocity_.y = 0; // dừng lại
     koopa->current_frame = 0;
     koopa->frame_timer = 0;
-    Score_Manager &score_manager = Score_Manager::GetInstance();
-    Rectangle dest_rec = koopa->Get_Draw_Rec();
-    score_manager.AddScore({dest_rec.x, dest_rec.y}, Score_Kicked);
 }
 
 void KoopaShellMovingState::Update(KoopaTroopa *koopa, float dt)
@@ -118,17 +106,15 @@ void KoopaDyingState::Enter(KoopaTroopa *koopa)
     koopa->gravity_ = 1000.0f;
     if (koopa->previous_state && dynamic_cast<KoopaFlyingState *>(koopa->previous_state))
     {
-        Rectangle dest_rec = koopa->Get_Draw_Rec();
-        Score_Manager &score_manager = Score_Manager::GetInstance();
-        score_manager.AddScore({dest_rec.x, dest_rec.y}, Score_Dying_Flying);
         score_ = Score_Dying_Flying;
     }
     else if (koopa->previous_state && dynamic_cast<KoopaWalkingState *>(koopa->previous_state))
     {
-        Rectangle dest_rec = koopa->Get_Draw_Rec();
-        Score_Manager &score_manager = Score_Manager::GetInstance();
-        score_manager.AddScore({dest_rec.x, dest_rec.y}, Score_Dying_Walking);
         score_ = Score_Dying_Walking;
+    }
+    else if (koopa->previous_state && dynamic_cast<KoopaShellIdleState *>(koopa->previous_state))
+    {
+        score_ = Score_Dying_Shell;
     }
 }
 

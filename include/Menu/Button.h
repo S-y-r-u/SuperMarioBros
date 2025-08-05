@@ -1,5 +1,6 @@
 #pragma once
 #include "raylib.h"
+#include "sprite.h"
 #include <string>
 
 // Base class Button (interface)
@@ -15,8 +16,8 @@ protected:
     std::string label;          // Text hiển thị trên button
     float posX, posY;           // Vị trí button
     
-    Color normalTextColor = BLACK;
-    Color hoverTextColor = BLACK;
+    Color normalTextColor = WHITE;
+    Color hoverTextColor =  {224, 224, 224, 255};
     
     bool hovered = false;       // Trạng thái hover
     bool pressed = false;       // Trạng thái pressed

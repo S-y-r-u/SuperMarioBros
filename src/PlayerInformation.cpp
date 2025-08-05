@@ -39,18 +39,39 @@ void PlayerInformation::Update(const float &dt)
 
 void PlayerInformation::Draw() const
 {
-    Font_Sprite::DrawText("SCORE", 50, 50); //[50, 174]
-    Font_Sprite::DrawText(std::to_string(score), 112 - (std::to_string(score).size() * 25 - 1) / 2.0f, 82);
+    float scale = 3.0f;
+
+    // SCORE
+    Font_Sprite::DrawText("SCORE", 50, 50, WHITE);
+    std::string score_str = std::to_string(score);
+    float score_x = 112 - (score_str.size() * (8 * scale + 1.0f) - 1) / 2.0f;
+    Font_Sprite::DrawText(score_str, score_x, 82, WHITE);
+
+    // COINS Icon
     Rectangle dest_rec = {255, 110, rec_.width * scale_screen, rec_.height * scale_screen};
-    DrawTexturePro(Font_Sprite::font_.sprite, rec_, dest_rec, {dest_rec.width / 2.0f, dest_rec.height}, 0.0f, WHITE);
-    Font_Sprite::DrawText("COINS", 224, 50); //[224, 348]
-    std::string text = "X" + std::to_string(coins);
-    float text_width = text.size() * 25.0f;
-    Font_Sprite::DrawText(text, 270.0f, 82.0f);
-    Font_Sprite::DrawText("WORLD", 398, 50); //[398, 522]
-    Font_Sprite::DrawText(world, 460 - (world.size() * 25 - 1) / 2.0f, 82);
-    Font_Sprite::DrawText("TIME", 572, 50); //[572, 671]
-    Font_Sprite::DrawText(std::to_string(int(time)), 621.5f - (std::to_string(int(time)).size() * 25 - 1) / 2.0f, 82);
-    Font_Sprite::DrawText("LIVES", 721, 50); //[721, 845]
-    Font_Sprite::DrawText(std::to_string(lives), 783 - (std::to_string(lives).size() * 25 - 1) / 2.0f, 82);
+    DrawTexturePro(Font_Sprite::font_.sprite, rec_, dest_rec,
+                   {dest_rec.width / 2.0f, dest_rec.height}, 0.0f, WHITE);
+
+    // COINS Text
+    Font_Sprite::DrawText("COINS", 224, 50, WHITE);
+    std::string coins_str = "X" + std::to_string(coins);
+    float coins_x = 307.0f - (coins_str.size() * (8 * scale + 1.0f) - 1) / 2.0f;
+    Font_Sprite::DrawText(coins_str, coins_x, 82, WHITE);
+
+    // WORLD
+    Font_Sprite::DrawText("WORLD", 398, 50, WHITE);
+    float world_x = 460 - (world.size() * (8 * scale + 1.0f) - 1) / 2.0f;
+    Font_Sprite::DrawText(world, world_x, 82, WHITE);
+
+    // TIME
+    Font_Sprite::DrawText("TIME", 572, 50, WHITE);
+    std::string time_str = std::to_string(static_cast<int>(time));
+    float time_x = 621.5f - (time_str.size() * (8 * scale + 1.0f) - 1) / 2.0f;
+    Font_Sprite::DrawText(time_str, time_x, 82, WHITE);
+
+    // LIVES
+    Font_Sprite::DrawText("LIVES", 721, 50, WHITE);
+    std::string lives_str = std::to_string(lives);
+    float lives_x = 783 - (lives_str.size() * (8 * scale + 1.0f) - 1) / 2.0f;
+    Font_Sprite::DrawText(lives_str, lives_x, 82, WHITE);
 }

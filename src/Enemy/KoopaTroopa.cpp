@@ -94,6 +94,9 @@ void KoopaTroopa::Notify_Be_Stomped(PlayerInformation &info)
     {
         current_state_->OnStomped(this);
         info.UpdateScore(current_state_->Get_Score());
+        Rectangle dest_rec = Get_Draw_Rec();
+        Score_Manager &score_manager = Score_Manager::GetInstance();
+        score_manager.AddScore({dest_rec.x, dest_rec.y}, current_state_->Get_Score());
     }
 }
 
@@ -105,6 +108,9 @@ void KoopaTroopa::Notify_Be_Fired_Or_Hit(PlayerInformation &info)
     {
         current_state_->OnFired(this);
         info.UpdateScore(current_state_->Get_Score());
+        Rectangle dest_rec = Get_Draw_Rec();
+        Score_Manager &score_manager = Score_Manager::GetInstance();
+        score_manager.AddScore({dest_rec.x, dest_rec.y}, current_state_->Get_Score());
     }
 }
 
@@ -123,6 +129,9 @@ void KoopaTroopa::Notify_Be_Kicked(int direction, PlayerInformation &info)
         velocity_.x = 1.0f * direction;        // Set velocity based on kick direction
         SetState(new KoopaShellMovingState()); // Chuyển sang trạng thái shell
         info.UpdateScore(current_state_->Get_Score());
+        Rectangle dest_rec = Get_Draw_Rec();
+        Score_Manager &score_manager = Score_Manager::GetInstance();
+        score_manager.AddScore({dest_rec.x, dest_rec.y}, current_state_->Get_Score());
     }
 }
 

@@ -1188,8 +1188,8 @@ namespace Font_Sprite
         extern std::vector<Rectangle> character;
     }
 
-    void DrawText(std::string s, float x, float y);
-    
+    void DrawText(std::string s, float x, float y, Color color, float scale = 3.0f);
+
     // Coin frame
     namespace Coin
     {
@@ -1222,6 +1222,10 @@ namespace Font_Sprite
     namespace Clock
     {
         extern Rectangle clock;
+    }
+    namespace Percent
+    {
+        extern Rectangle percent;
     }
 }
 
@@ -1410,6 +1414,6 @@ namespace Enemies_Sprite
 namespace BomberBill_Sprite
 {
     extern SpriteSheet bomber_bill_;
-    
+
     extern Rectangle normal_m;
 }

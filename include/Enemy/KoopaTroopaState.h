@@ -60,6 +60,7 @@ class KoopaDyingState : public KoopaState
 private:
     const int Score_Dying_Walking = 200;
     const int Score_Dying_Flying = 300;
+    const int Score_Dying_Shell = 100; 
     int score_;
 
 public:

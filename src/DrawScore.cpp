@@ -18,7 +18,7 @@ void DrawScore::Draw()
 {
     if (is_delete)
         return;
-    Font_Sprite::DrawText(std::to_string(score_), position_.x, position_.y);
+    Font_Sprite::DrawText(std::to_string(score_), position_.x, position_.y, WHITE);
 }
 
 bool DrawScore::Is_Delete() const
