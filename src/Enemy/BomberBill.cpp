@@ -6,11 +6,15 @@ BomberBill::BomberBill(Vector2 startPos, float maxDistance, float speed)
       initial_x(startPos.x),
       moving_right(true),
       run_speed(speed),
-      asprite_(BomberBill_Sprite::bomber_bill_)
+      asprite_(BomberBill_Sprite::bomber_bill_),
+      animation_timer(0.0f),
+      m_normal(BomberBill_Sprite::bomber_bill_normal),
+      current_frame(0)
 {
-    // Thiết lập sprite rectangle cho Bomber Bill (29x23)
-    rec_ = BomberBill_Sprite::normal_m;
-    m_normal = BomberBill_Sprite::normal_m;
+    // Khởi tạo vector chứa 6 frame animation
+    
+    // Thiết lập sprite rectangle ban đầu
+    rec_ = m_normal[0]; // Frame đầu tiên
     previous_frame_pos = startPos;
 }
 
@@ -24,24 +28,39 @@ void BomberBill::Update(float dt)
     // Lưu vị trí trước đó
     previous_frame_pos = position_;
 
+    // Cập nhật animation
+    Update_Animation(dt);
+
     // Kiểm tra nếu đã bay quá khoảng cách cho phép
     if (moving_right && (position_.x - initial_x) >= max_distance)
     {
         // Quay đầu - bay sang trái
         moving_right = false;
-        velocity_.x = -run_speed; // Đổi hướng bay sang trái
+        velocity_.x = -run_speed;
     }
     // Kiểm tra nếu đã bay về vị trí ban đầu
     else if (!moving_right && (position_.x - initial_x) <= -max_distance)
     {
         // Quay đầu - bay sang phải
         moving_right = true;
-        velocity_.x = run_speed; // Đổi hướng bay sang phải
+        velocity_.x = run_speed;
     }
 
     // Cập nhật vị trí - chỉ di chuyển theo x, y giữ nguyên
     position_.x += velocity_.x * dt;
-    // Không cập nhật position_.y vì bay ngang ở độ cao cố định
+}
+
+void BomberBill::Update_Animation(float dt)
+{
+    animation_timer += dt;
+    
+    if (animation_timer >= frame_duration)
+    {
+        // Chuyển sang frame tiếp theo
+        current_frame = (current_frame + 1) % m_normal.size(); // Lặp qua 6 frame
+        rec_ = m_normal[current_frame]; // Cập nhật rectangle hiện tại
+        animation_timer = 0.0f; // Reset timer
+    }
 }
 
 void BomberBill::Draw() const
@@ -50,19 +69,19 @@ void BomberBill::Draw() const
         return;
 
     Rectangle destRec = Get_Draw_Rec();
-    Rectangle sourceRec = BomberBill_Sprite::normal_m;
+    Rectangle sourceRec = rec_; // Sử dụng frame hiện tại
     
     // Vẽ Bomber Bill với hướng phù hợp
     if (moving_right)
     {
-        sourceRec.width = -sourceRec.width; // Lật ngang
         // Bay sang phải - vẽ bình thường
-        DrawTexturePro(BomberBill_Sprite::bomber_bill_.sprite, sourceRec, destRec, {0, 0}, 0.0f, WHITE);
+        sourceRec.width = -sourceRec.width; // Lật ngang
+        DrawTexturePro(asprite_.sprite, sourceRec, destRec, {0, 0}, 0.0f, WHITE);
     }
     else
     {
         // Bay sang trái - lật ngang sprite
-        DrawTexturePro(BomberBill_Sprite::bomber_bill_.sprite, sourceRec, destRec, {0, 0}, 0.0f, WHITE);
+        DrawTexturePro(asprite_.sprite, sourceRec, destRec, {0, 0}, 0.0f, WHITE);
     }
 }
 

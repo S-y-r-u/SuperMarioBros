@@ -1414,6 +1414,14 @@ namespace Enemies_Sprite
 namespace BomberBill_Sprite
 {
     extern SpriteSheet bomber_bill_;
-
-    extern Rectangle normal_m;
+    
+    extern Rectangle n1;
+    extern Rectangle n2;
+    extern Rectangle n3;
+    extern Rectangle n4;
+    extern Rectangle n5;
+    extern Rectangle n6;
+    extern Rectangle n7;
+    extern Rectangle n8;
+    extern std::vector<Rectangle> bomber_bill_normal;
 }

@@ -1384,5 +1384,13 @@ namespace Enemies_Sprite
 namespace BomberBill_Sprite
 {
     SpriteSheet bomber_bill_;
-    Rectangle normal_m = {0, 0, 29, 23};
+    Rectangle n1 = {8,82,25,15};
+    Rectangle n2 = {38,82,25,17};
+    Rectangle n3 = {70,79,25,21};
+    Rectangle n4 = {99,80,26,17};
+    Rectangle n5 = {129,82,24,15};
+    Rectangle n6 = {158,82,25,15};
+    Rectangle n7 = {185,80,24,19};
+    Rectangle n8 = {216,82,25,15};
+    std::vector<Rectangle> bomber_bill_normal = {n1, n2, n3, n4, n5, n6, n7, n8};
 }
