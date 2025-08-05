@@ -1,3 +1,0 @@
-D:/SuperMarioBros/build/CMakeFiles/SuperMarioBros.dir
-D:/SuperMarioBros/build/CMakeFiles/edit_cache.dir
-D:/SuperMarioBros/build/CMakeFiles/rebuild_cache.dir
