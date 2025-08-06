@@ -14,6 +14,13 @@ Player ::Player(Vector2 startPos) : Character(startPos)
     isTransforming = 0;
     targetForm = form;
 
+    isInvincible = 0;
+    invincibleTimer = 0.0f;
+    beforeStar = form;
+
+    isDead = 0;
+    deadTimer = 0.0f;
+
     currentFrame = 0;
     frameTimer = 0.0f;
     animationSpeed = 1.0f / 12.0f;
@@ -99,6 +106,22 @@ void Player ::update(float dt)
         }
         position.y = position.y + (previous_frame_rec.height - getAnimationFrame()[currentFrame].height) * scale_screen;
         return;
+    }
+
+    if(isInvincible){
+        invincibleTimer -= dt;
+        if(invincibleTimer <= 0.0f){
+            isInvincible = 0;
+            form = beforeStar;
+        }
+    }
+
+    if(isDead){        
+        velocity.y += gravity * dt;
+        position.y += velocity.y * dt;
+
+        if(deadTimer >= 0.0f)   deadTimer -= dt;
+        return; 
     }
 
     velocity.y += gravity * dt;
@@ -208,9 +231,30 @@ void Player ::getFlower()
     frameTimer = 0.0f;
 }
 
-void Player ::getStar()
+void Player :: getStar()
 {
+    if(isTransforming)  return;
+    if(isInvincible){
+        invincibleTimer = 10.0f;
+        return;
+    }
+    
+    isInvincible = 1;
+    invincibleTimer = 10.0f;
+    beforeStar = form;
 
+    if(form == PlayerForm :: Fire) form = PlayerForm :: Invincible_Super_And_Fire;
+    else form = PlayerForm :: Invincible; 
+} 
+
+void Player :: Die()
+{
+    if(isDead)  return;
+    isDead = 1;
+    state = AnimationState :: Die;
+
+    velocity = {0.0f, -350.0f};
     currentFrame = 0;
     frameTimer = 0.0f;
+    deadTimer = 3.0f;
 }

@@ -18,6 +18,14 @@ class Player : public Character{
         bool isTransforming;
         PlayerForm targetForm;
         Rectangle previous_frame_rec ;
+
+        bool isInvincible;
+        float invincibleTimer;
+        PlayerForm beforeStar;
+
+        bool isDead;
+        float deadTimer;
+
         int currentFrame;
         float frameTimer;
         float animationSpeed;
@@ -37,6 +45,9 @@ class Player : public Character{
         bool Get_isGround() const { return isGround; }
         void Set_isGround(bool value) { isGround = value; }
         bool Get_isTransforming() const { return isTransforming; }
+        bool Get_isInvincible() const { return isInvincible; }
+        PlayerForm Get_formBeforeStar() const {return beforeStar; }
+        bool Get_isDead() const { return isDead; }
     
         void MoveRight() override;
         void MoveLeft() override;
@@ -50,4 +61,6 @@ class Player : public Character{
         void getMushroom();
         void getFlower();
         void getStar();
+
+        void Die();
 };
