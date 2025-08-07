@@ -21,6 +21,8 @@ Player ::Player(Vector2 startPos) : Character(startPos)
     isDead = 0;
     deadTimer = 0.0f;
 
+    fireCoolDown = 0.0f;
+
     currentFrame = 0;
     frameTimer = 0.0f;
     animationSpeed = 1.0f / 12.0f;
@@ -39,14 +41,8 @@ Rectangle Player::Get_Previous_Rec()
     return previous_frame_rec;
 }
 
-AnimationState Player ::get_state() const
-{
-    return state;
-}
-
-PlayerForm Player ::get_form() const
-{
-    return form;
+void Player :: Set_isGround(bool value){
+    isGround = value;
 }
 
 void Player ::MoveRight()
@@ -243,7 +239,7 @@ void Player :: getStar()
     invincibleTimer = 10.0f;
     beforeStar = form;
 
-    if(form == PlayerForm :: Fire) form = PlayerForm :: Invincible_Super_And_Fire;
+    if(form == PlayerForm :: Fire || form == PlayerForm :: Super) form = PlayerForm :: Invincible_Super_And_Fire;
     else form = PlayerForm :: Invincible; 
 } 
 
@@ -257,4 +253,9 @@ void Player :: Die()
     currentFrame = 0;
     frameTimer = 0.0f;
     deadTimer = 3.0f;
+}
+
+void Player :: Shoot()
+{
+
 }

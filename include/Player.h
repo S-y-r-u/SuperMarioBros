@@ -1,5 +1,6 @@
 #pragma once
 #include "Character.h"
+#include "FireBall.h"
 #include "Menu/SoundManager.h"
 #include <vector>
 
@@ -26,6 +27,8 @@ class Player : public Character{
         bool isDead;
         float deadTimer;
 
+        float fireCoolDown;
+        
         int currentFrame;
         float frameTimer;
         float animationSpeed;
@@ -38,12 +41,12 @@ class Player : public Character{
 
         Rectangle get_draw_rec() override;
         Rectangle Get_Previous_Rec() override;
-        AnimationState get_state() const;
-        PlayerForm get_form() const; 
+        AnimationState get_state() const { return state; }; 
+        PlayerForm get_form() const { return form; }; 
         Vector2 get_Velocity() const { return velocity; }
         void Set_Velocity(Vector2 newVelocity) { velocity = newVelocity; }
         bool Get_isGround() const { return isGround; }
-        void Set_isGround(bool value) { isGround = value; }
+        void Set_isGround(bool value);
         bool Get_isTransforming() const { return isTransforming; }
         bool Get_isInvincible() const { return isInvincible; }
         PlayerForm Get_formBeforeStar() const {return beforeStar; }
@@ -63,4 +66,5 @@ class Player : public Character{
         void getStar();
 
         void Die();
+        void Shoot();
 };
