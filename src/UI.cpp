@@ -23,6 +23,8 @@ void UI::Process()
     ChoosingStageState *choosingStage = new ChoosingStageState();
     GameManager *gameManager = new GameManager();
     SettingState *settingMenu = new SettingState();
+    ChoosingCharacter* choosingCharacter = new ChoosingCharacter();
+
 
     Program_state = menuState;
     int previousState = menuState; // Track previous state để quản lý music
@@ -36,14 +38,14 @@ void UI::Process()
         if (Program_state != previousState)
         {
             // Stop current music
-            if (Program_state / choosingStageState != previousState / choosingStageState)
+            if (Program_state == gameManagerState || previousState == gameManagerState) 
             {
                 SoundManager::GetInstance().StopMusic();
-                if (Program_state / choosingStageState == 0)
+                if (Program_state == menuState)
                 {
                     SoundManager::GetInstance().PlayMusic("MenuMusic", true);
                 }
-                else if (Program_state / choosingStageState == 1)
+                else if (Program_state == gameManagerState)
                 {
                     SoundManager::GetInstance().PlayMusic("playingMusic", true);
                 }
@@ -55,15 +57,14 @@ void UI::Process()
         if (Program_state == menuState)
         {
             Program_state = menu->Update();
+            if (Program_state == gameManagerState){
+                gameManager->SetDifficulty(choosingStage->GetSelectedDifficulty());
+                // gameManager->SetCharacter(choosingCharacter->GetCharacter());
+            }
         }
         else if (Program_state == choosingStageState)
         {
-            int nextState = choosingStage->Update();
-            if (nextState == gameManagerState)
-            {
-                gameManager->SetDifficulty(choosingStage->GetSelectedDifficulty());
-            }
-            Program_state = nextState;
+            Program_state = choosingStage->Update();;
         }
         else if (Program_state == gameManagerState)
         {
@@ -72,6 +73,10 @@ void UI::Process()
         else if (Program_state == settingState)
         {
             Program_state = settingMenu->Update();
+        }
+        else if (Program_state == choosingCharacterState)
+        {
+            Program_state = choosingCharacter->Update();
         }
 
         // Draw
@@ -94,6 +99,10 @@ void UI::Process()
         {
             settingMenu->Draw();
         }
+        else if (Program_state == choosingCharacterState)
+        {
+            choosingCharacter->Draw();
+        }
 
         EndDrawing();
         CursorManager::Update_(); // Cập nhật con trỏ mỗi frame
@@ -108,6 +117,7 @@ void UI::Process()
     delete choosingStage;
     delete gameManager;
     delete settingMenu;
+    delete choosingCharacter;
 
     CloseAudioDevice();
     CloseWindow();

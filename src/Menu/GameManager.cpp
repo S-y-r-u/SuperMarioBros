@@ -1,12 +1,6 @@
 #include "Menu/GameManager.h"
 #include "raylib.h"
 
-constexpr int NUM_MONITORED_KEYS = 16;
-constexpr int MONITORED_KEYS[NUM_MONITORED_KEYS] = {
-    KEY_LEFT, KEY_RIGHT, KEY_UP, KEY_DOWN,
-    KEY_A, KEY_S, KEY_D, KEY_W,
-    KEY_SPACE, KEY_X, KEY_C, KEY_Z,
-    KEY_LEFT_CONTROL, KEY_LEFT_SHIFT, KEY_P, KEY_ESCAPE};
 
 GameManager::GameManager() : stage(nullptr) {}
 
@@ -46,7 +40,6 @@ void GameManager::SetDifficulty(Difficulty diff)
 
 int GameManager::Update()
 {
-    UpdateKeyStates();
     if (IsKeyPressed(KEY_ESCAPE))
     {
         return menuState;
@@ -54,16 +47,6 @@ int GameManager::Update()
     return gameManagerState; // Continue in game manager state
 }
 
-void GameManager::UpdateKeyStates()
-{
-    keyStates.clear();
-    for (int i = 0; i < NUM_MONITORED_KEYS; ++i)
-    {
-        int keyCode = MONITORED_KEYS[i];
-        bool isPressed = IsKeyDown(keyCode);
-        keyStates.emplace_back(keyCode, isPressed);
-    }
-}
 
 void GameManager::Draw()
 {

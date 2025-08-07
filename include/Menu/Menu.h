@@ -9,6 +9,8 @@ private:
     RecButton settingBtn;
     RecButton infoButton;
     RecButton quitButton;
+    RecButton mapButton;
+    RecButton characterButton;
     Texture* MenuTexture;
     Texture* MenuTitleTexture;
     
@@ -36,6 +38,7 @@ struct MenuImages
     Texture2D buttonPlusTexture;
     Texture2D buttonMinusTexture;
     Texture2D SettingTexture;
+    Texture2D MarioIcon;
 
     Rectangle menu_title;
     Rectangle menu_background;
@@ -44,6 +47,7 @@ struct MenuImages
     Rectangle button_minus;
     Rectangle button_back;
     Rectangle setting_texture;
+    Rectangle mario_icon;
 
     void Load();
     void Unload();
