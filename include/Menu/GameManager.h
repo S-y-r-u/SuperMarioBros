@@ -22,6 +22,4 @@ public:
 private:
     Stage* stage;
     Difficulty difficulty = Difficulty::Easy;
-    void UpdateKeyStates();
-    std::vector<std::pair<int, bool>> keyStates;
 };

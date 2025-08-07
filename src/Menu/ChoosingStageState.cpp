@@ -42,6 +42,7 @@ void ChoosingStageState::Draw()
     // Draw back button
     backButton.Draw();
 
+
     // Draw difficulty buttons
     easyButton->Draw();
     mediumButton->Draw();
@@ -60,17 +61,17 @@ int ChoosingStageState::Update()
     if (easyButton->Update())
     {
         selectedDifficulty = Difficulty::Easy;
-        return gameManagerState;
+        return menuState;
     }
     if (mediumButton->Update())
     {
         selectedDifficulty = Difficulty::Medium;
-        return gameManagerState;
+        return menuState;
     }
     if (hardButton->Update())
     {
         selectedDifficulty = Difficulty::Hard;
-        return gameManagerState;
+        return menuState;
     }
 
     return choosingStageState;

@@ -9,6 +9,7 @@
 #include "Menu/SoundManager.h"
 #include "Menu/SettingState.h"
 #include "Menu/CursorManager.h"
+#include "Menu/ChoosingCharacter.h"
 
 class UI {
 public:

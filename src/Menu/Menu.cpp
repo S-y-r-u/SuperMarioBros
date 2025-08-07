@@ -3,10 +3,12 @@
 #include <cmath>
 
 Menu::Menu() : 
-    playButton("PLAY", 500, 420, 200, 50),
-    settingBtn("SETTINGS", 500, 480, 200, 50),
-    infoButton("INFO", 500, 540, 200, 50),
-    quitButton("QUIT", 500, 600, 200, 50),
+    playButton("PLAY", 350, 400, 200, 50),
+    settingBtn("SETTINGS", 640, 400, 200, 50),
+    infoButton("INFO", 350, 600, 200, 50),
+    quitButton("QUIT", 640, 600, 200, 50),
+    mapButton("MAP", 350, 500, 200, 50),
+    characterButton("CHARACTER", 640, 500, 200, 50),
     titleBaseY(50.0f),      // Vị trí Y cơ bản của title
     titleAnimTime(0.0f),     // Thời gian animation
     titleAnimSpeed(2.0f),    // Tốc độ animation (càng lớn càng nhanh)
@@ -32,6 +34,8 @@ void Menu::Draw() {
     settingBtn.Draw();
     infoButton.Draw();
     quitButton.Draw();
+    mapButton.Draw();
+    characterButton.Draw();
 }
 
 int Menu::Update() {
@@ -42,7 +46,7 @@ int Menu::Update() {
     // Xử lý button clicks
     if (playButton.Update()) {
         std::cout << "PLAY\n";
-        return choosingStageState;
+        return gameManagerState; // Trở về game manager state
     }
     if (settingBtn.Update()) {
         return settingState;
@@ -52,6 +56,12 @@ int Menu::Update() {
     }
     if (quitButton.Update()) {
         // return quitState;
+    }
+    if (mapButton.Update()) {
+        return choosingStageState;
+    }
+    if (characterButton.Update()) {
+        return choosingCharacterState;
     }
     return menuState;
 }
@@ -74,6 +84,7 @@ void MenuImages::Load() {
     buttonPlusTexture = LoadTexture("Menu/Plus.png");
     buttonMinusTexture = LoadTexture("Menu/Minus.png");
     SettingTexture = LoadTexture("Menu/Setting.jpg");
+    MarioIcon = LoadTexture("Menu/MarioIcon.png");
 
     // Set rectangles
     menu_background = {0, 0, (float)menuTexture.width, (float)menuTexture.height};
@@ -83,6 +94,7 @@ void MenuImages::Load() {
     button_minus = {0, 0, (float)buttonMinusTexture.width, (float)buttonMinusTexture.height};
     button_back = {0, 0, (float)buttonBackTexture.width, (float)buttonBackTexture.height};
     setting_texture = {0, 0, (float)SettingTexture.width, (float)SettingTexture.height};
+    mario_icon = {0, 0, (float)MarioIcon.width, (float)MarioIcon.height};
 }
 
 void MenuImages::Unload() {
