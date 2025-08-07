@@ -38,4 +38,5 @@ public:
     void Update();
     void Draw();
     void RemoveDeletedScores();
+    void ClearScores();
 };

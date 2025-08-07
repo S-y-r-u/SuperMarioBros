@@ -44,7 +44,10 @@ public:
         NORMAL,     // Button thường (chỉ text)
         PLUS,       // Nút +
         MINUS,      // Nút -
-        BACK        // Nút back (mũi tên)
+        BACK,        // Nút back (mũi tên)
+        PAUSE,       // Nút pause
+        YES,        // Nút yes
+        NO          // Nút no
     };
 
     CircleButton(const std::string& text, float x, float y, float r = 50);

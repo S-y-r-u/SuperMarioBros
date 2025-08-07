@@ -104,12 +104,6 @@ void Goomba::Set_Pos(Vector2 pos)
 void Goomba::Move_(float dt)
 {
     position_.x += velocity_.x * dt;
-
-    if (position_.x + rec_.width / 2.0f <= 0.0f || position_.x + rec_.width / 2.0f >= 214 * 48.0f)
-    {
-        position_.x = Clamp(position_.x, rec_.width / 2.0f, 214 * 48.0f - rec_.width / 2.0f);
-        velocity_.x *= -1;
-    }
 }
 
 void Goomba::Animate_()

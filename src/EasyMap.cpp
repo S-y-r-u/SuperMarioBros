@@ -1,7 +1,8 @@
 #include "EasyMap.h"
 
-EasyMap::EasyMap()
+EasyMap::EasyMap(Player_Mode mode, PlayerInformation &info) : Stage(info)
 {
+    player_mode = mode;
     MapTexture = LoadTexture("map/Easy.png");
     std::ifstream fi;
     fi.open("map/Easy.txt");
@@ -53,25 +54,24 @@ EasyMap::EasyMap()
         }
     }
     fi.close();
-    player = new Mario({400, 200});
-    information.SetWorld("EASY");
+    if (player_mode == Player_Mode::MARIO_PLAYER)
+        player = new Mario({400, 200});
+    else if (player_mode == Player_Mode::LUIGI_PLAYER)
+        player = new Luigi({400, 200});
     camera.target = {0, 0};
     camera.offset = {0, 0};
     camera.rotation = 0;
     camera.zoom = 1;
     Spawn_Enemy::Spawn_Goomba(enemies, {240, 100}, enemy_map);
-    Spawn_Enemy::Spawn_Goomba(enemies, {340, 100}, enemy_map);
-    Spawn_Enemy::Spawn_Latiku(enemies, {200, 100}, player, enemy_map);
+    // Spawn_Enemy::Spawn_Goomba(enemies, {340, 100}, enemy_map);
+    // Spawn_Enemy::Spawn_Latiku(enemies, {200, 100}, player, enemy_map, camera);
     // enemies.push_back(new PiranhaPlant({500, 400}, player));
-    Spawn_Enemy::Spawn_KoopaTroopa(enemies, {140, 400}, enemy_map);
-    Spawn_Enemy::Spawn_KoopaTroopa(enemies, {520, 400}, enemy_map, true);
-    Spawn_Enemy::Spawn_BomberBill(enemies, {1800, 470}, enemy_map);
-    // enemies.push_back(new Spiny({500, 400}, {75.0f, 0.0f}, 1));
-    // enemies.push_back(new Spiny({700, 400}, {-75.0f, 0.0f}, 1));
+    // Spawn_Enemy::Spawn_KoopaTroopa(enemies, {140, 400}, enemy_map);
+    // Spawn_Enemy::Spawn_KoopaTroopa(enemies, {520, 400}, enemy_map, true);
+    // Spawn_Enemy::Spawn_BomberBill(enemies, {1800, 470}, enemy_map);
 }
 
 EasyMap::~EasyMap()
 {
-    delete player;
     UnloadTexture(MapTexture);
 }

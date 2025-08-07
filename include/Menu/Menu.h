@@ -37,6 +37,9 @@ struct MenuImages
     Texture2D buttonBackTexture;
     Texture2D buttonPlusTexture;
     Texture2D buttonMinusTexture;
+    Texture2D buttonPauseTexture;
+    Texture2D buttonYesTexture;
+    Texture2D buttonNoTexture;
     Texture2D SettingTexture;
     Texture2D MarioIcon;
 
@@ -45,7 +48,10 @@ struct MenuImages
     Rectangle button_normal;
     Rectangle button_plus;
     Rectangle button_minus;
+    Rectangle button_pause;
     Rectangle button_back;
+    Rectangle button_yes;
+    Rectangle button_no;
     Rectangle setting_texture;
     Rectangle mario_icon;
 

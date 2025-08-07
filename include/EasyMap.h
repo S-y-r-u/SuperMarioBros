@@ -6,6 +6,6 @@
 class EasyMap : public Stage
 {
 public:
-    EasyMap();
+    EasyMap(Player_Mode mode, PlayerInformation& info);
     ~EasyMap();
 };

@@ -1414,7 +1414,7 @@ namespace Enemies_Sprite
 namespace BomberBill_Sprite
 {
     extern SpriteSheet bomber_bill_;
-    
+
     extern Rectangle n1;
     extern Rectangle n2;
     extern Rectangle n3;

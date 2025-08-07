@@ -1,14 +1,18 @@
 #include "Stage.h"
 #include "algorithm"
 
-Stage::Stage()
+Stage::Stage(PlayerInformation &info) : information(info)
 {
     source = {0, 0, 3424, 240};
     dest = {0, 0, 10272, 720};
+    Reset_Game = false;
 }
 
 Stage::~Stage()
 {
+
+    enemy_map.clear();
+
     for (Item *item : items)
         delete item;
     items.clear();
@@ -21,7 +25,19 @@ Stage::~Stage()
         delete enemy;
     enemies.clear();
 
-    delete player;
+    if (player)
+    {
+        delete player;
+        player = nullptr;
+    }
+
+    Score_Manager &score_manager = Score_Manager::GetInstance();
+    score_manager.ClearScores();
+
+    Keyboard.clear();
+
+    // Unload textures if necessary
+    UnloadTexture(MapTexture);
 }
 
 void Stage::Run()
@@ -31,6 +47,20 @@ void Stage::Run()
     if (!player->Get_isTransforming())
     {
         Non_Player_Update();
+    }
+    Cool_Down_After_Die(GetFrameTime());
+}
+
+void Stage::Cool_Down_After_Die(float dt)
+{
+    if (!player->Get_isActive() && !Reset_Game)
+    {
+        timer_after_die += dt;
+    }
+    if (timer_after_die >= cool_down_after_die)
+    {
+        Reset_Game = true;
+        timer_after_die = 0.0f;
     }
 }
 
@@ -46,6 +76,8 @@ void Stage::Player_Update()
         Keyboard.erase(std::remove(Keyboard.begin(), Keyboard.end(), KEY_D), Keyboard.end());
     if (IsKeyPressed(KEY_W))
         player->Jump();
+    else if (IsKeyReleased(KEY_W))
+        player->Cut_Jump();
     if (Keyboard.empty())
         player->StopMoving();
     else if (Keyboard.back() == KEY_A)
@@ -59,10 +91,27 @@ void Stage::Player_Update()
     Score_Manager &score_manager = Score_Manager::GetInstance();
     score_manager.Update();
 
-    Check_Player_Vs_Ground();
-    Check_Player_Vs_Enemy();
-    Check_Block_Vs_Block();
-    Check_Player_Vs_Block();
+    if (!player->Get_isDead())
+    {
+        Check_Player_Vs_Ground();
+        Check_Player_Vs_Enemy();
+        Check_Block_Vs_Block();
+        Check_Player_Vs_Block();
+    }
+
+    Vector2 top_left = GetScreenToWorld2D({0, 0}, camera);
+    Vector2 bottom_right = GetScreenToWorld2D({(float)GetScreenWidth(), (float)GetScreenHeight()}, camera);
+
+    Rectangle screen_rect_world = {
+        top_left.x,
+        top_left.y,
+        bottom_right.x - top_left.x,
+        bottom_right.y - top_left.y};
+    if (player->getPosition().x <= screen_rect_world.x)
+    {
+        player->Set_Pos({screen_rect_world.x, player->getPosition().y});
+        player->Set_Velocity({0, player->get_Velocity().y});
+    }
 }
 
 void Stage::Non_Player_Update()
@@ -85,10 +134,26 @@ void Stage::Non_Player_Update()
         }
     }
 
+    Vector2 top_left = GetScreenToWorld2D({0, 0}, camera);
+    Vector2 bottom_right = GetScreenToWorld2D({(float)GetScreenWidth(), (float)GetScreenHeight()}, camera);
+
+    Rectangle screen_rect_world = {
+        top_left.x,
+        top_left.y,
+        bottom_right.x - top_left.x,
+        bottom_right.y - top_left.y};
+
     for (size_t i = 0; i < items.size();)
     {
+        Rectangle rec_item = items[i]->Get_Draw_Rec();
         if (items[i]->Get_Is_Delete())
         {
+            delete items[i];
+            items.erase(items.begin() + i);
+        }
+        else if (rec_item.x + rec_item.width <= screen_rect_world.x)
+        {
+            // Item is completely off-screen to the left
             delete items[i];
             items.erase(items.begin() + i);
         }
@@ -109,6 +174,13 @@ void Stage::Non_Player_Update()
 
     for (size_t i = 0; i < enemies.size();)
     {
+        Rectangle rec_enemy = enemies[i]->Get_Draw_Rec();
+        if (rec_enemy.x + rec_enemy.width <= screen_rect_world.x)
+        {
+            enemy_map.erase(enemies[i]);
+            delete enemies[i];
+            enemies.erase(enemies.begin() + i);
+        }
         if (!enemies[i]->Get_Is_Active())
         {
             enemy_map.erase(enemies[i]);
@@ -134,7 +206,6 @@ void Stage::Non_Player_Update()
 
 void Stage::Draw()
 {
-    Run();
     BeginMode2D(camera);
     DrawTexturePro(MapTexture, source, dest, {0, 0}, 0, WHITE);
     player->draw();
@@ -345,7 +416,7 @@ void Stage::Check_Player_Vs_Enemy()
                 }
                 else
                 {
-                    player->Set_Pos({player->getPosition().x, 200.0f});
+                    player->Die();
                 }
             }
             else
@@ -359,7 +430,7 @@ void Stage::Check_Player_Vs_Enemy()
                 }
                 else
                 {
-                    player->Set_Pos({player->getPosition().x, 200.0f});
+                    player->Die();
                 }
             }
         }
@@ -384,12 +455,12 @@ void Stage::Check_Player_Vs_Enemy()
                 }
                 else
                 {
-                    player->Set_Pos({player->getPosition().x, 200.0f});
+                    player->Die();
                 }
             }
             else
             {
-                player->Set_Pos({player->getPosition().x, 200.0f}); // Đẩy player lên trên nếu va chạm từ dưới
+                player->Die();
                 // Player ở phía dưới enemy
             }
         }
@@ -762,4 +833,14 @@ void Stage::Check_Block_Vs_Block()
             }
         }
     }
+}
+
+void Stage::Clear_Keyboard()
+{
+    Keyboard.clear();
+}
+
+bool Stage::Need_Reset_Game() const
+{
+    return Reset_Game;
 }

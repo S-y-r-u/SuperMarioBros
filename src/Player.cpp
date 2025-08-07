@@ -19,6 +19,7 @@ Player ::Player(Vector2 startPos) : Character(startPos)
     beforeStar = form;
 
     isDead = 0;
+    isActive = 1;
     deadTimer = 0.0f;
 
     fireCoolDown = 0.0f;
@@ -41,7 +42,8 @@ Rectangle Player::Get_Previous_Rec()
     return previous_frame_rec;
 }
 
-void Player :: Set_isGround(bool value){
+void Player ::Set_isGround(bool value)
+{
     isGround = value;
 }
 
@@ -76,12 +78,19 @@ void Player ::Jump()
     {
         SoundManager::GetInstance().PlaySoundEffect("jump-super");
     }
+}
 
+void Player ::Cut_Jump()
+{
+    if (velocity.y < 0.0f)
+    {
+        velocity.y *= 0.6f;
+    }
 }
 
 void Player ::update(float dt)
 {
-    previous_frame_rec = getAnimationFrame()[currentFrame] ;
+    previous_frame_rec = getAnimationFrame()[currentFrame];
 
     if (isTransforming)
     {
@@ -104,20 +113,28 @@ void Player ::update(float dt)
         return;
     }
 
-    if(isInvincible){
+    if (isInvincible)
+    {
         invincibleTimer -= dt;
-        if(invincibleTimer <= 0.0f){
+        if (invincibleTimer <= 0.0f)
+        {
             isInvincible = 0;
             form = beforeStar;
         }
     }
 
-    if(isDead){        
+    const auto &frame = getAnimationFrame();
+    if(position.y >= Screen_h)
+        isActive = 0;
+
+    if (isDead)
+    {
         velocity.y += gravity * dt;
         position.y += velocity.y * dt;
 
-        if(deadTimer >= 0.0f)   deadTimer -= dt;
-        return; 
+        if (deadTimer >= 0.0f)
+            deadTimer -= dt;
+        return;
     }
 
     velocity.y += gravity * dt;
@@ -157,8 +174,7 @@ void Player ::update(float dt)
         frameTimer = 0.0f;
         currentFrame = (currentFrame + 1) % getAnimationFrame().size();
     }
-    position.y = position.y + (previous_frame_rec.height - getAnimationFrame()[currentFrame].height)* scale_screen ;
-
+    position.y = position.y + (previous_frame_rec.height - getAnimationFrame()[currentFrame].height) * scale_screen;
 }
 
 void Player ::draw()
@@ -184,7 +200,6 @@ void Player ::draw()
     dest.x = position.x;
     dest.y = position.y;
     DrawTexturePro(texture->sprite, source, dest, {0, 0}, 0.0f, WHITE);
-
 }
 
 void Player ::collectCoin()
@@ -210,44 +225,54 @@ void Player ::getFlower()
     if (isTransforming || form == PlayerForm ::Fire)
         return;
 
-    isTransforming = 1;
-    targetForm = PlayerForm ::Fire;
-
-    if (form == PlayerForm ::Small)
+    if (isInvincible)
+        beforeStar = PlayerForm::Fire;
+    else
     {
-        state = AnimationState::Small_To_Super;
-    }
-    else if (form == PlayerForm ::Super)
-    {
-        state = AnimationState::Stance_To_Fire;
-    }
+        isTransforming = 1;
+        targetForm = PlayerForm ::Fire;
 
-    velocity = {0.0f, 0.0f};
-    currentFrame = 0;
-    frameTimer = 0.0f;
+        if (form == PlayerForm ::Small)
+        {
+            state = AnimationState::Small_To_Super;
+        }
+        else if (form == PlayerForm ::Super)
+        {
+            state = AnimationState::Stance_To_Fire;
+        }
+
+        velocity = {0.0f, 0.0f};
+        currentFrame = 0;
+        frameTimer = 0.0f;
+    }
 }
 
-void Player :: getStar()
+void Player ::getStar()
 {
-    if(isTransforming)  return;
-    if(isInvincible){
+    if (isTransforming)
+        return;
+    if (isInvincible)
+    {
         invincibleTimer = 10.0f;
         return;
     }
-    
+
     isInvincible = 1;
     invincibleTimer = 10.0f;
     beforeStar = form;
 
-    if(form == PlayerForm :: Fire || form == PlayerForm :: Super) form = PlayerForm :: Invincible_Super_And_Fire;
-    else form = PlayerForm :: Invincible; 
-} 
+    if (form == PlayerForm ::Fire || form == PlayerForm ::Super)
+        form = PlayerForm ::Invincible_Super_And_Fire;
+    else
+        form = PlayerForm ::Invincible;
+}
 
-void Player :: Die()
+void Player ::Die()
 {
-    if(isDead)  return;
+    if (isDead)
+        return;
     isDead = 1;
-    state = AnimationState :: Die;
+    state = AnimationState ::Die;
 
     velocity = {0.0f, -350.0f};
     currentFrame = 0;
@@ -255,7 +280,6 @@ void Player :: Die()
     deadTimer = 3.0f;
 }
 
-void Player :: Shoot()
+void Player ::Shoot()
 {
-
 }

@@ -126,6 +126,18 @@ void CircleButton::Draw()
         DrawTexturePro(menuImg.buttonBackTexture, menuImg.button_back, destRect, Vector2{0, 0}, 0.0f, tint);
         break;
 
+    case PAUSE:
+        DrawTexturePro(menuImg.buttonPauseTexture, menuImg.button_pause, destRect, Vector2{0, 0}, 0.0f, tint);
+        break;
+    
+    case YES:
+        DrawTexturePro(menuImg.buttonYesTexture, menuImg.button_yes, destRect, Vector2{0, 0}, 0.0f, tint);
+        break;
+
+    case NO:
+        DrawTexturePro(menuImg.buttonNoTexture, menuImg.button_no, destRect, Vector2{0, 0}, 0.0f, tint);
+        break;
+
     case NORMAL:
     default:
         // NORMAL chỉ vẽ text, không có background

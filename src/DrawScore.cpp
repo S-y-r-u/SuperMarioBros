@@ -56,3 +56,8 @@ void Score_Manager::RemoveDeletedScores()
             ++it;
     }
 }
+
+void Score_Manager::ClearScores()
+{
+    scores_.clear();
+}

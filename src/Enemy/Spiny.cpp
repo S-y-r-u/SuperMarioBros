@@ -13,12 +13,8 @@ Spiny::Spiny(Vector2 pos, Vector2 velo)
 void Spiny::Update(float dt)
 {
     previous_frame_pos = position_;
-
-    if (state_ != Spiny_State::be_fired_or_hit)
-    {
-        if (!is_ground || is_jump)
-            velocity_.y += Physics::gravity_ * dt;
-    }
+    if (!is_ground || is_jump)
+        velocity_.y += Physics::gravity_ * dt;
 
     position_.y += velocity_.y * dt;
 
@@ -140,12 +136,6 @@ void Spiny::Animate_()
 void Spiny::Move_(float dt)
 {
     position_.x += velocity_.x * dt;
-
-    if (position_.x - rec_.width / 2.0f <= 0.0f || position_.x + rec_.width / 2.0f >= 214 * 48.0f)
-    {
-        position_.x = Clamp(position_.x, rec_.width / 2.0f, 214 * 48.0f - rec_.width / 2.0f);
-        velocity_.x *= -1;
-    }
 }
 
 void Spiny::Collision_With_Other_Enemy(Vector2 velo, Vector2 pos)

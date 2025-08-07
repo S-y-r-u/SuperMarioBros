@@ -10,6 +10,8 @@
 #include "Menu/SettingState.h"
 #include "Menu/CursorManager.h"
 #include "Menu/ChoosingCharacter.h"
+#include "Menu/GameOver.h"
+#include "Menu/TimeUp.h"
 
 class UI {
 public:
@@ -18,5 +20,4 @@ public:
 private:
 	int Program_state ;
 	Font font;
-	bool type_cursor = 0;
 };

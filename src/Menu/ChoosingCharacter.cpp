@@ -1,8 +1,9 @@
 #include "Menu/ChoosingCharacter.h"
 #include "raylib.h"
+#include "sprite.h"
 
 ChoosingCharacter::ChoosingCharacter()
-    : backButton(80, 80, 40, CircleButton::BACK)// Nút back tròn ở góc trái 
+    : backButton(80, 80, 40, CircleButton::BACK) // Nút back tròn ở góc trái
 {
     MenuTexture = &MenuImages::GetInstance().menuTexture;
 
@@ -37,11 +38,26 @@ void ChoosingCharacter::Draw()
     // Draw back button
     backButton.Draw();
 
-
     // Draw character buttons
     marioButton->Draw();
     luigiButton->Draw();
     multiplayerButton->Draw();
+
+    if (selectedCharacter == Player_Mode::MARIO_PLAYER)
+    {
+        Rectangle arrow = {80, 660, Screen_Sprite::arrow_.width * 5.0f, Screen_Sprite::arrow_.height * 5.0f};
+        DrawTexturePro(Screen_Sprite::screen_.sprite, Screen_Sprite::arrow_, arrow, {0, 0}, 0.0f, WHITE);
+    }
+    else if (selectedCharacter == Player_Mode::LUIGI_PLAYER)
+    {
+        Rectangle arrow = {865, 660, Screen_Sprite::arrow_.width * 5.0f, Screen_Sprite::arrow_.height * 5.0f};
+        DrawTexturePro(Screen_Sprite::screen_.sprite, Screen_Sprite::arrow_, arrow, {0, 0}, 0.0f, WHITE);
+    }
+    else if (selectedCharacter == Player_Mode::MULTI_PLAYER)
+    {
+        Rectangle arrow = {435, 660, Screen_Sprite::arrow_.width * 5.0f, Screen_Sprite::arrow_.height * 5.0f};
+        DrawTexturePro(Screen_Sprite::screen_.sprite, Screen_Sprite::arrow_, arrow, {0, 0}, 0.0f, WHITE);
+    }
 }
 
 int ChoosingCharacter::Update()
@@ -55,24 +71,21 @@ int ChoosingCharacter::Update()
     // Kiểm tra các nút character
     if (marioButton->Update())
     {
-        selectedCharacter = 1;
-        return menuState; // Quay về menu
+        selectedCharacter = Player_Mode::MARIO_PLAYER;
     }
     if (luigiButton->Update())
     {
-        selectedCharacter = 2;
-        return menuState; // Quay về menu
+        selectedCharacter = Player_Mode::LUIGI_PLAYER;
     }
     if (multiplayerButton->Update())
     {
-        selectedCharacter = 3;
-        return menuState; // Quay về menu
+        selectedCharacter = Player_Mode::MULTI_PLAYER;
     }
 
     return choosingCharacterState;
 }
 
-int ChoosingCharacter::GetCharacter() const
+Player_Mode ChoosingCharacter::GetCharacter() const
 {
     return selectedCharacter;
 }

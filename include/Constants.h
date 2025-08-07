@@ -8,15 +8,26 @@ constexpr int Screen_h = 720;
 constexpr float scale_screen = 3.0f;
 
 // Program states
-enum ProgramState {
+enum ProgramState
+{
     menuState = 0,
     settingState = 1,
     choosingStageState = 2,
     choosingCharacterState = 3,
-    gameManagerState = 4
+    gameManagerState = 4,
+    gameOverState = 5,
+    timeUpState = 6
 };
 
-enum class Difficulty {
+enum class Player_Mode
+{
+    MARIO_PLAYER,
+    LUIGI_PLAYER,
+    MULTI_PLAYER
+};
+
+enum class Difficulty
+{
     Easy,
     Medium,
     Hard
@@ -26,7 +37,6 @@ namespace Physics
 {
     constexpr float gravity_ = 1000.0f;
 }
-
 
 // Colors (if you want to define custom colors, otherwise use raylib's built-in colors)
 // Example:

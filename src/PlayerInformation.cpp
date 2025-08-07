@@ -1,13 +1,39 @@
 #include "PlayerInformation.h"
 
-PlayerInformation::PlayerInformation()
+PlayerInformation::PlayerInformation(float time, int lives)
 {
     score = 0;
     coins = 0;
-    time = 1000;
-    lives = 3;
+    this->time = time;
+    this->lives = lives;
     coins_frame = 0;
     rec_ = Font_Sprite::Coin::coin[0];
+}
+
+PlayerInformation::PlayerInformation(const PlayerInformation &other)
+    : score(other.score),
+      coins(other.coins),
+      world(other.world),
+      time(other.time),
+      lives(other.lives),
+      coin_timer(other.coin_timer),
+      coins_frame(other.coins_frame),
+      rec_(other.rec_) {}
+
+PlayerInformation& PlayerInformation::operator=(const PlayerInformation &other)
+{
+    if (this != &other)
+    {
+        score = other.score;
+        coins = other.coins;
+        world = other.world;
+        time = other.time;
+        lives = other.lives;
+        coin_timer = other.coin_timer;
+        coins_frame = other.coins_frame;
+        rec_ = other.rec_;
+    }
+    return *this;
 }
 
 void PlayerInformation::SetWorld(const std::string &world)
@@ -27,7 +53,7 @@ void PlayerInformation::UpdateCoins(const int &c)
 
 void PlayerInformation::Update(const float &dt)
 {
-    time -= dt;
+    time -= 2 * dt;
     coin_timer += dt;
     if (coin_timer >= Coin_Animation_Speed)
     {
@@ -74,4 +100,37 @@ void PlayerInformation::Draw() const
     std::string lives_str = std::to_string(lives);
     float lives_x = 783 - (lives_str.size() * (8 * scale + 1.0f) - 1) / 2.0f;
     Font_Sprite::DrawText(lives_str, lives_x, 82, WHITE);
+}
+
+void PlayerInformation::DecreaseLives()
+{
+    if (lives > 0)
+        --lives;
+}
+
+int PlayerInformation::GetLives() const
+{
+    return lives;
+}
+
+void PlayerInformation::ResetTime()
+{
+    time = 400.0f;
+}
+
+void PlayerInformation::ResetCoin()
+{
+    coins = 0;
+    coins_frame = 0;
+    rec_ = Font_Sprite::Coin::coin[0];
+}
+
+void PlayerInformation::ResetScore()
+{
+    score = 0;
+}
+
+float PlayerInformation::GetTime() const
+{
+    return time;
 }

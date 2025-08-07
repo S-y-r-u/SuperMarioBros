@@ -2,12 +2,13 @@
 #include <raymath.h>
 
 // Constructor: khởi tạo Latiku với vị trí, trọng lực, con trỏ tới Player và danh sách kẻ địch
-Latiku::Latiku(Vector2 pos, Player *player, std::vector<Enemy *> *enemies, std::unordered_map<Enemy *, std::vector<Enemy *>> &enemy_map)
+Latiku::Latiku(Vector2 pos, Player *player, std::vector<Enemy *> *enemies, std::unordered_map<Enemy *, std::vector<Enemy *>> &enemy_map, Camera2D &camera)
     : Enemy(pos, {120.0f, 0}, 0.0f),
       player(player),
       state_(Latiku_State::fly),
       enemies(enemies),
       base_y(pos.y),
+      camera(camera),
       pos_state(0),
       timer_(0.0f),
       pos_to_player(hover_radius_front),
@@ -19,10 +20,26 @@ Latiku::Latiku(Vector2 pos, Player *player, std::vector<Enemy *> *enemies, std::
 // Hàm cập nhật trạng thái mỗi frame
 void Latiku::Update(float dt)
 {
+    Vector2 top_left = GetScreenToWorld2D({0, 0}, camera);
+    Vector2 bottom_right = GetScreenToWorld2D({(float)GetScreenWidth(), (float)GetScreenHeight()}, camera);
+
+    Rectangle screen_rect_world = {
+        top_left.x,
+        top_left.y,
+        bottom_right.x - top_left.x,
+        bottom_right.y - top_left.y};
+    if (214 * 48.0f - top_left.x <= dis_to_finish)
+    {
+        state_ = Latiku_State::disappear;
+    }
     if (state_ == Latiku_State::be_fired_or_hit)
     {
         velocity_.y += Physics::gravity_ * dt;
         position_.y += velocity_.y * dt;
+    }
+    else if (state_ == Latiku_State::disappear)
+    {
+        Disappear_(dt);
     }
     else
     {
@@ -77,7 +94,7 @@ bool Latiku::Need_Check_Ground_Block() const { return false; }
 // Cập nhật chuyển động và hành vi bay của Lakitu
 void Latiku::Animate_(float dt)
 {
-    if (state_ != Latiku_State::be_fired_or_hit)
+    if (state_ != Latiku_State::be_fired_or_hit && state_ != Latiku_State::disappear)
     {
         timer_ += dt;
 
@@ -91,10 +108,18 @@ void Latiku::Animate_(float dt)
             pos_state = !pos_state;
 
         float target_pos = player->getPosition().x + pos_to_player;
-        if (player->getPosition().x + pos_to_player < rec_.width / 2.0f ||
-            player->getPosition().x + pos_to_player > 214 * 48.0f - rec_.width / 2.0f)
+        Vector2 top_left = GetScreenToWorld2D({0, 0}, camera);
+        Vector2 bottom_right = GetScreenToWorld2D({(float)GetScreenWidth(), (float)GetScreenHeight()}, camera);
+
+        Rectangle screen_rect_world = {
+            top_left.x,
+            top_left.y,
+            bottom_right.x - top_left.x,
+            bottom_right.y - top_left.y};
+        if (target_pos - rec_.width / 2.0f < screen_rect_world.x)
         {
-            target_pos = Clamp(target_pos, rec_.width / 2.0f, 214 * 48.0f - rec_.width / 2.0f);
+            target_pos = screen_rect_world.x + rec_.width / 2.0f;
+            pos_to_player = target_pos - player->getPosition().x;
             pos_state = !pos_state;
         }
         position_.x = Lerp(position_.x, target_pos, 0.06f);
@@ -141,4 +166,10 @@ void Latiku::Spawn_Spiny()
 bool Latiku::Need_Check_Collision_With_Other_Enemy() const
 {
     return false;
+}
+
+void Latiku::Disappear_(float dt)
+{
+    position_.x -= 2.0f;
+    position_.y = base_y + sinf(GetTime() * 4.0f) * 5.0f;
 }

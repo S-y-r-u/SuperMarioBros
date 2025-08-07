@@ -16,10 +16,18 @@ class PlayerInformation {
         int coins_frame;
         Rectangle rec_;
     public:
-        PlayerInformation(); 
+        PlayerInformation(float time, int lives); 
+        PlayerInformation(const PlayerInformation &other);
+        PlayerInformation& operator=(const PlayerInformation &other);
         void SetWorld(const std::string &world);
         void UpdateScore(const int &s);
         void UpdateCoins(const int &c);
+        void DecreaseLives();
+        int GetLives() const;
+        float GetTime() const;
+        void ResetTime();
+        void ResetCoin();
+        void ResetScore();
         void Update(const float &dt);
         void Draw() const;
 };

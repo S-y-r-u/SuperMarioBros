@@ -2,6 +2,7 @@
 #include "raylib.h"
 #include "Constants.h"
 #include "Mario.h"
+#include "Luigi.h"
 #include "Item/Item.h"
 #include "Item/MushRoom.h"
 #include "Item/Star.h"
@@ -30,7 +31,7 @@ protected:
     Texture MapTexture;
     int Map[214][15];
     Player *player;
-    PlayerInformation information;
+    PlayerInformation& information;
     Camera2D camera = {0};
     std::vector<KeyboardKey> Keyboard;
 
@@ -38,13 +39,19 @@ protected:
     std::vector<Block *> blocks;
     std::vector<Enemy *> enemies;
     std::unordered_map<Enemy*, std::vector<Enemy *>> enemy_map;
+    Player_Mode player_mode;
+    //Thời gian chờ khi nhân vật chết
+    float cool_down_after_die = 3.0f;
+    float timer_after_die = 0.0f;
+    bool Reset_Game;
 
 public:
-    Stage();
+    Stage(PlayerInformation& info);
     virtual ~Stage();
     void Run();
     void Draw();
 
+    void Cool_Down_After_Die(float dt);
     void Player_Update();
     void Non_Player_Update();
     void Check_Player_Vs_Ground();
@@ -56,4 +63,6 @@ public:
     void Check_Item_Vs_Block();
     void Check_Item_Vs_Ground();
     void Check_Block_Vs_Block();
+    void Clear_Keyboard();
+    bool Need_Reset_Game() const;
 };

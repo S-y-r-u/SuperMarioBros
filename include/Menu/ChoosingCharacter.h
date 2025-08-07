@@ -8,13 +8,13 @@ public:
     ChoosingCharacter();
     void Draw();
     int Update();
-    int  GetCharacter() const;
+    Player_Mode GetCharacter() const;  // Lấy nhân vật đã chọn
     ~ChoosingCharacter();
 
 private:
     Texture* MenuTexture;    
-    int selectedCharacter = 1;
-    
+    Player_Mode selectedCharacter = Player_Mode::MARIO_PLAYER; // Nhân vật được chọn
+
     CircleButton backButton;        // Nút back tròn
     RecButton* marioButton;
     RecButton* luigiButton;

@@ -30,7 +30,7 @@ void Spawn_Item::Item_Spawn(const std::string &type_item, std::vector<Item *> &i
 {
     if (type_item == "flower" || type_item == "super_mushroom")
     {
-        if (player.get_form() == PlayerForm::Small)
+        if (player.get_form() == PlayerForm::Small || player.get_form() == PlayerForm::Invincible)
             Mush_Room_Spawner(items, pos, State_MushRoom::super_);
         else
             Flower_Spawner(items, pos);

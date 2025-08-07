@@ -85,6 +85,9 @@ void MenuImages::Load() {
     buttonMinusTexture = LoadTexture("Menu/Minus.png");
     SettingTexture = LoadTexture("Menu/Setting.jpg");
     MarioIcon = LoadTexture("Menu/MarioIcon.png");
+    buttonPauseTexture = LoadTexture("Menu/Pause.png");
+    buttonYesTexture = LoadTexture("Menu/YES.png");
+    buttonNoTexture = LoadTexture("Menu/NO.png");
 
     // Set rectangles
     menu_background = {0, 0, (float)menuTexture.width, (float)menuTexture.height};
@@ -95,6 +98,9 @@ void MenuImages::Load() {
     button_back = {0, 0, (float)buttonBackTexture.width, (float)buttonBackTexture.height};
     setting_texture = {0, 0, (float)SettingTexture.width, (float)SettingTexture.height};
     mario_icon = {0, 0, (float)MarioIcon.width, (float)MarioIcon.height};
+    button_pause = {0, 0, (float)buttonPauseTexture.width, (float)buttonPauseTexture.height};
+    button_yes = {0, 0, (float)buttonYesTexture.width, (float)buttonYesTexture.height};
+    button_no = {0, 0, (float)buttonNoTexture.width, (float)buttonNoTexture.height};
 }
 
 void MenuImages::Unload() {
@@ -121,5 +127,17 @@ void MenuImages::Unload() {
     if (buttonMinusTexture.id > 0) {
         UnloadTexture(buttonMinusTexture);
         buttonMinusTexture.id = 0;
+    }
+    if(buttonPauseTexture.id > 0) {
+        UnloadTexture(buttonPauseTexture);
+        buttonPauseTexture.id = 0;
+    }
+    if (buttonYesTexture.id > 0) {
+        UnloadTexture(buttonYesTexture);
+        buttonYesTexture.id = 0;
+    }
+    if (buttonNoTexture.id > 0) {
+        UnloadTexture(buttonNoTexture);
+        buttonNoTexture.id = 0;
     }
 }

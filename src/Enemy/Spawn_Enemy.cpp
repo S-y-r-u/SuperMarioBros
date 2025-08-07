@@ -14,9 +14,9 @@ void Spawn_Enemy::Spawn_KoopaTroopa(std::vector<Enemy *> &enemies, Vector2 pos, 
     enemy_map[koopa] = std::vector<Enemy *>();
 }
 
-void Spawn_Enemy::Spawn_Latiku(std::vector<Enemy *> &enemies, Vector2 pos, Player *player, std::unordered_map<Enemy *, std::vector<Enemy *>> &enemy_map)
+void Spawn_Enemy::Spawn_Latiku(std::vector<Enemy *> &enemies, Vector2 pos, Player *player, std::unordered_map<Enemy *, std::vector<Enemy *>> &enemy_map, Camera2D& camera)
 {
-    Latiku *latiku = new Latiku(pos, player, &enemies, enemy_map);
+    Latiku *latiku = new Latiku(pos, player, &enemies, enemy_map, camera);
     enemies.push_back(latiku);
 }
 

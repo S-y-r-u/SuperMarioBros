@@ -8,6 +8,8 @@ Luigi :: Luigi(Vector2 startPos) : Player(startPos){
     friction = 0.96f;   // trượt xa hơn 
 }
 
+Luigi :: ~Luigi() {}
+
 std::vector<Rectangle>& Luigi :: getAnimationFrame() const{
     if(state == AnimationState :: Small_To_Super)
         return Luigi_Sprite::Small::Small_To_Super::small_to_super;

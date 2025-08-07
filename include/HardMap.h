@@ -4,6 +4,6 @@
 
 class HardMap : public Stage {
     public:
-        HardMap();
+        HardMap(Player_Mode mode, PlayerInformation& info);
         ~HardMap();
 };

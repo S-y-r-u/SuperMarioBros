@@ -9,7 +9,8 @@ enum class Latiku_State
 {
     fly,
     throw_spiny,
-    be_fired_or_hit
+    be_fired_or_hit,
+    disappear
 };
 
 class Latiku : public Enemy
@@ -28,21 +29,23 @@ private:
     float base_y;
     const float Push_Velocity = 200.0f;
     const int Score_Latiku = 1000;
+    const float dis_to_finish = 2 * Screen_w;
 
     Player *player;
     std::vector<Enemy *> *enemies;
     std::unordered_map<Enemy *, std::vector<Enemy *>> &enemy_map;
+    Camera2D &camera;
 
 public:
-    Latiku(Vector2 pos, Player *player, std::vector<Enemy *> *enemies, std::unordered_map<Enemy *, std::vector<Enemy *>> &enemy_map);
+    Latiku(Vector2 pos, Player *player, std::vector<Enemy *> *enemies, std::unordered_map<Enemy *, std::vector<Enemy *>> &enemy_map, Camera2D &camera);
 
     void Update(float dt) override;
     void Draw() const override;
 
     void Notify_Fall(float dt) override {}
     void Notify_On_Ground() override {}
-    void Notify_Be_Stomped(PlayerInformation& info) override {}
-    void Notify_Be_Fired_Or_Hit(PlayerInformation& info) override;
+    void Notify_Be_Stomped(PlayerInformation &info) override {}
+    void Notify_Be_Fired_Or_Hit(PlayerInformation &info) override;
 
     bool Can_Be_Stomped() const override;
     bool Can_Be_Fired_Or_Hit() const override;
@@ -52,4 +55,5 @@ public:
 private:
     void Spawn_Spiny();
     void Animate_(float dt);
+    void Disappear_(float dt);
 };

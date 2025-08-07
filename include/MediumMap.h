@@ -4,6 +4,6 @@
 
 class MediumMap : public Stage {
     public:
-        MediumMap();
+        MediumMap(Player_Mode mode, PlayerInformation& info);
         ~MediumMap();
 };

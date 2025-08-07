@@ -65,12 +65,6 @@ void KoopaTroopa::Update(float dt)
     }
     before_pos_ = position_; // Lưu vị trí trước khi cập nhật
     position_ = Vector2Add(position_, Vector2Scale(velocity_, dt));
-    if (position_.x - rec_.width / 2.0f < 0 || position_.x + rec_.width / 2.0f > 214 * 48.0f)
-    {
-        // Nếu ra ngoài biên, dừng lại
-        position_.x = Clamp(position_.x, rec_.width / 2.0f, 214 * 48.0f - rec_.width / 2.0f);
-        velocity_.x *= -1.0f;
-    }
 }
 
 void KoopaTroopa::Draw() const

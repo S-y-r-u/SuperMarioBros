@@ -25,6 +25,7 @@ class Player : public Character{
         PlayerForm beforeStar;
 
         bool isDead;
+        bool isActive;
         float deadTimer;
 
         float fireCoolDown;
@@ -51,11 +52,13 @@ class Player : public Character{
         bool Get_isInvincible() const { return isInvincible; }
         PlayerForm Get_formBeforeStar() const {return beforeStar; }
         bool Get_isDead() const { return isDead; }
+        bool Get_isActive() const { return isActive; }
     
         void MoveRight() override;
         void MoveLeft() override;
         void StopMoving() override;
         void Jump();
+        void Cut_Jump();
 
         void update(float dt) override;
         void draw() override;

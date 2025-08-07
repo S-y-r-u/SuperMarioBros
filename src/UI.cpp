@@ -23,8 +23,9 @@ void UI::Process()
     ChoosingStageState *choosingStage = new ChoosingStageState();
     GameManager *gameManager = new GameManager();
     SettingState *settingMenu = new SettingState();
-    ChoosingCharacter* choosingCharacter = new ChoosingCharacter();
-
+    ChoosingCharacter *choosingCharacter = new ChoosingCharacter();
+    GameOver *gameOver = new GameOver();
+    TimeUp *timeUp = new TimeUp();
 
     Program_state = menuState;
     int previousState = menuState; // Track previous state để quản lý music
@@ -33,12 +34,11 @@ void UI::Process()
 
     while (!WindowShouldClose())
     {
-        type_cursor = 0;
         // Quản lý music khi state thay đổi
         if (Program_state != previousState)
         {
             // Stop current music
-            if (Program_state == gameManagerState || previousState == gameManagerState) 
+            if (Program_state == gameManagerState || previousState == gameManagerState)
             {
                 SoundManager::GetInstance().StopMusic();
                 if (Program_state == menuState)
@@ -57,18 +57,31 @@ void UI::Process()
         if (Program_state == menuState)
         {
             Program_state = menu->Update();
-            if (Program_state == gameManagerState){
-                gameManager->SetDifficulty(choosingStage->GetSelectedDifficulty());
+            if (Program_state == gameManagerState)
+            {
+                {
+                    gameManager->SetGameMode(Game_Mode::Play_Through);
+                    gameManager->SetDifficulty(Difficulty::Easy);
+                }
                 // gameManager->SetCharacter(choosingCharacter->GetCharacter());
             }
         }
         else if (Program_state == choosingStageState)
         {
-            Program_state = choosingStage->Update();;
+            Program_state = choosingStage->Update();
+            if (Program_state == gameManagerState)
+            {
+                gameManager->SetGameMode(Game_Mode::Play_Level);
+                gameManager->SetDifficulty(choosingStage->GetSelectedDifficulty());
+            }
         }
         else if (Program_state == gameManagerState)
         {
             Program_state = gameManager->Update();
+            if (Program_state == gameOverState)
+                gameOver->SetPlayerInformation(&gameManager->GetPlayerInformation());
+            if (Program_state == timeUpState)
+                timeUp->SetPlayerInformation(&gameManager->GetPlayerInformation());
         }
         else if (Program_state == settingState)
         {
@@ -77,8 +90,16 @@ void UI::Process()
         else if (Program_state == choosingCharacterState)
         {
             Program_state = choosingCharacter->Update();
+            gameManager->SetPlayerMode(choosingCharacter->GetCharacter());
         }
-
+        else if (Program_state == gameOverState)
+        {
+            Program_state = gameOver->Update();
+        }
+        else if (Program_state == timeUpState)
+        {
+            Program_state = timeUp->Update();
+        }   
         // Draw
         BeginDrawing();
         ClearBackground(RAYWHITE);
@@ -102,6 +123,14 @@ void UI::Process()
         else if (Program_state == choosingCharacterState)
         {
             choosingCharacter->Draw();
+        }
+        else if (Program_state == gameOverState)
+        {
+            gameOver->Draw();
+        }
+        else if (Program_state == timeUpState)
+        {
+            timeUp->Draw();
         }
 
         EndDrawing();

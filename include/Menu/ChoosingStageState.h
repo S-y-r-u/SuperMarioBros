@@ -3,6 +3,7 @@
 #include "Menu/Button.h" 
 #include "Menu/Menu.h"
 
+// Dùng để chọn độ khó, chơi 1 map
 class ChoosingStageState {
 public:
     ChoosingStageState();

@@ -61,17 +61,17 @@ int ChoosingStageState::Update()
     if (easyButton->Update())
     {
         selectedDifficulty = Difficulty::Easy;
-        return menuState;
+        return gameManagerState;
     }
     if (mediumButton->Update())
     {
         selectedDifficulty = Difficulty::Medium;
-        return menuState;
+        return gameManagerState;
     }
     if (hardButton->Update())
     {
         selectedDifficulty = Difficulty::Hard;
-        return menuState;
+        return gameManagerState;
     }
 
     return choosingStageState;
