@@ -280,6 +280,30 @@ void Player ::Die()
     deadTimer = 3.0f;
 }
 
-void Player ::Shoot()
+
+void Player :: updateCoolDown(float dt)
 {
+    if(fireCoolDown >= 0.0f)  fireCoolDown -= dt; 
+}
+
+void Player :: Shoot(std::vector<FireBall*> &fireballs)
+{
+    bool canShoot = (form == PlayerForm :: Fire || form == PlayerForm :: Invincible_Super_And_Fire);
+    if(!canShoot || isTransforming || isDead || fireCoolDown > 0 || fireballs.size() >= 3){
+        return;
+    }
+
+    state = AnimationState :: Shoot;
+    fireCoolDown = 0.3f;
+    currentFrame = 0;
+    frameTimer = 0.0f;
+
+    Vector2 fireBallStartPos = position;
+    Rectangle playerPos = get_draw_rec();
+
+    fireBallStartPos.y += playerPos.height * 0.6f;
+    if(!isFacingLeft)    fireBallStartPos.x += playerPos.width - 15;
+    else fireBallStartPos.x += 5;
+
+    fireballs.push_back(new FireBall(fireBallStartPos, isFacingLeft));
 }

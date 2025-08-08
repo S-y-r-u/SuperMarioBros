@@ -69,5 +69,7 @@ class Player : public Character{
         void getStar();
 
         void Die();
-        void Shoot();
+        
+        void updateCoolDown(float dt);
+        void Shoot(std::vector<FireBall*> &fireballs);
 };

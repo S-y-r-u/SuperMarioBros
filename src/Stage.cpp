@@ -25,6 +25,10 @@ Stage::~Stage()
         delete enemy;
     enemies.clear();
 
+    for(FireBall *fireball : fireballs)
+        delete fireball;
+    fireballs.clear();
+
     if (player)
     {
         delete player;
@@ -78,13 +82,15 @@ void Stage::Player_Update()
         player->Jump();
     else if (IsKeyReleased(KEY_W))
         player->Cut_Jump();
+    if(IsKeyPressed(KEY_SPACE))
+        player->Shoot(fireballs);
     if (Keyboard.empty())
         player->StopMoving();
     else if (Keyboard.back() == KEY_A)
         player->MoveLeft();
     else
         player->MoveRight();
-
+    player->updateCoolDown(GetFrameTime());
     player->update(GetFrameTime());
     information.Update(GetFrameTime());
 
@@ -123,6 +129,7 @@ void Stage::Non_Player_Update()
     Check_Enemy_Vs_Ground();
     Check_Enemy_Vs_Block();
     Check_Enemy_Vs_Enemy();
+    Check_FireBall_Vs_World();
 
     for (Item *item : items)
     {
@@ -191,6 +198,14 @@ void Stage::Non_Player_Update()
             i++;
     }
 
+    for(size_t i=0; i<fireballs.size();){
+        if(!fireballs[i]->getActive()){
+            delete fireballs[i];
+            fireballs.erase(fireballs.begin()+i);
+        }
+        else i++;
+    }
+
     for (Item *item : items)
         item->Update_();
 
@@ -202,6 +217,9 @@ void Stage::Non_Player_Update()
     {
         enemies[i]->Update(GetFrameTime());
     }
+
+    for(FireBall *fireball : fireballs)
+        fireball->update(GetFrameTime(), camera);
 }
 
 void Stage::Draw()
@@ -218,6 +236,9 @@ void Stage::Draw()
 
     for (Enemy *enemy : enemies)
         enemy->Draw();
+
+    for (FireBall* fireball : fireballs)
+        fireball->draw();
 
     Score_Manager &score_manager = Score_Manager::GetInstance();
     score_manager.Draw();
@@ -832,6 +853,77 @@ void Stage::Check_Block_Vs_Block()
                 mainblock->Surrounded_Block[3] = true; // right
             }
         }
+    }
+}
+
+void Stage::Check_FireBall_Vs_World()
+{
+    for (auto* fireball : fireballs) 
+    {
+        if (!fireball->getActive()) continue;
+        Rectangle rec_fireball = fireball->get_draw_rec();
+
+        bool rebound = 0;
+
+        for (Block* block : blocks) 
+        {
+            Rectangle rec_block = block->Get_Draw_Rec();
+            if (CheckCollisionRecs(rec_fireball, rec_block))
+            {
+                if (fireball->getVelocity().y > 0 && rec_fireball.y + rec_fireball.height - 
+                (fireball->getVelocity().y * GetFrameTime()) <= rec_block.y) 
+                {
+                    fireball->setPosition({rec_fireball.x, rec_block.y - rec_fireball.height});
+                    fireball->reboundOnSurface(); 
+                    rebound = 1;
+                    goto end_collision_check_for_this_fireball;
+                } 
+                else
+                {
+                    fireball->explode();
+                    goto next_fireball; 
+                }
+            }
+        }
+
+        for(int i=0; i<15; i++) for(int j=0; j<214; j++)
+        {
+            if(Map[j][i] == 0)  continue;
+            Rectangle rec_map = {j * 16.0f * scale_screen, i * 16.0f * scale_screen, 16.0f * scale_screen, 16.0f * scale_screen};
+            if(CheckCollisionRecs(rec_fireball, rec_map))
+            {
+                if (fireball->getVelocity().y > 0 && rec_fireball.y + rec_fireball.height - (fireball->getVelocity().y * GetFrameTime()) <= rec_map.y){
+                    fireball->setPosition({rec_fireball.x, rec_map.y - rec_fireball.height});
+                    fireball->reboundOnSurface();
+                    rebound = 1;
+                    goto end_collision_check_for_this_fireball;
+                } 
+                else
+                {
+                    fireball->explode();
+                    goto next_fireball;
+                }
+            }
+        }
+
+        end_collision_check_for_this_fireball:;
+        if (rebound)
+        {
+            fireball->notifyOnGround();
+        }
+
+        for (Enemy* enemy : enemies) 
+        {
+            if (!enemy->Get_Is_Active() || enemy->Get_Is_Dead()) continue;
+            if (CheckCollisionRecs(rec_fireball, enemy->Get_Draw_Rec())) 
+            {
+                fireball->explode();
+                enemy->Notify_Be_Fired_Or_Hit(information);
+                goto next_fireball;
+            }
+        }
+
+        next_fireball:;
     }
 }
 

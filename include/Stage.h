@@ -38,6 +38,7 @@ protected:
     std::vector<Item *> items;
     std::vector<Block *> blocks;
     std::vector<Enemy *> enemies;
+    std::vector<FireBall*> fireballs;
     std::unordered_map<Enemy*, std::vector<Enemy *>> enemy_map;
     Player_Mode player_mode;
     //Thời gian chờ khi nhân vật chết
@@ -63,6 +64,7 @@ public:
     void Check_Item_Vs_Block();
     void Check_Item_Vs_Ground();
     void Check_Block_Vs_Block();
+    void Check_FireBall_Vs_World();
     void Clear_Keyboard();
     bool Need_Reset_Game() const;
 };

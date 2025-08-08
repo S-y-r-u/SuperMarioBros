@@ -10,7 +10,8 @@ class FireBall{
         Vector2 velocity;
         bool isActive;
         FireBallState state;
-        
+        bool isGround; 
+
         int currentFrame;
         float frameTimer;
         float animationSpeed;
@@ -21,8 +22,14 @@ class FireBall{
         ~FireBall();
 
         bool getActive() const;
+        Rectangle get_draw_rec();
+        Vector2 getVelocity() const {return velocity;}
         std :: vector<Rectangle> getFireBallFrame() const;
-        void update(float dt);    
+        void setPosition(Vector2 newPos);
+        void notifyOnGround();
+        void reboundOnSurface();
+
+        void update(float dt, const Camera2D& camera);    
         void explode();
         void draw();
 };

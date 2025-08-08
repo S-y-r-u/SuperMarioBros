@@ -1,4 +1,5 @@
 #include "FireBall.h"
+#include <iostream>
 
 FireBall :: FireBall(Vector2 pos, bool facingLeft){
     position = pos;
@@ -6,9 +7,10 @@ FireBall :: FireBall(Vector2 pos, bool facingLeft){
 
     isActive = 1;
     state = FireBallState :: Fly;
-    float speedX = 300.0f, speedY = -180.0f;
+    float speedX = 550.0f, speedY = 20.0f;
     if(facingLeft)  velocity = {-speedX, speedY};
     else velocity = {speedX, speedY};
+    isGround = 1;
 
     currentFrame = 0;
     frameTimer = 0.0f;
@@ -23,13 +25,30 @@ bool FireBall :: getActive() const{
     return isActive;
 }
 
+void FireBall :: setPosition(Vector2 newPos){
+    position = newPos;
+}
+
+void FireBall :: notifyOnGround(){
+    isGround = 1;
+}
+
+void FireBall :: reboundOnSurface(){
+    velocity.y = -280.0f;
+}
+
+Rectangle FireBall :: get_draw_rec(){
+    const auto &frame = getFireBallFrame();
+    return {position.x, position.y, frame[currentFrame].width * scale_screen, frame[currentFrame].height * scale_screen};
+}
+
 std :: vector<Rectangle> FireBall :: getFireBallFrame() const{
     if(state == FireBallState :: Explode)
         return Item_Sprite :: Fire_Ball :: Explode :: explode_;
     return Item_Sprite :: Fire_Ball :: Fly :: fly_; 
 }
 
-void FireBall :: update(float dt){
+void FireBall :: update(float dt, const Camera2D& camera){
     if(!isActive)   return;
 
     if(state == FireBallState :: Explode){
@@ -46,14 +65,15 @@ void FireBall :: update(float dt){
         return;
     }
 
-    float gravity = 500.0f;
+    float gravity = 1500.0f;
+    velocity.y += gravity * dt;
     position.x += velocity.x * dt;
     position.y += velocity.y * dt;
 
-    // nay len san nha
-    if (position.y > 579){ 
-        position.y = 579;
-        velocity.y = -250.0f;
+    float groundY = 600.0f;
+    if (position.y >= groundY){
+        position.y = groundY; 
+        if(velocity.y > 0)  velocity.y = -280.0f; // lucj nayr leen
     }
 
     frameTimer += dt;
@@ -64,9 +84,11 @@ void FireBall :: update(float dt){
             currentFrame = 0;
         }
     }
+    float leftEdge = camera.target.x - (Screen_w / 2.0f);
+    float rightEdge = camera.target.x + Screen_w;
 
-    if(position.x < 0 || position.x > GetScreenWidth()){
-        isActive = 0;
+    if (position.x < leftEdge || position.x > rightEdge){
+        isActive = false;
     }
 }
 
