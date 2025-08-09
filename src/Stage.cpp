@@ -417,6 +417,12 @@ void Stage::Check_Player_Vs_Enemy()
         if (!CheckCollisionRecs(playerRec, enemyRec))
             continue;
 
+        if(player->Get_isInvincible()){
+            enemy->Notify_Be_Fired_Or_Hit(information);
+            SoundManager::GetInstance().PlaySoundEffect("kick");
+            continue;
+        }
+
         // Tính toán độ sâu va chạm
         float overlapX = std::min(playerRec.x + playerRec.width - enemyRec.x,
                                   enemyRec.x + enemyRec.width - playerRec.x);

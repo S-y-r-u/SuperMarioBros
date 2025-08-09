@@ -13,8 +13,13 @@ Mario ::~Mario() {}
 
 std::vector<Rectangle> &Mario ::getAnimationFrame() const
 {
-    if (state == AnimationState ::Small_To_Super)
+    if (isTransforming && state == AnimationState::Small_To_Super && isInvincible) {
+        return Mario_Sprite::Invincible::Small_To_Super::small_to_super;
+    }
+
+    if (isTransforming && state == AnimationState::Small_To_Super) {
         return Mario_Sprite::Small::Small_To_Super::small_to_super;
+    }
 
     if (state == AnimationState ::Die)
         return Mario_Sprite::Small::Die::die_;
@@ -53,8 +58,6 @@ std::vector<Rectangle> &Mario ::getAnimationFrame() const
             return Mario_Sprite::Invincible::Climb::climb_;
         case AnimationState ::Enter_Pipe:
             return Mario_Sprite::Invincible::Enter_Pipe::enter_pipe;
-        case AnimationState ::Small_To_Super:
-            return Mario_Sprite::Invincible::Small_To_Super::small_to_super;
         default:
             return Mario_Sprite::Invincible::Stance::stance_;
         }

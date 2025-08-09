@@ -5,12 +5,12 @@ FireBall :: FireBall(Vector2 pos, bool facingLeft){
     position = pos;
     this -> texture = &Item_Sprite::item_;
 
-    isActive = 1;
+    isActive = true;
     state = FireBallState :: Fly;
     float speedX = 550.0f, speedY = 20.0f;
     if(facingLeft)  velocity = {-speedX, speedY};
     else velocity = {speedX, speedY};
-    isGround = 1;
+    isGround = true;
 
     currentFrame = 0;
     frameTimer = 0.0f;
@@ -30,7 +30,7 @@ void FireBall :: setPosition(Vector2 newPos){
 }
 
 void FireBall :: notifyOnGround(){
-    isGround = 1;
+    isGround = true;
 }
 
 void FireBall :: reboundOnSurface(){
@@ -70,12 +70,6 @@ void FireBall :: update(float dt, const Camera2D& camera){
     position.x += velocity.x * dt;
     position.y += velocity.y * dt;
 
-    float groundY = 600.0f;
-    if (position.y >= groundY){
-        position.y = groundY; 
-        if(velocity.y > 0)  velocity.y = -280.0f; // lucj nayr leen
-    }
-
     frameTimer += dt;
     if(frameTimer >= animationSpeed){
         currentFrame ++;
@@ -88,6 +82,10 @@ void FireBall :: update(float dt, const Camera2D& camera){
     float rightEdge = camera.target.x + Screen_w;
 
     if (position.x < leftEdge || position.x > rightEdge){
+        isActive = false;
+    }
+
+    if(position.y > Screen_h){
         isActive = false;
     }
 }

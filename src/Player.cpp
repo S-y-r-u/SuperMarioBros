@@ -17,7 +17,7 @@ Player ::Player(Vector2 startPos) : Character(startPos)
     isInvincible = 0;
     invincibleTimer = 0.0f;
     beforeStar = form;
-
+                   
     isDead = 0;
     isActive = 1;
     deadTimer = 0.0f;
@@ -94,6 +94,15 @@ void Player ::update(float dt)
 
     if (isTransforming)
     {
+        if (isInvincible) 
+        {
+            invincibleTimer -= dt;
+            if (invincibleTimer <= 0.0f) 
+            {
+                isInvincible = false;
+                form = targetForm; 
+            }
+        }
         frameTimer += dt;
         if (frameTimer >= animationSpeed)
         {
@@ -139,7 +148,7 @@ void Player ::update(float dt)
 
     velocity.y += gravity * dt;
 
-    // ma sát tru?t
+    // ma sat truot
     if (velocity.x != 0.0f)
     {
         velocity.x *= pow(friction, dt * 60);
@@ -208,25 +217,30 @@ void Player ::collectCoin()
 
 void Player ::getMushroom()
 {
-    if (isTransforming || form != PlayerForm ::Small)
+    bool isBig = (form == PlayerForm :: Super || form == PlayerForm :: Fire || form == PlayerForm :: Invincible_Super_And_Fire);
+    if (isTransforming || isBig)
         return;
 
     isTransforming = 1;
     state = AnimationState::Small_To_Super;
-    targetForm = PlayerForm ::Super;
 
     velocity = {0.0f, 0.0f};
     currentFrame = 0;
     frameTimer = 0.0f;
+
+    if(isInvincible){
+        beforeStar = PlayerForm :: Super;
+        targetForm = PlayerForm :: Invincible_Super_And_Fire;
+    }
+    else targetForm = PlayerForm ::Super;
 }
 
 void Player ::getFlower()
 {
-    if (isTransforming || form == PlayerForm ::Fire)
+    if (isTransforming || form == PlayerForm ::Fire )
         return;
 
-    if (isInvincible)
-        beforeStar = PlayerForm::Fire;
+    if (isInvincible)  beforeStar = PlayerForm::Fire;
     else
     {
         isTransforming = 1;
@@ -257,14 +271,13 @@ void Player ::getStar()
         return;
     }
 
-    isInvincible = 1;
+    isInvincible = true;
     invincibleTimer = 10.0f;
-    beforeStar = form;
+    beforeStar = form; 
 
-    if (form == PlayerForm ::Fire || form == PlayerForm ::Super)
-        form = PlayerForm ::Invincible_Super_And_Fire;
-    else
-        form = PlayerForm ::Invincible;
+    if(form == PlayerForm::Fire || form == PlayerForm :: Super)
+        form = PlayerForm::Invincible_Super_And_Fire;
+    else form = PlayerForm::Invincible;
 }
 
 void Player ::Die()
