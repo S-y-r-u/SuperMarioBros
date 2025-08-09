@@ -3,14 +3,14 @@
 EasyMap::EasyMap(Player_Mode mode, PlayerInformation &info) : Stage(info)
 {
     player_mode = mode;
-    MapTexture = LoadTexture("map/Easy.png");
+    MapTexture = LoadTexture("map/Easy/Easy.png");
     std::ifstream fi;
-    fi.open("map/Easy.txt");
+    fi.open("map/Easy/Easy.txt");
     for (int i = 0; i < 15; ++i)
         for (int j = 0; j < 214; ++j)
             fi >> Map[j][i];
     fi.close();
-    fi.open("map/Block_Easy.txt");
+    fi.open("map/Easy/Block_Easy.txt");
     for (int i = 0; i < 15; ++i)
     {
         for (int j = 0; j < 214; ++j)
@@ -62,13 +62,7 @@ EasyMap::EasyMap(Player_Mode mode, PlayerInformation &info) : Stage(info)
     camera.offset = {0, 0};
     camera.rotation = 0;
     camera.zoom = 1;
-    Spawn_Enemy::Spawn_Goomba(enemies, {240, 100}, enemy_map);
-    // Spawn_Enemy::Spawn_Goomba(enemies, {340, 100}, enemy_map);
-    // Spawn_Enemy::Spawn_Latiku(enemies, {200, 100}, player, enemy_map, camera);
-    // enemies.push_back(new PiranhaPlant({500, 400}, player));
-    // Spawn_Enemy::Spawn_KoopaTroopa(enemies, {140, 400}, enemy_map);
-    // Spawn_Enemy::Spawn_KoopaTroopa(enemies, {520, 400}, enemy_map, true);
-    // Spawn_Enemy::Spawn_BomberBill(enemies, {1800, 470}, enemy_map);
+    LoadEnemiesFromFile("map/Easy/Enemy_Easy.txt");
 }
 
 EasyMap::~EasyMap()

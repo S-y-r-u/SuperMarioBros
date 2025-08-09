@@ -25,11 +25,11 @@ private:
     const float emerge_speed = 60.0f;        // Tốc độ nhô lên/rút xuống
     const float above_duration = 2.0f;       // Thời gian ở trên (giây)
     const float underground_duration = 1.5f; // Thời gian ẩn dưới (giây)
-    const float emerge_height = 65.0f;       // Chiều cao nhô lên
+    const float emerge_height = 76.0f;       // Chiều cao nhô lên
     const float Push_Height = 25.0f;         // Độ cao bay lên khi bị đánh
 
     Player *player;                    // Con trỏ tới player để kiểm tra khoảng cách
-    const float safe_distance = 64.0f; // Khoảng cách an toàn từ player
+    const float safe_distance = 300.0f; // Khoảng cách an toàn từ player
     const int Score_PiranhaPlant = 100;
 
 public:

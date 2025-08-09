@@ -18,6 +18,8 @@
 #include <vector>
 #include <algorithm>
 #include <unordered_map>
+#include <fstream>
+#include <string>
 #include "PlayerInformation.h"
 #include "DrawScore.h"
 
@@ -67,4 +69,5 @@ public:
     void Check_FireBall_Vs_World();
     void Clear_Keyboard();
     bool Need_Reset_Game() const;
+    void LoadEnemiesFromFile(const std::string& filename);
 };

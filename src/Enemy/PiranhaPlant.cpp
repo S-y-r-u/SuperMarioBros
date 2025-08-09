@@ -97,7 +97,7 @@ void PiranhaPlant::UpdateStateMachine(float dt)
     switch (state_)
     {
     case PiranhaPlant_State::underground:
-        if (state_timer >= underground_duration && !IsPlayerNearby())
+        if (state_timer >= underground_duration && IsPlayerNearby())
         {
             state_ = PiranhaPlant_State::emerging;
             state_timer = 0.0f;
@@ -182,9 +182,7 @@ void PiranhaPlant::Be_Fired_Or_Hit()
 // Kiểm tra player có gần không
 bool PiranhaPlant::IsPlayerNearby() const
 {
-    if (!player)
-        return false;
-
+    if (!player) return false;
     Vector2 player_pos = player->getPosition();
     float distance = std::abs(player_pos.x - position_.x);
 

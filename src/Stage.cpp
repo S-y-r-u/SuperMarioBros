@@ -93,6 +93,7 @@ void Stage::Player_Update()
     player->updateCoolDown(GetFrameTime());
     player->update(GetFrameTime());
     information.Update(GetFrameTime());
+    std::cout << "Player position: " << player->getPosition().x << ", " << player->getPosition().y << std::endl;
 
     Score_Manager &score_manager = Score_Manager::GetInstance();
     score_manager.Update();
@@ -188,7 +189,7 @@ void Stage::Non_Player_Update()
             delete enemies[i];
             enemies.erase(enemies.begin() + i);
         }
-        if (!enemies[i]->Get_Is_Active())
+        if (i < enemies.size() && !enemies[i]->Get_Is_Active())
         {
             enemy_map.erase(enemies[i]);
             delete enemies[i];
@@ -225,7 +226,6 @@ void Stage::Non_Player_Update()
 void Stage::Draw()
 {
     BeginMode2D(camera);
-    DrawTexturePro(MapTexture, source, dest, {0, 0}, 0, WHITE);
     player->draw();
 
     for (Item *item : items)
@@ -240,7 +240,9 @@ void Stage::Draw()
     for (FireBall* fireball : fireballs)
         fireball->draw();
 
+    DrawTexturePro(MapTexture, source, dest, {0, 0}, 0, WHITE);
     Score_Manager &score_manager = Score_Manager::GetInstance();
+    
     score_manager.Draw();
 
     EndMode2D();
@@ -935,4 +937,52 @@ void Stage::Clear_Keyboard()
 bool Stage::Need_Reset_Game() const
 {
     return Reset_Game;
+}
+
+
+void Stage::LoadEnemiesFromFile(const std::string& filename)
+{
+    std::ifstream file(filename);
+    if (!file.is_open())
+    {
+        // Nếu không mở được file, in ra lỗi
+        return;
+    }
+    
+    int enemy_type, x, y;
+    while (file >> enemy_type >> x >> y)
+    {
+        Vector2 position = {(float)x, (float)y};
+        
+        // Chuyển đổi int thành EnemyType
+        EnemyType type;
+        switch (enemy_type)
+        {
+        case 0:
+            type = EnemyType::Goomba;
+            break;
+        case 1:
+            type = EnemyType::KoopaTroopaWalking;
+            break;
+        case 2:
+            type = EnemyType::KoopaTroopaFlying;
+            break;
+        case 3:
+            type = EnemyType::Latiku;
+            break;
+        case 4:
+            type = EnemyType::PiranhaPlant;
+            break;
+        case 5:
+            type = EnemyType::BomberBill;
+            break;
+        default:
+            continue; // Bỏ qua nếu type không hợp lệ
+        }
+        
+        // Spawn enemy
+        Spawn_Enemy::SpawnEnemies(type, position , player , enemy_map, enemies, camera);
+    }
+    
+    file.close();
 }

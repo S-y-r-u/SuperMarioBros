@@ -10,12 +10,27 @@
 #include <string>
 #include <unordered_map>
 
+enum class EnemyType
+{
+    Goomba,
+    KoopaTroopaWalking,
+    KoopaTroopaFlying,
+    Latiku,
+    PiranhaPlant,
+    BomberBill,
+    Spiny
+};
+
+
 class Spawn_Enemy
 {
+private:
+    static void Spawn_Goomba(Vector2 pos , std::unordered_map<Enemy *, std::vector<Enemy *>>& enemy_map, std::vector<Enemy *>& enemies);
+    static void Spawn_KoopaTroopa(Vector2 pos, std::unordered_map<Enemy *, std::vector<Enemy *>>& enemy_map, std::vector<Enemy *>& enemies ,bool is_flying = false);
+    static void Spawn_Latiku(Vector2 pos, std::unordered_map<Enemy *, std::vector<Enemy *>>& enemy_map, std::vector<Enemy *>& enemies , Player* player, Camera2D& camera);
+    static void Spawn_PiranhaPlant(Vector2 pos, std::vector<Enemy *>& enemies, Player* player);
+    static void Spawn_BomberBill(Vector2 pos, std::unordered_map<Enemy *, std::vector<Enemy *>>& enemy_map, std::vector<Enemy *>& enemies);
+
 public:
-    static void Spawn_Goomba(std::vector<Enemy *> &enemies, Vector2 pos, std::unordered_map<Enemy *, std::vector<Enemy *>> &enemy_map);
-    static void Spawn_KoopaTroopa(std::vector<Enemy *> &enemies, Vector2 pos, std::unordered_map<Enemy *, std::vector<Enemy *>> &enemy_map, bool is_flying = false);
-    static void Spawn_Latiku(std::vector<Enemy *> &enemies, Vector2 pos, Player *player, std::unordered_map<Enemy *, std::vector<Enemy *>> &enemy_map, Camera2D& camera);
-    static void Spawn_PiranhaPlant(std::vector<Enemy *> &enemies, Vector2 pos, Player *player, std::unordered_map<Enemy *, std::vector<Enemy *>> &enemy_map);
-    static void Spawn_BomberBill(std::vector<Enemy *> &enemies, Vector2 pos, std::unordered_map<Enemy *, std::vector<Enemy *>> &enemy_map);
+    static void SpawnEnemies(EnemyType type, Vector2 spawn_position , Player* player , std::unordered_map<Enemy *, std::vector<Enemy *>>& enemy_map, std::vector<Enemy *>& enemies , Camera2D& camera);
 };

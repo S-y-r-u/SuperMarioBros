@@ -62,7 +62,6 @@ HardMap::HardMap(Player_Mode mode, PlayerInformation &info) : Stage(info)
     camera.offset = {0, 0};
     camera.rotation = 0;
     camera.zoom = 1;
-    Spawn_Enemy::Spawn_Goomba(enemies, {240, 100}, enemy_map);
 }
 
 HardMap::~HardMap()
