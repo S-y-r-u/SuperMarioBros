@@ -93,13 +93,13 @@ void Stage::Player_Update()
     player->updateCoolDown(GetFrameTime());
     player->update(GetFrameTime());
     information.Update(GetFrameTime());
-    std::cout << "Player position: " << player->getPosition().x << ", " << player->getPosition().y << std::endl;
 
     Score_Manager &score_manager = Score_Manager::GetInstance();
     score_manager.Update();
 
     if (!player->Get_isDead())
     {
+        player->Set_isGround(false);
         Check_Player_Vs_Ground();
         Check_Player_Vs_Enemy();
         Check_Block_Vs_Block();
@@ -388,8 +388,8 @@ void Stage::Check_Player_Vs_Ground()
                 if (prevPos.y + preRec.height < rec_map.y && Map[j][i - 1] == 0 && player->get_Velocity().y >= 0)
                 {
                     // Va chạm từ trên xuống (đáp xuống mặt đất)
-                    player->Set_Pos({player->getPosition().x, rec_map.y - currentRec.height});
-                    player->Set_Velocity({player->get_Velocity().x, -500.0f * deltaTime});
+                    player->Set_Pos({player->getPosition().x, rec_map.y - playerRec.height});
+                    player->Set_Velocity({player->get_Velocity().x, 0.f});
                     player->Set_isGround(true);
                 }
                 else if (prevPos.y > rec_map.y + rec_map.height && Map[j][i + 1] == 0 && player->get_Velocity().y < 0)
