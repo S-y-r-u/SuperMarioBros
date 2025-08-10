@@ -30,7 +30,7 @@ namespace Mario_Sprite
     {
         namespace Stance
         {
-            Rectangle stance = {7, 51, 12, 15};
+            Rectangle stance = {5, 51, 16, 15};
             std::vector<Rectangle> stance_ = {stance};
         }
         namespace Jump
@@ -45,9 +45,9 @@ namespace Mario_Sprite
         }
         namespace Walk
         {
-            Rectangle w1 = {7, 93, 12, 15};
-            Rectangle w2 = {28, 93, 12, 15};
-            Rectangle w3 = {47, 92, 15, 16};
+            Rectangle w1 = {7, 93, 16, 15};
+            Rectangle w2 = {28, 93, 16, 15};
+            Rectangle w3 = {47, 92, 16, 16};
             std::vector<Rectangle> walk_ = {w1, w2, w3};
         }
         namespace Slide
@@ -104,10 +104,10 @@ namespace Mario_Sprite
     {
         namespace Stance
         {
-            Rectangle s1 = {7, 292, 12, 15};
-            Rectangle s2 = {28, 292, 12, 15};
-            Rectangle s3 = {49, 292, 12, 15};
-            Rectangle s4 = {70, 292, 12, 15};
+            Rectangle s1 = {7, 292, 16, 15};
+            Rectangle s2 = {28, 292, 16, 15};
+            Rectangle s3 = {49, 292, 16, 15};
+            Rectangle s4 = {70, 292, 16, 15};
             std::vector<Rectangle> stance_ = {s1, s2, s3, s4};
         }
         namespace Jump
@@ -120,21 +120,21 @@ namespace Mario_Sprite
         }
         namespace Walk
         {
-            Rectangle w1 = {7, 334, 12, 15};
-            Rectangle w2 = {28, 334, 12, 15};
-            Rectangle w3 = {47, 333, 15, 16};
-            Rectangle w4 = {70, 334, 12, 15};
-            Rectangle w5 = {91, 334, 12, 15};
-            Rectangle w6 = {110, 333, 15, 16};
-            Rectangle w7 = {133, 334, 12, 15};
-            Rectangle w8 = {154, 334, 12, 15};
-            Rectangle w9 = {173, 333, 15, 16};
-            Rectangle w10 = {196, 334, 12, 15};
-            Rectangle w11 = {217, 334, 12, 15};
-            Rectangle w12 = {236, 333, 15, 16};
-            Rectangle w13 = {259, 334, 12, 15};
-            Rectangle w14 = {280, 334, 12, 15};
-            Rectangle w15 = {299, 332, 15, 16};
+            Rectangle w1 = {7, 334, 16, 15};
+            Rectangle w2 = {28, 334, 16, 15};
+            Rectangle w3 = {47, 333, 16, 16};
+            Rectangle w4 = {70, 334, 16, 15};
+            Rectangle w5 = {91, 334, 16, 15};
+            Rectangle w6 = {110, 333, 16, 16};
+            Rectangle w7 = {133, 334, 16, 15};
+            Rectangle w8 = {154, 334, 16, 15};
+            Rectangle w9 = {173, 333, 16, 16};
+            Rectangle w10 = {196, 334, 16, 15};
+            Rectangle w11 = {217, 334, 16, 15};
+            Rectangle w12 = {236, 333, 16, 16};
+            Rectangle w13 = {259, 334, 16, 15};
+            Rectangle w14 = {280, 334, 16, 15};
+            Rectangle w15 = {299, 332, 16, 16};
             std::vector<Rectangle> walk_ = {w1, w2, w3, w4, w5, w6, w7, w8, w9, w10, w11, w12, w13, w14};
         }
         namespace Climb
@@ -192,23 +192,23 @@ namespace Mario_Sprite
     {
         namespace Stance
         {
-            Rectangle stance = {386, 36, 14, 30};
+            Rectangle stance = {386, 36, 16, 30};
             std::vector<Rectangle> stance_ = {stance};
         }
         namespace Stance_To_Fire
         {
-            Rectangle s1 = {793, 214, 14, 30};
-            Rectangle s2 = {814, 214, 14, 30};
-            Rectangle s3 = {835, 214, 14, 30};
-            Rectangle s4 = {856, 214, 14, 30};
-            Rectangle s5 = {793, 214, 14, 30};
-            Rectangle s6 = {814, 214, 14, 30};
-            Rectangle s7 = {835, 214, 14, 30};
-            Rectangle s8 = {856, 214, 14, 30};
-            Rectangle s9 = {793, 214, 14, 30};
-            Rectangle s10 = {814, 214, 14, 30};
-            Rectangle s11 = {835, 214, 14, 30};
-            Rectangle s12 = {856, 214, 14, 30};
+            Rectangle s1 = {793, 214, 16, 30};
+            Rectangle s2 = {814, 214, 16, 30};
+            Rectangle s3 = {835, 214, 16, 30};
+            Rectangle s4 = {856, 214, 16, 30};
+            Rectangle s5 = {793, 214, 16, 30};
+            Rectangle s6 = {814, 214, 16, 30};
+            Rectangle s7 = {835, 214, 16, 30};
+            Rectangle s8 = {856, 214, 16, 30};
+            Rectangle s9 = {793, 214, 16, 30};
+            Rectangle s10 = {814, 214, 16, 30};
+            Rectangle s11 = {835, 214, 16, 30};
+            Rectangle s12 = {856, 214, 16, 30};
             std::vector<Rectangle> stance_to_fire = {s1, s2, s3, s4, s5, s6, s7, s8, s9, s10, s11, s12};
         }
         namespace Crouch
@@ -255,7 +255,7 @@ namespace Mario_Sprite
         }
         namespace Walk
         {
-            Rectangle w1 = {386, 78, 14, 30};
+            Rectangle w1 = {386, 78, 16, 30};
             Rectangle w2 = {406, 78, 16, 29};
             Rectangle w3 = {427, 78, 16, 30};
             std::vector<Rectangle> walk_ = {w1, w2, w3};
@@ -349,10 +349,10 @@ namespace Mario_Sprite
     {
         namespace Stance
         {
-            Rectangle s1 = {558, 332, 14, 30};
-            Rectangle s2 = {579, 332, 14, 30};
-            Rectangle s3 = {600, 332, 14, 30};
-            Rectangle s4 = {621, 332, 14, 30};
+            Rectangle s1 = {558, 332, 16, 30};
+            Rectangle s2 = {579, 332, 16, 30};
+            Rectangle s3 = {600, 332, 16, 30};
+            Rectangle s4 = {621, 332, 16, 30};
             std::vector<Rectangle> stance_ = {s1, s2, s3, s4};
         }
         namespace Jump
@@ -401,19 +401,19 @@ namespace Mario_Sprite
         }
         namespace Walk
         {
-            Rectangle w1 = {557, 374, 15, 30};
+            Rectangle w1 = {557, 374, 16, 30};
             Rectangle w2 = {578, 438, 16, 30};
             Rectangle w3 = {578, 406, 16, 29};
-            Rectangle w4 = {600, 374, 14, 30};
+            Rectangle w4 = {600, 374, 16, 30};
             Rectangle w5 = {599, 438, 16, 30};
             Rectangle w6 = {620, 406, 16, 29};
-            Rectangle w7 = {621, 374, 14, 30};
+            Rectangle w7 = {621, 374, 16, 30};
             Rectangle w8 = {557, 438, 16, 30};
             Rectangle w9 = {557, 406, 16, 29};
-            Rectangle w10 = {579, 374, 14, 30};
+            Rectangle w10 = {579, 374, 16, 30};
             Rectangle w11 = {578, 438, 16, 30};
             Rectangle w12 = {599, 406, 16, 29};
-            Rectangle w13 = {600, 374, 14, 30};
+            Rectangle w13 = {600, 374, 16, 30};
             Rectangle w14 = {620, 438, 16, 30};
             Rectangle w15 = {620, 406, 16, 29};
             std::vector<Rectangle> walk_ = {w1, w2, w3, w4, w5, w6, w7, w7, w9, w10, w11, w12, w13, w14, w15};
@@ -432,7 +432,7 @@ namespace Mario_Sprite
     {
         namespace Stance
         {
-            Rectangle stance = {794, 36, 14, 30};
+            Rectangle stance = {794, 36, 16, 30};
             std::vector<Rectangle> stance_ = {stance};
         }
         namespace Crouch
@@ -447,7 +447,7 @@ namespace Mario_Sprite
         }
         namespace Walk
         {
-            Rectangle w1 = {794, 78, 14, 30};
+            Rectangle w1 = {794, 78, 16, 30};
             Rectangle w2 = {814, 78, 16, 29};
             Rectangle w3 = {835, 78, 16, 30};
             std::vector<Rectangle> walk_ = {w1, w2, w3};
@@ -519,7 +519,7 @@ namespace Luigi_Sprite
     {
         namespace Stance
         {
-            Rectangle stance = {8, 52, 11, 15};
+            Rectangle stance = {8, 52, 16, 15};
             std::vector<Rectangle> stance_ = {stance};
         }
         namespace Jump
@@ -534,9 +534,9 @@ namespace Luigi_Sprite
         }
         namespace Walk
         {
-            Rectangle w1 = {8, 95, 11, 15};
-            Rectangle w2 = {28, 95, 12, 15};
-            Rectangle w3 = {48, 94, 14, 16};
+            Rectangle w1 = {8, 95, 16, 15};
+            Rectangle w2 = {28, 95, 16, 15};
+            Rectangle w3 = {48, 94, 16, 16};
             std::vector<Rectangle> walk_ = {w1, w2, w3};
         }
         namespace Slide
@@ -593,10 +593,10 @@ namespace Luigi_Sprite
     {
         namespace Stance
         {
-            Rectangle s1 = {8, 298, 11, 15};
-            Rectangle s2 = {29, 298, 11, 15};
-            Rectangle s3 = {50, 298, 11, 15};
-            Rectangle s4 = {71, 298, 11, 15};
+            Rectangle s1 = {8, 298, 16, 15};
+            Rectangle s2 = {29, 298, 16, 15};
+            Rectangle s3 = {50, 298, 16, 15};
+            Rectangle s4 = {71, 298, 16, 15};
             std::vector<Rectangle> stance_ = {s1, s2, s3, s4};
         }
         namespace Jump
@@ -609,21 +609,21 @@ namespace Luigi_Sprite
         }
         namespace Walk
         {
-            Rectangle w1 = {7, 341, 11, 15};
-            Rectangle w2 = {28, 341, 12, 15};
-            Rectangle w3 = {48, 340, 14, 16};
-            Rectangle w4 = {71, 341, 11, 15};
-            Rectangle w5 = {91, 341, 12, 15};
-            Rectangle w6 = {111, 340, 14, 16};
-            Rectangle w7 = {134, 341, 11, 15};
-            Rectangle w8 = {154, 341, 12, 15};
-            Rectangle w9 = {174, 340, 14, 16};
-            Rectangle w10 = {197, 341, 11, 15};
-            Rectangle w11 = {217, 341, 11, 15};
-            Rectangle w12 = {237, 340, 14, 16};
-            Rectangle w13 = {260, 341, 11, 15};
-            Rectangle w14 = {280, 341, 12, 15};
-            Rectangle w15 = {300, 340, 14, 16};
+            Rectangle w1 = {7, 341, 16, 15};
+            Rectangle w2 = {28, 341, 16, 15};
+            Rectangle w3 = {48, 340, 16, 16};
+            Rectangle w4 = {71, 341, 16, 15};
+            Rectangle w5 = {91, 341, 16, 15};
+            Rectangle w6 = {111, 340, 16, 16};
+            Rectangle w7 = {134, 341, 16, 15};
+            Rectangle w8 = {154, 341, 16, 15};
+            Rectangle w9 = {174, 340, 16, 16};
+            Rectangle w10 = {197, 341, 16, 15};
+            Rectangle w11 = {217, 341, 16, 15};
+            Rectangle w12 = {237, 340, 16, 16};
+            Rectangle w13 = {260, 341, 16, 15};
+            Rectangle w14 = {280, 341, 16, 15};
+            Rectangle w15 = {300, 340, 16, 16};
             std::vector<Rectangle> walk_ = {w1, w2, w3, w4, w5, w6, w7, w8, w9, w10, w11, w12, w13, w14};
         }
         namespace Climb
@@ -679,7 +679,7 @@ namespace Luigi_Sprite
     {
         namespace Stance
         {
-            Rectangle stance = {386, 36, 14, 31};
+            Rectangle stance = {386, 36, 16, 31};
             std::vector<Rectangle> stance_ = {stance};
         }
         namespace Stance_To_Fire
@@ -742,7 +742,7 @@ namespace Luigi_Sprite
         }
         namespace Walk
         {
-            Rectangle w1 = {385, 79, 15, 31};
+            Rectangle w1 = {385, 79, 16, 31};
             Rectangle w2 = {406, 79, 16, 31};
             Rectangle w3 = {427, 79, 16, 31};
             std::vector<Rectangle> walk_ = {w1, w2, w3};
@@ -888,19 +888,19 @@ namespace Luigi_Sprite
         }
         namespace Walk
         {
-            Rectangle w1 = {539, 381, 14, 31};
+            Rectangle w1 = {539, 381, 16, 31};
             Rectangle w2 = {538, 447, 16, 31};
             Rectangle w3 = {559, 414, 16, 30};
-            Rectangle w4 = {581, 381, 14, 31};
+            Rectangle w4 = {581, 381, 16, 31};
             Rectangle w5 = {559, 447, 16, 31};
             Rectangle w6 = {601, 414, 16, 30};
-            Rectangle w7 = {621, 374, 14, 30};
+            Rectangle w7 = {621, 374, 16, 30};
             Rectangle w8 = {538, 447, 16, 31};
             Rectangle w9 = {538, 414, 16, 30};
-            Rectangle w10 = {560, 381, 14, 31};
+            Rectangle w10 = {560, 381, 16, 31};
             Rectangle w11 = {538, 447, 16, 31};
             Rectangle w12 = {580, 414, 16, 30};
-            Rectangle w13 = {581, 381, 14, 31};
+            Rectangle w13 = {581, 381, 16, 31};
             Rectangle w14 = {601, 447, 16, 31};
             Rectangle w15 = {601, 414, 16, 30};
             std::vector<Rectangle> walk_ = {w1, w2, w3, w4, w5, w6, w7, w7, w9, w10, w11, w12, w13, w14, w15};
@@ -934,7 +934,7 @@ namespace Luigi_Sprite
         }
         namespace Walk
         {
-            Rectangle w1 = {772, 79, 14, 31};
+            Rectangle w1 = {772, 79, 16, 31};
             Rectangle w2 = {813, 79, 16, 31};
             Rectangle w3 = {792, 79, 16, 30};
             std::vector<Rectangle> walk_ = {w1, w2, w3};

@@ -183,6 +183,7 @@ void Stage::Non_Player_Update()
     for (size_t i = 0; i < enemies.size();)
     {
         Rectangle rec_enemy = enemies[i]->Get_Draw_Rec();
+        if (!enemies[i]->Get_First_Appear() && rec_enemy.x <= screen_rect_world.x + screen_rect_world.width) enemies[i]->Set_First_Appear(true);
         if (rec_enemy.x + rec_enemy.width <= screen_rect_world.x)
         {
             enemy_map.erase(enemies[i]);
@@ -216,7 +217,7 @@ void Stage::Non_Player_Update()
     size_t size_before = enemies.size();
     for (size_t i = 0; i < size_before; ++i)
     {
-        enemies[i]->Update(GetFrameTime());
+        if (enemies[i]->Get_First_Appear()) enemies[i]->Update(GetFrameTime());
     }
 
     for(FireBall *fireball : fireballs)
@@ -226,6 +227,7 @@ void Stage::Non_Player_Update()
 void Stage::Draw()
 {
     BeginMode2D(camera);
+    DrawTexturePro(MapTexture, source, dest, {0, 0}, 0, WHITE);
     player->draw();
 
     for (Item *item : items)
@@ -235,12 +237,11 @@ void Stage::Draw()
         block->Draw_();
 
     for (Enemy *enemy : enemies)
-        enemy->Draw();
+        if (enemy->Get_First_Appear()) enemy->Draw();
 
     for (FireBall* fireball : fireballs)
         fireball->draw();
 
-    DrawTexturePro(MapTexture, source, dest, {0, 0}, 0, WHITE);
     Score_Manager &score_manager = Score_Manager::GetInstance();
     
     score_manager.Draw();
@@ -409,7 +410,7 @@ void Stage::Check_Player_Vs_Enemy()
 
     for (Enemy *enemy : enemies)
     {
-        if (!enemy || !enemy->Get_Is_Active() || enemy->Get_Is_Dead())
+        if (!enemy || !enemy->Get_Is_Active() || enemy->Get_Is_Dead() || !enemy->Get_First_Appear())
             continue;
 
         Rectangle enemyRec = enemy->Get_Draw_Rec();

@@ -65,7 +65,7 @@ void GameManager::SetDifficulty(Difficulty diff)
 void GameManager::ResetGame(Difficulty diff)
 {
     difficulty = diff;
-
+    SoundManager::GetInstance().PlayMusic("playingMusic",true);
     // Delete the old stage if it exists
     if (stage)
     {

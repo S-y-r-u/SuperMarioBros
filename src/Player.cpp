@@ -282,8 +282,8 @@ void Player ::getStar()
 
 void Player ::Die()
 {
-    if (isDead)
-        return;
+    if (isDead) return;
+    SoundManager::GetInstance().PlayMusic("mariodie",false);
     isDead = 1;
     state = AnimationState ::Die;
 
@@ -319,4 +319,5 @@ void Player :: Shoot(std::vector<FireBall*> &fireballs)
     else fireBallStartPos.x += 5;
 
     fireballs.push_back(new FireBall(fireBallStartPos, isFacingLeft));
+    SoundManager::GetInstance().PlaySoundEffect("fireball");
 }

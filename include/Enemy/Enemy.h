@@ -18,7 +18,7 @@ protected:
     int current_frame;
     bool is_ground;
     bool is_active, is_dead;
-
+    bool first_appear = false;
 public:
     Enemy(Vector2 startPos, Vector2 velocity, float gravity);
     virtual ~Enemy();
@@ -27,6 +27,8 @@ public:
     virtual void Draw() const = 0;
     virtual Vector2 Get_Previous_Pos() const {}
 
+    bool Get_First_Appear() const { return first_appear; }
+    void Set_First_Appear(bool value) { first_appear = value; }
     Rectangle Get_Draw_Rec() const;
     Vector2 Get_Pos() const;
     Vector2 Get_Velocity() const;
