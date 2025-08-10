@@ -7,6 +7,7 @@
 #include "Item/MushRoom.h"
 #include "Item/Star.h"
 #include "Item/Spawn_Item.h"
+#include "Item/RotatingBarItem.h"
 #include "Block/Block.h"
 #include "Enemy/Enemy.h"
 #include "Enemy/Goomba.h"
@@ -37,6 +38,7 @@ protected:
     Camera2D camera = {0};
     std::vector<KeyboardKey> Keyboard;
 
+    std::vector<RotatingBar*> rotatingBars;
     std::vector<Item *> items;
     std::vector<Block *> blocks;
     std::vector<Enemy *> enemies;

@@ -62,6 +62,7 @@ EasyMap::EasyMap(Player_Mode mode, PlayerInformation &info) : Stage(info)
     camera.offset = {0, 0};
     camera.rotation = 0;
     camera.zoom = 1;
+    rotatingBars.push_back(new RotatingBar({1080, 300}, 100, 45));
     LoadEnemiesFromFile("map/Easy/Enemy_Easy.txt");
 }
 

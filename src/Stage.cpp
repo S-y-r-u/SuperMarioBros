@@ -13,6 +13,10 @@ Stage::~Stage()
 
     enemy_map.clear();
 
+    for (RotatingBar *bar : rotatingBars)
+        delete bar;
+    rotatingBars.clear();
+
     for (Item *item : items)
         delete item;
     items.clear();
@@ -208,6 +212,13 @@ void Stage::Non_Player_Update()
         else i++;
     }
 
+    for (RotatingBar *bar : rotatingBars){
+        bar->Update(GetFrameTime());
+        if ( bar->CheckCollision(player->get_draw_rec()))
+        {
+            player->Die();
+        }
+    }
     for (Item *item : items)
         item->Update_();
 
@@ -229,6 +240,9 @@ void Stage::Draw()
     BeginMode2D(camera);
     DrawTexturePro(MapTexture, source, dest, {0, 0}, 0, WHITE);
     player->draw();
+
+    for (RotatingBar *bar : rotatingBars)
+        bar->Draw();
 
     for (Item *item : items)
         item->Draw_();
@@ -420,7 +434,7 @@ void Stage::Check_Player_Vs_Enemy()
 
         if(player->Get_isInvincible()){
             enemy->Notify_Be_Fired_Or_Hit(information);
-            SoundManager::GetInstance().PlaySoundEffect("kick");
+            SoundManager::GetInstance().PlaySoundEffect("stomp");
             continue;
         }
 
