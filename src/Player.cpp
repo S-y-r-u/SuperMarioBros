@@ -33,11 +33,12 @@ Player ::~Player() {}
 
 Rectangle Player ::get_draw_rec()
 {
-    if (form == PlayerForm ::Small)
+    if (form == PlayerForm ::Small ||
+         form == PlayerForm ::Invincible)
     {
         return {position.x - 12 * scale_screen / 2.0f , position.y - 15 * scale_screen, 12 * scale_screen, 15 * scale_screen};
     }
-    else if (form == PlayerForm ::Super)
+    else
     {
         return {position.x - 14 * scale_screen / 2.0f , position.y - 30 * scale_screen, 14 * scale_screen, 30 * scale_screen};
     }

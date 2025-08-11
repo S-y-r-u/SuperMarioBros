@@ -92,6 +92,7 @@ void BomberBill::Update_Animation(float dt)
 
 void BomberBill::Start_Death_Animation()
 {
+    is_dead = true ;
     state_ = BomberBill_State::Dying;
     velocity_.x *= 0.5f; // Giảm tốc độ ngang khi chết
     velocity_.y = -100.0f; // Bật lên một chút trước khi rơi
@@ -143,12 +144,12 @@ bool BomberBill::Can_Be_Stomped() const
 
 bool BomberBill::Can_Be_Fired_Or_Hit() const
 {
-    return (state_ == BomberBill_State::Flying); // Chỉ có thể bắn khi đang bay
+    return false; // Chỉ có thể bắn khi đang bay
 }
 
 bool BomberBill::Need_Check_Ground_Block() const
 {
-    return (state_ == BomberBill_State::Dying); // Chỉ kiểm tra ground khi đang rơi
+    return false; // Chỉ kiểm tra ground khi đang rơi
 }
 
 void BomberBill::Notify_Fall(float dt)
