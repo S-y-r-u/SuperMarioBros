@@ -239,16 +239,17 @@ void Stage::Draw()
 {
     BeginMode2D(camera);
     DrawTexturePro(MapTexture, source, dest, {0, 0}, 0, WHITE);
+
+    for (Item *item : items)
+        item->Draw_();
+        
+    for (Block *block : blocks)
+        block->Draw_();
+        
     player->draw();
 
     for (RotatingBar *bar : rotatingBars)
         bar->Draw();
-
-    for (Item *item : items)
-        item->Draw_();
-
-    for (Block *block : blocks)
-        block->Draw_();
 
     for (Enemy *enemy : enemies)
         if (enemy->Get_First_Appear()) enemy->Draw();
@@ -267,72 +268,81 @@ void Stage::Draw()
 
 void Stage::Check_Player_Vs_Block()
 {
-    // rectangle của frame trước
-    Rectangle preRec = player->Get_Previous_Rec();
-
-    // current Rectangle
-    Rectangle currentRec = player->get_draw_rec();
-    Vector2 prevPos = player->getPosition();
+    // Lấy pos center-bottom ở frame trước và hiện tại
+    Vector2 prevCenterBottom = player->Get_Previous_Pos();
+    Vector2 currCenterBottom = player->getPosition();
     Vector2 velocity = player->get_Velocity();
-    float deltaTime = GetFrameTime();
 
-    // compute next
-    Vector2 sufPos = prevPos;
-    sufPos.x += velocity.x * deltaTime;
-    velocity.y += player->getGravity() * deltaTime; // Gravity effect
-    sufPos.y += velocity.y * deltaTime;
-    Rectangle playerRec = {sufPos.x, sufPos.y, currentRec.width, currentRec.height};
+    // Lấy kích thước player
+    Rectangle currRec = player->get_draw_rec();
+    float pw = currRec.width;
+    float ph = currRec.height;
+
+    // Rectangle frame trước
+    Rectangle prevRec = {
+        prevCenterBottom.x - pw / 2.0f,
+        prevCenterBottom.y - ph,
+        pw,
+        ph
+    };
+
+    // Rectangle hiện tại
+    Rectangle currRect = {
+        currCenterBottom.x - pw / 2.0f,
+        currCenterBottom.y - ph,
+        pw,
+        ph
+    };
 
     for (Block *block : blocks)
     {
         Rectangle rec_map = block->Get_Draw_Rec();
-        if (!CheckCollisionRecs(playerRec, rec_map))
+        if (!CheckCollisionRecs(currRect, rec_map))
             continue;
 
-        // Tính toán độ sâu va chạm
-        float overlapX = std::min(playerRec.x + playerRec.width - rec_map.x,
-                                  rec_map.x + rec_map.width - playerRec.x);
-        float overlapY = std::min(playerRec.y + playerRec.height - rec_map.y,
-                                  rec_map.y + rec_map.height - playerRec.y);
+        // Tính overlap
+        float overlapX = std::min(currRect.x + currRect.width - rec_map.x,
+                                  rec_map.x + rec_map.width - currRect.x);
+        float overlapY = std::min(currRect.y + currRect.height - rec_map.y,
+                                  rec_map.y + rec_map.height - currRect.y);
 
-        // Xác định hướng va chạm
         if (overlapX < overlapY && velocity.x != 0)
         {
             // Va chạm ngang
-            if (prevPos.x + preRec.width <= rec_map.x)
+            if (prevCenterBottom.x + pw / 2.0f <= rec_map.x)
             {
                 if (!block->Surrounded_Block[2])
                 {
-                    // Va chạm từ bên trái
-                    player->Set_Pos({rec_map.x - playerRec.width, player->getPosition().y});
-                    player->Set_Velocity({0, player->get_Velocity().y});
+                    // Từ trái sang
+                    player->Set_Pos({rec_map.x - pw / 2.0f - 0.1f, currCenterBottom.y});
+                    player->Set_Velocity({0, velocity.y});
                 }
             }
             else
             {
                 if (!block->Surrounded_Block[3])
                 {
-                    // Va chạm từ bên phải
-                    player->Set_Pos({rec_map.x + rec_map.width, player->getPosition().y});
-                    player->Set_Velocity({0, player->get_Velocity().y});
+                    // Từ phải sang
+                    player->Set_Pos({rec_map.x + rec_map.width + pw / 2.0f + 0.1f, currCenterBottom.y});
+                    player->Set_Velocity({0, velocity.y});
                 }
             }
         }
         else
         {
             // Va chạm dọc
-            if (prevPos.y + preRec.height < rec_map.y && !block->Surrounded_Block[0] && player->get_Velocity().y >= 0)
+            if (prevCenterBottom.y <= rec_map.y && !block->Surrounded_Block[0] && velocity.y >= 0)
             {
-                // Va chạm từ trên xuống (đáp xuống mặt đất)
-                player->Set_Pos({player->getPosition().x, rec_map.y - playerRec.height});
-                player->Set_Velocity({player->get_Velocity().x, 0.f});
+                // Từ trên xuống
+                player->Set_Pos({currCenterBottom.x, rec_map.y});
+                player->Set_Velocity({velocity.x, 0.f});
                 player->Set_isGround(true);
             }
-            else if (prevPos.y > rec_map.y + rec_map.height && !block->Surrounded_Block[1] && player->get_Velocity().y < 0)
+            else if (prevCenterBottom.y - ph >= rec_map.y + rec_map.height && !block->Surrounded_Block[1] && velocity.y < 0)
             {
-                // Va chạm từ dưới lên (đụng đầu)
-                player->Set_Pos({player->getPosition().x, rec_map.y + rec_map.height});
-                player->Set_Velocity({player->get_Velocity().x, 0.f});
+                // Từ dưới lên
+                player->Set_Pos({currCenterBottom.x, rec_map.y + rec_map.height + ph});
+                player->Set_Velocity({velocity.x, 0.f});
                 block->On_Hit(items, *player, information);
             }
         }
@@ -341,58 +351,77 @@ void Stage::Check_Player_Vs_Block()
 
 void Stage::Check_Player_Vs_Ground()
 {
-    // rectangle của frame trước
-    Rectangle preRec = player->Get_Previous_Rec();
-
-    // current Rectangle
-    Rectangle currentRec = player->get_draw_rec();
-    Vector2 prevPos = player->getPosition();
+    // Vị trí center-bottom của frame trước và hiện tại
+    Vector2 prevCenterBottom = player->Get_Previous_Pos();
+    Vector2 currCenterBottom = player->getPosition();
     Vector2 velocity = player->get_Velocity();
-    float deltaTime = GetFrameTime();
 
-    // compute next
-    Vector2 sufPos = prevPos;
-    sufPos.x += velocity.x * deltaTime;
-    velocity.y += player->getGravity() * deltaTime; // Gravity effect
-    sufPos.y += velocity.y * deltaTime;
-    Rectangle playerRec = {sufPos.x, sufPos.y, currentRec.width, currentRec.height};
-    for (int i = 0; i < sizeof(Map[0]) / sizeof(Map[0][0]); i++)
+    // Lấy kích thước player
+    Rectangle currDrawRec = player->get_draw_rec();
+    float pw = currDrawRec.width;
+    float ph = currDrawRec.height;
+
+    // Rectangle của frame trước
+    Rectangle prevRec = {
+        prevCenterBottom.x - pw / 2.0f,
+        prevCenterBottom.y - ph,
+        pw,
+        ph
+    };
+
+    // Rectangle hiện tại
+    Rectangle currRec = {
+        currCenterBottom.x - pw / 2.0f,
+        currCenterBottom.y - ph,
+        pw,
+        ph
+    };
+
+    int mapWidth = sizeof(Map[0]) / sizeof(Map[0][0]);
+    int mapHeight = sizeof(Map) / sizeof(Map[0]);
+
+    for (int i = 0; i < mapWidth; i++)
     {
-        for (int j = 0; j < sizeof(Map) / sizeof(Map[0]); j++)
+        for (int j = 0; j < mapHeight; j++)
         {
             int id = Map[j][i];
             if (id == 0)
                 continue;
 
-            Rectangle rec_map = {j * 16.0f * scale_screen, i * 16.0f * scale_screen, 16.0f * scale_screen, 16.0f * scale_screen};
-            if (!CheckCollisionRecs(playerRec, rec_map))
+            Rectangle rec_map = {
+                j * 16.0f * scale_screen,
+                i * 16.0f * scale_screen,
+                16.0f * scale_screen,
+                16.0f * scale_screen
+            };
+
+            if (!CheckCollisionRecs(currRec, rec_map))
                 continue;
 
-            // Tính toán độ sâu va chạm
-            float overlapX = std::min(playerRec.x + playerRec.width - rec_map.x,
-                                      rec_map.x + rec_map.width - playerRec.x);
-            float overlapY = std::min(playerRec.y + playerRec.height - rec_map.y,
-                                      rec_map.y + rec_map.height - playerRec.y);
+            float overlapX = std::min(currRec.x + currRec.width - rec_map.x,
+                                      rec_map.x + rec_map.width - currRec.x);
+            float overlapY = std::min(currRec.y + currRec.height - rec_map.y,
+                                      rec_map.y + rec_map.height - currRec.y);
 
-            // Xác định hướng va chạm
-            if (overlapX < overlapY && velocity.x != 0)
+
+            if (overlapX < overlapY)
             {
                 // Va chạm ngang
-                if (prevPos.x + preRec.width < rec_map.x)
+                if (prevCenterBottom.x + pw / 2.0f <= rec_map.x)
                 {
-                    // Va chạm từ bên trái
+                    // Từ trái sang
                     if (Map[j - 1][i] == 0)
                     {
-                        player->Set_Pos({rec_map.x - currentRec.width, player->getPosition().y});
+                        player->Set_Pos({rec_map.x - pw / 2.0f - 0.1f, player->getPosition().y});
                         player->Set_Velocity({0, player->get_Velocity().y});
                     }
                 }
                 else
                 {
-                    // Va chạm từ bên phải
+                    // Từ phải sang
                     if (Map[j + 1][i] == 0)
                     {
-                        player->Set_Pos({rec_map.x + rec_map.width, player->getPosition().y});
+                        player->Set_Pos({rec_map.x + rec_map.width + pw / 2.0f + 0.1f, player->getPosition().y});
                         player->Set_Velocity({0, player->get_Velocity().y});
                     }
                 }
@@ -400,23 +429,24 @@ void Stage::Check_Player_Vs_Ground()
             else
             {
                 // Va chạm dọc
-                if (prevPos.y + preRec.height < rec_map.y && Map[j][i - 1] == 0 && player->get_Velocity().y >= 0)
+                if (prevCenterBottom.y <= rec_map.y && Map[j][i - 1] == 0 && velocity.y >= 0)
                 {
-                    // Va chạm từ trên xuống (đáp xuống mặt đất)
-                    player->Set_Pos({player->getPosition().x, rec_map.y - playerRec.height});
+                    // Từ trên xuống
+                    player->Set_Pos({player->getPosition().x, rec_map.y});
                     player->Set_Velocity({player->get_Velocity().x, 0.f});
                     player->Set_isGround(true);
                 }
-                else if (prevPos.y > rec_map.y + rec_map.height && Map[j][i + 1] == 0 && player->get_Velocity().y < 0)
+                else if (prevCenterBottom.y - ph >= rec_map.y + rec_map.height && Map[j][i + 1] == 0 && velocity.y < 0)
                 {
-                    // Va chạm từ dưới lên (đụng đầu)
-                    player->Set_Pos({player->getPosition().x, rec_map.y + rec_map.height});
+                    // Từ dưới lên
+                    player->Set_Pos({player->getPosition().x, rec_map.y + rec_map.height + ph});
                     player->Set_Velocity({player->get_Velocity().x, 0.f});
                 }
             }
         }
     }
 }
+
 
 void Stage::Check_Player_Vs_Enemy()
 {

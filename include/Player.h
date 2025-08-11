@@ -18,7 +18,7 @@ class Player : public Character{
 
         bool isTransforming;
         PlayerForm targetForm;
-        Rectangle previous_frame_rec ;
+        Vector2 previous_pos;
 
         bool isInvincible;
         float invincibleTimer;
@@ -41,7 +41,7 @@ class Player : public Character{
         virtual ~Player();
 
         Rectangle get_draw_rec() override;
-        Rectangle Get_Previous_Rec() override;
+        Vector2 Get_Previous_Pos() override;
         AnimationState get_state() const { return state; }; 
         PlayerForm get_form() const { return form; }; 
         Vector2 get_Velocity() const { return velocity; }

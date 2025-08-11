@@ -33,13 +33,19 @@ Player ::~Player() {}
 
 Rectangle Player ::get_draw_rec()
 {
-    const auto &frame = getAnimationFrame();
-    return {position.x, position.y, frame[currentFrame].width * scale_screen, frame[currentFrame].height * scale_screen};
+    if (form == PlayerForm ::Small)
+    {
+        return {position.x - 12 * scale_screen / 2.0f , position.y - 15 * scale_screen, 12 * scale_screen, 15 * scale_screen};
+    }
+    else if (form == PlayerForm ::Super)
+    {
+        return {position.x - 14 * scale_screen / 2.0f , position.y - 30 * scale_screen, 14 * scale_screen, 30 * scale_screen};
+    }
 }
 
-Rectangle Player::Get_Previous_Rec()
+Vector2 Player::Get_Previous_Pos()
 {
-    return previous_frame_rec;
+    return previous_pos;
 }
 
 void Player ::Set_isGround(bool value)
@@ -90,8 +96,7 @@ void Player ::Cut_Jump()
 
 void Player ::update(float dt)
 {
-    previous_frame_rec = getAnimationFrame()[currentFrame];
-
+    previous_pos = position;
     if (isTransforming)
     {
         if (isInvincible) 
@@ -118,7 +123,6 @@ void Player ::update(float dt)
                 currentFrame = 0;
             }
         }
-        position.y = position.y + (previous_frame_rec.height - getAnimationFrame()[currentFrame].height) * scale_screen;
         return;
     }
 
@@ -183,11 +187,11 @@ void Player ::update(float dt)
         frameTimer = 0.0f;
         currentFrame = (currentFrame + 1) % getAnimationFrame().size();
     }
-    position.y = position.y + (previous_frame_rec.height - getAnimationFrame()[currentFrame].height) * scale_screen;
 }
 
 void Player ::draw()
 {
+    DrawRectangleLinesEx(get_draw_rec(), 2, RED);
     const auto &frame = getAnimationFrame();
 
     if (frame.empty() || texture == nullptr)
@@ -203,11 +207,7 @@ void Player ::draw()
         source.width *= (-1);
     }
 
-    Rectangle dest;
-    dest.width = abs(source.width) * scale_screen;
-    dest.height = abs(source.height) * scale_screen;
-    dest.x = position.x;
-    dest.y = position.y;
+    Rectangle dest = {position.x - frame[currentFrame].width * scale_screen / 2.0f , position.y - frame[currentFrame].height * scale_screen, frame[currentFrame].width * scale_screen, frame[currentFrame].height * scale_screen};
     DrawTexturePro(texture->sprite, source, dest, {0, 0}, 0.0f, WHITE);
 }
 
