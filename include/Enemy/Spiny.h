@@ -12,8 +12,6 @@ class Spiny : public Enemy
 {
 private:
     Spiny_State state_;
-    std::vector<Rectangle> m_egg;
-    std::vector<Rectangle> m_normal;
 
     Vector2 previous_frame_pos;
     bool is_jump;

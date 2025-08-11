@@ -6,16 +6,13 @@ Stage::Stage(PlayerInformation &info) : information(info)
     source = {0, 0, 3424, 240};
     dest = {0, 0, 10272, 720};
     Reset_Game = false;
+    is_game_won = false;
 }
 
 Stage::~Stage()
 {
 
     enemy_map.clear();
-
-    for (RotatingBar *bar : rotatingBars)
-        delete bar;
-    rotatingBars.clear();
 
     for (Item *item : items)
         delete item;
@@ -29,7 +26,7 @@ Stage::~Stage()
         delete enemy;
     enemies.clear();
 
-    for(FireBall *fireball : fireballs)
+    for (FireBall *fireball : fireballs)
         delete fireball;
     fireballs.clear();
 
@@ -38,6 +35,9 @@ Stage::~Stage()
         delete player;
         player = nullptr;
     }
+
+    delete flag_pole;
+    delete win_animation;
 
     Score_Manager &score_manager = Score_Manager::GetInstance();
     score_manager.ClearScores();
@@ -50,21 +50,31 @@ Stage::~Stage()
 
 void Stage::Run()
 {
+    if (!is_game_won)
+    {
+        is_game_won = win_animation->Check_Win_Animation();
+        if (is_game_won)
+        {
+            Keyboard.clear();
+        }
+    }
+    else
+        win_animation->Update(GetFrameTime());
+
     Player_Update();
 
     if (!player->Get_isTransforming())
     {
         Non_Player_Update();
     }
-    Cool_Down_After_Die(GetFrameTime());
+
+    if (!player->Get_isActive() && !Reset_Game)
+        Cool_Down_After_Die(GetFrameTime());
 }
 
 void Stage::Cool_Down_After_Die(float dt)
 {
-    if (!player->Get_isActive() && !Reset_Game)
-    {
-        timer_after_die += dt;
-    }
+    timer_after_die += dt;
     if (timer_after_die >= cool_down_after_die)
     {
         Reset_Game = true;
@@ -74,26 +84,30 @@ void Stage::Cool_Down_After_Die(float dt)
 
 void Stage::Player_Update()
 {
-    if (IsKeyPressed(KEY_A))
-        Keyboard.emplace_back(KEY_A);
-    if (IsKeyReleased(KEY_A))
-        Keyboard.erase(std::remove(Keyboard.begin(), Keyboard.end(), KEY_A), Keyboard.end());
-    if (IsKeyPressed(KEY_D))
-        Keyboard.emplace_back(KEY_D);
-    if (IsKeyReleased(KEY_D))
-        Keyboard.erase(std::remove(Keyboard.begin(), Keyboard.end(), KEY_D), Keyboard.end());
-    if (IsKeyPressed(KEY_W))
-        player->Jump();
-    else if (IsKeyReleased(KEY_W))
-        player->Cut_Jump();
-    if(IsKeyPressed(KEY_SPACE))
-        player->Shoot(fireballs);
-    if (Keyboard.empty())
-        player->StopMoving();
-    else if (Keyboard.back() == KEY_A)
-        player->MoveLeft();
-    else
-        player->MoveRight();
+    if (!is_game_won)
+    {
+        if (IsKeyPressed(KEY_A))
+            Keyboard.emplace_back(KEY_A);
+        if (IsKeyReleased(KEY_A))
+            Keyboard.erase(std::remove(Keyboard.begin(), Keyboard.end(), KEY_A), Keyboard.end());
+        if (IsKeyPressed(KEY_D))
+            Keyboard.emplace_back(KEY_D);
+        if (IsKeyReleased(KEY_D))
+            Keyboard.erase(std::remove(Keyboard.begin(), Keyboard.end(), KEY_D), Keyboard.end());
+        if (IsKeyPressed(KEY_W))
+            player->Jump();
+        else if (IsKeyReleased(KEY_W))
+            player->Cut_Jump();
+        if (IsKeyPressed(KEY_SPACE))
+            player->Shoot(fireballs);
+        if (Keyboard.empty())
+            player->StopMoving();
+        else if (Keyboard.back() == KEY_A)
+            player->MoveLeft();
+        else
+            player->MoveRight();
+    }
+
     player->updateCoolDown(GetFrameTime());
     player->update(GetFrameTime());
     information.Update(GetFrameTime());
@@ -118,9 +132,9 @@ void Stage::Player_Update()
         top_left.y,
         bottom_right.x - top_left.x,
         bottom_right.y - top_left.y};
-    if (player->getPosition().x <= screen_rect_world.x)
+    if (player->getPosition().x - player->get_draw_rec().width / 2.0f <= screen_rect_world.x)
     {
-        player->Set_Pos({screen_rect_world.x, player->getPosition().y});
+        player->Set_Pos({screen_rect_world.x + player->get_draw_rec().width / 2.0f, player->getPosition().y});
         player->Set_Velocity({0, player->get_Velocity().y});
     }
 }
@@ -128,6 +142,10 @@ void Stage::Player_Update()
 void Stage::Non_Player_Update()
 {
     camera.target.x = std::max(camera.target.x, player->getPosition().x - Screen_w / 2.0f);
+    if (camera.target.x >= MapTexture.width * scale_screen - Screen_w)
+        camera.target.x = MapTexture.width * scale_screen - Screen_w;
+
+    flag_pole->Update(GetFrameTime());
 
     Check_Item_Vs_Ground();
     Check_Item_Vs_Block();
@@ -187,7 +205,8 @@ void Stage::Non_Player_Update()
     for (size_t i = 0; i < enemies.size();)
     {
         Rectangle rec_enemy = enemies[i]->Get_Draw_Rec();
-        if (!enemies[i]->Get_First_Appear() && rec_enemy.x <= screen_rect_world.x + screen_rect_world.width) enemies[i]->Set_First_Appear(true);
+        if (!enemies[i]->Get_First_Appear() && rec_enemy.x <= screen_rect_world.x + screen_rect_world.width)
+            enemies[i]->Set_First_Appear(true);
         if (rec_enemy.x + rec_enemy.width <= screen_rect_world.x)
         {
             enemy_map.erase(enemies[i]);
@@ -204,21 +223,17 @@ void Stage::Non_Player_Update()
             i++;
     }
 
-    for(size_t i=0; i<fireballs.size();){
-        if(!fireballs[i]->getActive()){
+    for (size_t i = 0; i < fireballs.size();)
+    {
+        if (!fireballs[i]->getActive())
+        {
             delete fireballs[i];
-            fireballs.erase(fireballs.begin()+i);
+            fireballs.erase(fireballs.begin() + i);
         }
-        else i++;
+        else
+            i++;
     }
 
-    for (RotatingBar *bar : rotatingBars){
-        bar->Update(GetFrameTime());
-        if ( bar->CheckCollision(player->get_draw_rec()))
-        {
-            player->Die();
-        }
-    }
     for (Item *item : items)
         item->Update_();
 
@@ -228,38 +243,59 @@ void Stage::Non_Player_Update()
     size_t size_before = enemies.size();
     for (size_t i = 0; i < size_before; ++i)
     {
-        if (enemies[i]->Get_First_Appear()) enemies[i]->Update(GetFrameTime());
+        if (enemies[i]->Get_First_Appear())
+            enemies[i]->Update(GetFrameTime());
     }
 
-    for(FireBall *fireball : fireballs)
+    for (FireBall *fireball : fireballs)
         fireball->update(GetFrameTime(), camera);
 }
 
 void Stage::Draw()
 {
     BeginMode2D(camera);
-    DrawTexturePro(MapTexture, source, dest, {0, 0}, 0, WHITE);
-
-    for (Item *item : items)
-        item->Draw_();
-        
-    for (Block *block : blocks)
-        block->Draw_();
-        
-    player->draw();
-
-    for (RotatingBar *bar : rotatingBars)
-        bar->Draw();
 
     for (Enemy *enemy : enemies)
-        if (enemy->Get_First_Appear()) enemy->Draw();
+    {
+        PiranhaPlant *piranha = dynamic_cast<PiranhaPlant *>(enemy);
+        if (piranha && enemy->Get_First_Appear())
+        {
+            piranha->Draw();
+        }
+    }
 
-    for (FireBall* fireball : fireballs)
+    DrawTexturePro(MapTexture, source, dest, {0, 0}, 0, WHITE);
+
+    for (Enemy *enemy : enemies)
+    {
+        if (PiranhaPlant *piranha = dynamic_cast<PiranhaPlant *>(enemy))
+            continue;
+        if (enemy->Get_First_Appear())
+            enemy->Draw();
+    }
+
+    for (Item *item : items)
+    {
+        if (!item->Get_Is_Delete())
+            item->Draw_();
+    }
+
+    for (Block *block : blocks)
+    {
+        if (!block->Get_Is_Delete())
+            block->Draw_();
+    }
+
+    for (FireBall *fireball : fireballs)
         fireball->draw();
 
     Score_Manager &score_manager = Score_Manager::GetInstance();
-    
+
     score_manager.Draw();
+
+    flag_pole->Draw();
+
+    player->draw();
 
     EndMode2D();
 
@@ -283,19 +319,22 @@ void Stage::Check_Player_Vs_Block()
         prevCenterBottom.x - pw / 2.0f,
         prevCenterBottom.y - ph,
         pw,
-        ph
-    };
+        ph};
 
     // Rectangle hiện tại
     Rectangle currRect = {
         currCenterBottom.x - pw / 2.0f,
         currCenterBottom.y - ph,
         pw,
-        ph
-    };
+        ph};
 
     for (Block *block : blocks)
     {
+        if (block->Kill_Player(*player))
+        {
+            player->Die();
+            return;
+        }
         Rectangle rec_map = block->Get_Draw_Rec();
         if (!CheckCollisionRecs(currRect, rec_map))
             continue;
@@ -379,16 +418,14 @@ void Stage::Check_Player_Vs_Ground()
         prevCenterBottom.x - pw / 2.0f,
         prevCenterBottom.y - ph,
         pw,
-        ph
-    };
+        ph};
 
     // Rectangle hiện tại
     Rectangle currRec = {
         currCenterBottom.x - pw / 2.0f,
         currCenterBottom.y - ph,
         pw,
-        ph
-    };
+        ph};
 
     int mapWidth = sizeof(Map[0]) / sizeof(Map[0][0]);
     int mapHeight = sizeof(Map) / sizeof(Map[0]);
@@ -405,8 +442,7 @@ void Stage::Check_Player_Vs_Ground()
                 j * 16.0f * scale_screen,
                 i * 16.0f * scale_screen,
                 16.0f * scale_screen,
-                16.0f * scale_screen
-            };
+                16.0f * scale_screen};
 
             if (!CheckCollisionRecs(currRec, rec_map))
                 continue;
@@ -415,7 +451,6 @@ void Stage::Check_Player_Vs_Ground()
                                       rec_map.x + rec_map.width - currRec.x);
             float overlapY = std::min(currRec.y + currRec.height - rec_map.y,
                                       rec_map.y + rec_map.height - currRec.y);
-
 
             if (overlapX < overlapY)
             {
@@ -460,7 +495,6 @@ void Stage::Check_Player_Vs_Ground()
     }
 }
 
-
 void Stage::Check_Player_Vs_Enemy()
 {
     Rectangle playerRec = player->get_draw_rec();
@@ -475,7 +509,8 @@ void Stage::Check_Player_Vs_Enemy()
         if (!CheckCollisionRecs(playerRec, enemyRec))
             continue;
 
-        if(player->Get_isInvincible()){
+        if (player->Get_isInvincible())
+        {
             enemy->Notify_Be_Fired_Or_Hit(information);
             SoundManager::GetInstance().PlaySoundEffect("stomp");
             continue;
@@ -924,46 +959,28 @@ void Stage::Check_Block_Vs_Block()
 
 void Stage::Check_FireBall_Vs_World()
 {
-    for (auto* fireball : fireballs) 
+    for (auto *fireball : fireballs)
     {
-        if (!fireball->getActive()) continue;
+        if (!fireball->getActive())
+            continue;
         Rectangle rec_fireball = fireball->get_draw_rec();
 
         bool rebound = 0;
 
-        for (Block* block : blocks) 
+        for (Block *block : blocks)
         {
             Rectangle rec_block = block->Get_Draw_Rec();
             if (CheckCollisionRecs(rec_fireball, rec_block))
             {
-                if (fireball->getVelocity().y > 0 && rec_fireball.y + rec_fireball.height - 
-                (fireball->getVelocity().y * GetFrameTime()) <= rec_block.y) 
+                if (fireball->getVelocity().y > 0 && rec_fireball.y + rec_fireball.height -
+                                                             (fireball->getVelocity().y * GetFrameTime()) <=
+                                                         rec_block.y)
                 {
                     fireball->setPosition({rec_fireball.x, rec_block.y - rec_fireball.height});
-                    fireball->reboundOnSurface(); 
-                    rebound = 1;
-                    goto end_collision_check_for_this_fireball;
-                } 
-                else
-                {
-                    fireball->explode();
-                    goto next_fireball; 
-                }
-            }
-        }
-
-        for(int i=0; i<15; i++) for(int j=0; j<214; j++)
-        {
-            if(Map[j][i] == 0)  continue;
-            Rectangle rec_map = {j * 16.0f * scale_screen, i * 16.0f * scale_screen, 16.0f * scale_screen, 16.0f * scale_screen};
-            if(CheckCollisionRecs(rec_fireball, rec_map))
-            {
-                if (fireball->getVelocity().y > 0 && rec_fireball.y + rec_fireball.height - (fireball->getVelocity().y * GetFrameTime()) <= rec_map.y){
-                    fireball->setPosition({rec_fireball.x, rec_map.y - rec_fireball.height});
                     fireball->reboundOnSurface();
                     rebound = 1;
                     goto end_collision_check_for_this_fireball;
-                } 
+                }
                 else
                 {
                     fireball->explode();
@@ -972,16 +989,40 @@ void Stage::Check_FireBall_Vs_World()
             }
         }
 
-        end_collision_check_for_this_fireball:;
+        for (int i = 0; i < 15; i++)
+            for (int j = 0; j < 214; j++)
+            {
+                if (Map[j][i] == 0)
+                    continue;
+                Rectangle rec_map = {j * 16.0f * scale_screen, i * 16.0f * scale_screen, 16.0f * scale_screen, 16.0f * scale_screen};
+                if (CheckCollisionRecs(rec_fireball, rec_map))
+                {
+                    if (fireball->getVelocity().y > 0 && rec_fireball.y + rec_fireball.height - (fireball->getVelocity().y * GetFrameTime()) <= rec_map.y)
+                    {
+                        fireball->setPosition({rec_fireball.x, rec_map.y - rec_fireball.height});
+                        fireball->reboundOnSurface();
+                        rebound = 1;
+                        goto end_collision_check_for_this_fireball;
+                    }
+                    else
+                    {
+                        fireball->explode();
+                        goto next_fireball;
+                    }
+                }
+            }
+
+    end_collision_check_for_this_fireball:;
         if (rebound)
         {
             fireball->notifyOnGround();
         }
 
-        for (Enemy* enemy : enemies) 
+        for (Enemy *enemy : enemies)
         {
-            if (!enemy->Get_Is_Active() || enemy->Get_Is_Dead()) continue;
-            if (CheckCollisionRecs(rec_fireball, enemy->Get_Draw_Rec())) 
+            if (!enemy->Get_Is_Active() || enemy->Get_Is_Dead())
+                continue;
+            if (CheckCollisionRecs(rec_fireball, enemy->Get_Draw_Rec()))
             {
                 fireball->explode();
                 enemy->Notify_Be_Fired_Or_Hit(information);
@@ -989,7 +1030,7 @@ void Stage::Check_FireBall_Vs_World()
             }
         }
 
-        next_fireball:;
+    next_fireball:;
     }
 }
 
@@ -1003,8 +1044,7 @@ bool Stage::Need_Reset_Game() const
     return Reset_Game;
 }
 
-
-void Stage::LoadEnemiesFromFile(const std::string& filename)
+void Stage::LoadEnemiesFromFile(const std::string &filename)
 {
     std::ifstream file(filename);
     if (!file.is_open())
@@ -1012,12 +1052,12 @@ void Stage::LoadEnemiesFromFile(const std::string& filename)
         // Nếu không mở được file, in ra lỗi
         return;
     }
-    
+
     int enemy_type, x, y;
     while (file >> enemy_type >> x >> y)
     {
         Vector2 position = {(float)x, (float)y};
-        
+
         // Chuyển đổi int thành EnemyType
         EnemyType type;
         switch (enemy_type)
@@ -1043,10 +1083,65 @@ void Stage::LoadEnemiesFromFile(const std::string& filename)
         default:
             continue; // Bỏ qua nếu type không hợp lệ
         }
-        
+
         // Spawn enemy
-        Spawn_Enemy::SpawnEnemies(type, position , player , enemy_map, enemies, camera);
+        Spawn_Enemy::SpawnEnemies(type, position, player, enemy_map, enemies, camera);
     }
-    
+
+    file.close();
+}
+
+void Stage::LoadMapFromFile(const std::string &filename)
+{
+    std::ifstream file(filename);
+    if (!file.is_open())
+    {
+        // Nếu không mở được file, in ra lỗi
+        return;
+    }
+    for (int i = 0; i < 15; ++i)
+    {
+        for (int j = 0; j < 214; ++j)
+        {
+            int var;
+            file >> var;
+            Vector2 pos = {(j + 0.5) * Tile_Size, (i + 1) * Tile_Size};
+            if (var < 100)
+                continue;
+            int type_block = var / 100;
+            int type_item = (var % 100) / 10;
+            int item_cnt = var % 10;
+            if (type_block == 1 && type_item == 0 && item_cnt == 0)
+                blocks.push_back(new Block(pos, 0, "", "question"));
+            else if (type_block == 1 && type_item == 0)
+                blocks.push_back(new Block(pos, item_cnt, "super_mushroom", "question"));
+            else if (type_block == 1 && type_item == 1)
+                blocks.push_back(new Block(pos, item_cnt, "one_up_mushroom", "question"));
+            else if (type_block == 1 && type_item == 2)
+                blocks.push_back(new Block(pos, item_cnt, "posion_mushroom", "question"));
+            else if (type_block == 1 && type_item == 3)
+                blocks.push_back(new Block(pos, item_cnt, "hidden_coin", "question"));
+            else if (type_block == 1 && type_item == 4)
+                blocks.push_back(new Block(pos, item_cnt, "flower", "question"));
+            else if (type_block == 1 && type_item == 5)
+                blocks.push_back(new Block(pos, item_cnt, "star", "question"));
+            else if (type_block == 2 && type_item == 0 && item_cnt == 0)
+                blocks.push_back(new Block(pos, 0, "", "normal"));
+            else if (type_block == 2 && type_item == 0)
+                blocks.push_back(new Block(pos, item_cnt, "super_mushroom", "normal"));
+            else if (type_block == 2 && type_item == 1)
+                blocks.push_back(new Block(pos, item_cnt, "one_up_mushroom", "normal"));
+            else if (type_block == 2 && type_item == 2)
+                blocks.push_back(new Block(pos, item_cnt, "posion_mushroom", "normal"));
+            else if (type_block == 2 && type_item == 3)
+                blocks.push_back(new Block(pos, item_cnt, "hidden_coin", "normal"));
+            else if (type_block == 2 && type_item == 4)
+                blocks.push_back(new Block(pos, item_cnt, "flower", "normal"));
+            else if (type_block == 2 && type_item == 5)
+                blocks.push_back(new Block(pos, item_cnt, "star", "normal"));
+            else if (type_block == 3 && type_item == 0 && item_cnt == 0)
+                blocks.push_back(new Block(pos, 0, "rotating_bar", "unbreakable"));
+        }
+    }
     file.close();
 }

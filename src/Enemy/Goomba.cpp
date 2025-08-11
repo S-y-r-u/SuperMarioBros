@@ -1,19 +1,18 @@
 #include "Enemy/Goomba.h"
 
 Goomba::Goomba(Vector2 pos)
-    : Enemy(pos, Vector2{75.0f, 0.0f}, 0.0f),
+    : Enemy(pos, Vector2{-75.0f, 0.0f}, 0.0f),
       state_(Goomba_State::normal),
-      m_normal(Enemies_Sprite::Goomba_Brown::Normal::normal_),
       stomped_timer(0.0f)
 {
-    rec_ = m_normal[current_frame];
+    animation_ = Animation(&Enemies_Sprite::enemies_, Enemies_Sprite::Goomba_Brown::Normal::normal_, 1 / 6.0f);
 }
 
 void Goomba::Draw() const
 {
-    Rectangle dest_rec = {position_.x, position_.y, rec_.width * scale_screen, rec_.height * scale_screen};
-    DrawTexturePro(sprite_.sprite, rec_, dest_rec,
-                   {rec_.width * scale_screen / 2.0f, rec_.height * scale_screen},
+    Rectangle dest_rec = {position_.x, position_.y, animation_.Get_Current_Rec().width * scale_screen, animation_.Get_Current_Rec().height * scale_screen};
+    DrawTexturePro(animation_.Get_Sprite().sprite, animation_.Get_Current_Rec(), dest_rec,
+                   {animation_.Get_Current_Rec().width * scale_screen / 2.0f, animation_.Get_Current_Rec().height * scale_screen},
                    0.0f, WHITE);
 }
 
@@ -35,7 +34,7 @@ void Goomba::Update(float dt)
     Be_Stomped();
     Animate_();
 
-    if (position_.y - rec_.height >= Screen_h)
+    if (position_.y - animation_.Get_Current_Rec().height >= Screen_h)
         is_active = false;
 }
 
@@ -68,7 +67,7 @@ void Goomba::Notify_Be_Stomped(PlayerInformation &info)
     {
         info.UpdateScore(Score_Goomba);
         state_ = Goomba_State::be_stomped;
-        rec_ = Enemies_Sprite::Goomba_Brown::be_stomped;
+        animation_.Set_Rec(Enemies_Sprite::Goomba_Brown::be_stomped);
         Rectangle dest_rec = Get_Draw_Rec();
         Score_Manager &score_manager = Score_Manager::GetInstance();
         score_manager.AddScore({dest_rec.x, dest_rec.y}, Score_Goomba);
@@ -83,7 +82,7 @@ void Goomba::Notify_Be_Fired_Or_Hit(PlayerInformation &info)
     {
         info.UpdateScore(Score_Goomba);
         state_ = Goomba_State::be_fired_or_hit;
-        rec_ = Enemies_Sprite::Goomba_Brown::be_fired_or_hit;
+        animation_.Set_Rec(Enemies_Sprite::Goomba_Brown::be_fired_or_hit);
         velocity_.y = -Push_Velocity; // Nhảy lên
         Rectangle dest_rec = Get_Draw_Rec();
         Score_Manager &score_manager = Score_Manager::GetInstance();
@@ -110,13 +109,7 @@ void Goomba::Animate_()
 {
     if (state_ == Goomba_State::normal)
     {
-        frame_timer += GetFrameTime();
-        if (frame_timer >= animation_speed)
-        {
-            current_frame = (current_frame + 1) % m_normal.size();
-            frame_timer = 0.0f;
-        }
-        rec_ = m_normal[current_frame];
+        animation_.Update(GetFrameTime());
     }
 }
 

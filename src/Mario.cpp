@@ -4,8 +4,8 @@ Mario ::Mario(Vector2 startPos) : Player(startPos)
 {
     this->texture = &Mario_Sprite::mario_sprite;
     speed = 300.0f;
-    gravity = 500.0f;
-    JumpForce = -450.0f;
+    gravity = 1000.0f;
+    JumpForce = -630.0f;
     friction = 0.9f;
 }
 
@@ -13,11 +13,13 @@ Mario ::~Mario() {}
 
 std::vector<Rectangle> &Mario ::getAnimationFrame() const
 {
-    if (isTransforming && state == AnimationState::Small_To_Super && isInvincible) {
+    if (isTransforming && state == AnimationState::Small_To_Super && isInvincible)
+    {
         return Mario_Sprite::Invincible::Small_To_Super::small_to_super;
     }
 
-    if (isTransforming && state == AnimationState::Small_To_Super) {
+    if (isTransforming && state == AnimationState::Small_To_Super)
+    {
         return Mario_Sprite::Small::Small_To_Super::small_to_super;
     }
 
@@ -40,6 +42,8 @@ std::vector<Rectangle> &Mario ::getAnimationFrame() const
             return Mario_Sprite::Small::Enter_Pipe::enter_pipe;
         case AnimationState ::Fade_Out:
             return Mario_Sprite::Small::Fade_Out::fade_out;
+        case AnimationState::Pose:
+            return Mario_Sprite::Small::Pose::pose;
         default:
             return Mario_Sprite::Small::Stance::stance_;
         }
@@ -58,6 +62,10 @@ std::vector<Rectangle> &Mario ::getAnimationFrame() const
             return Mario_Sprite::Invincible::Climb::climb_;
         case AnimationState ::Enter_Pipe:
             return Mario_Sprite::Invincible::Enter_Pipe::enter_pipe;
+        case AnimationState ::Fade_Out:
+            return Mario_Sprite::Small::Fade_Out::fade_out;
+        case AnimationState::Pose:
+            return Mario_Sprite::Invincible::Pose::pose;
         default:
             return Mario_Sprite::Invincible::Stance::stance_;
         }
@@ -93,6 +101,8 @@ std::vector<Rectangle> &Mario ::getAnimationFrame() const
             return Mario_Sprite::Super::Hit::hit_;
         case AnimationState ::Stance_To_Fire:
             return Mario_Sprite::Super::Stance_To_Fire::stance_to_fire;
+        case AnimationState::Pose:
+            return Mario_Sprite::Super::Pose::pose;
         default:
             return Mario_Sprite::Super::Stance::stance_;
         }
@@ -115,6 +125,10 @@ std::vector<Rectangle> &Mario ::getAnimationFrame() const
             return Mario_Sprite::Invincible_Super_And_Fire::Walk::walk_;
         case AnimationState ::Enter_Pipe:
             return Mario_Sprite::Invincible_Super_And_Fire::Enter_Pipe::enter_pipe;
+        case AnimationState ::Fade_Out:
+            return Mario_Sprite::Super::Fade_Out::fade_out;
+        case AnimationState::Pose:
+            return Mario_Sprite::Super::Pose::pose;
         default:
             return Mario_Sprite::Invincible_Super_And_Fire::Stance::stance_;
         }
@@ -141,6 +155,8 @@ std::vector<Rectangle> &Mario ::getAnimationFrame() const
             return Mario_Sprite::Fire::Fade_Out::fade_out;
         case AnimationState ::Hit:
             return Mario_Sprite::Fire::Hit::hit_;
+        case AnimationState ::Pose:
+            return Mario_Sprite::Fire::Pose::pose;
         default:
             return Mario_Sprite::Fire::Stance::stance_;
         }

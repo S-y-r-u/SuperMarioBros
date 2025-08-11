@@ -21,8 +21,7 @@ private:
     float timer_;
     const float throw_interval = 2.0f;
     const float throw_duration = 0.25f;
-    const float hover_radius_front = 250.0f;
-    const float hover_radius_back = 150.0f;
+    const float hover_radius = 200.0f;
     const float hover_speed = 3.0f;
     float pos_to_player;
     bool pos_state;

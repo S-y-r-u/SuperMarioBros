@@ -3,9 +3,6 @@
 
 class Coin : public Item
 {
-private:
-    std::vector<Rectangle> m_rec;
-
 public:
     Coin(Vector2 pos);
 

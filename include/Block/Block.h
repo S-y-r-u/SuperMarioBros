@@ -8,7 +8,6 @@
 class Block
 {
 private:
-    const SpriteSheet& sprite_;
 
     A_Block_State *question_state_;
     A_Block_State *normal_state_;
@@ -28,20 +27,18 @@ public:
     void Update_();
     void Draw_();
     void On_Hit(std::vector<Item *> &item, Player &player, PlayerInformation &info);
+    bool Kill_Player(Player &player);
 
     void Set_State(A_Block_State *new_state);
 
     Vector2 Get_Pos() const;
     void Set_Pos(Vector2 pos);
     int Get_Item_Count() const;
-    Rectangle Get_Source_Rec() const;
     Rectangle Get_Draw_Rec() const;
     bool Get_Elapse() const;
     bool Get_Is_Delete() const;
     std::string Get_Type_Item() const;
     void Decrease_Item();
-
-    const SpriteSheet &Get_Sprite();
 
     A_Block_State *GetQuestionState() const;
     A_Block_State *GetNormalState() const;

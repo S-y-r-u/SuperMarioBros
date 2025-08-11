@@ -3,11 +3,9 @@
 Spiny::Spiny(Vector2 pos, Vector2 velo)
     : Enemy(pos, velo, 0.0f),
       state_(Spiny_State::egg),
-      m_egg(Enemies_Sprite::Spiny::Egg::egg_),
-      m_normal(Enemies_Sprite::Spiny::Normal::normal_),
       is_jump(false)
 {
-    rec_ = m_egg[current_frame];
+    animation_ = Animation(&Enemies_Sprite::enemies_, Enemies_Sprite::Spiny::Egg::egg_, 1 / 10.0f);
 }
 
 void Spiny::Update(float dt)
@@ -21,7 +19,7 @@ void Spiny::Update(float dt)
     if (state_ != Spiny_State::be_fired_or_hit)
         Move_(dt);
 
-    if (state_ == Spiny_State::be_fired_or_hit && position_.y - rec_.height >= Screen_h)
+    if (state_ == Spiny_State::be_fired_or_hit && position_.y - animation_.Get_Current_Rec().height >= Screen_h)
         is_active = false;
 
     Animate_();
@@ -29,7 +27,7 @@ void Spiny::Update(float dt)
 
 void Spiny::Draw() const
 {
-    Rectangle src = rec_;
+    Rectangle src = animation_.Get_Current_Rec();
     src.width = (velocity_.x < 0) ? std::abs(src.width) : -std::abs(src.width);
 
     Rectangle dest = {
@@ -38,7 +36,7 @@ void Spiny::Draw() const
         std::abs(src.width) * scale_screen,
         src.height * scale_screen};
 
-    DrawTexturePro(sprite_.sprite, src, dest, {dest.width / 2.0f, dest.height}, 0.0f, WHITE);
+    DrawTexturePro(animation_.Get_Sprite().sprite, src, dest, {dest.width / 2.0f, dest.height}, 0.0f, WHITE);
 }
 
 Vector2 Spiny::Get_Previous_Pos() const { return previous_frame_pos; }
@@ -68,9 +66,8 @@ void Spiny::Notify_On_Ground()
     if (state_ == Spiny_State::egg)
     {
         state_ = Spiny_State::normal;
-        frame_timer = 0.0f;
-        current_frame = 0;
-        rec_ = m_normal[current_frame];
+        animation_.Set_Frames(Enemies_Sprite::Spiny::Normal::normal_);
+        animation_.Set_Frame_Speed(1 / 6.0f);
     }
 }
 
@@ -90,7 +87,7 @@ void Spiny::Notify_Be_Fired_Or_Hit(PlayerInformation &info)
     {
         info.UpdateScore(Score_Spiny);
         state_ = Spiny_State::be_fired_or_hit;
-        rec_ = Enemies_Sprite::Spiny::be_fired_or_hit;
+        animation_.Set_Rec(Enemies_Sprite::Spiny::be_fired_or_hit);
         Rectangle dest_rec = Get_Draw_Rec();
         Score_Manager &score_manager = Score_Manager::GetInstance();
         score_manager.AddScore({dest_rec.x, dest_rec.y}, Score_Spiny);
@@ -117,20 +114,7 @@ void Spiny::Animate_()
     if (state_ == Spiny_State::be_fired_or_hit)
         return;
 
-    frame_timer += GetFrameTime();
-
-    if (state_ == Spiny_State::egg && frame_timer >= animation_speed * 0.75f)
-    {
-        frame_timer = 0;
-        current_frame = (current_frame + 1) % m_egg.size();
-        rec_ = m_egg[current_frame];
-    }
-    else if (state_ == Spiny_State::normal && frame_timer >= animation_speed)
-    {
-        frame_timer = 0;
-        current_frame = (current_frame + 1) % m_normal.size();
-        rec_ = m_normal[current_frame];
-    }
+    animation_.Update(GetFrameTime());
 }
 
 void Spiny::Move_(float dt)

@@ -1,19 +1,15 @@
 #include "Item/Coin.h"
 
 Coin::Coin(Vector2 pos)
-    : Item(pos),
-      m_rec(Item_Sprite::Coin::Blinking::blinking_) {}
+    : Item(pos)
+{
+    animation_ = Animation(&Item_Sprite::item_, Item_Sprite::Coin::Blinking::blinking_, 1 / 6.0f);
+}
 
 void Coin::Update_()
 {
     appear_animation = 0;
-    frame_ += GetFrameTime();
-    if (frame_ >= 1 / 6.0f)
-    {
-        type_ = (type_ + 1) % m_rec.size();
-        frame_ = 0.0f;
-    }
-    rec_ = m_rec[type_];
+    animation_.Update(GetFrameTime());
 }
 
 void Coin::Activate_(Player &player, PlayerInformation &info)

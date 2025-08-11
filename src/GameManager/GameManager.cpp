@@ -1,7 +1,7 @@
-#include "Menu/GameManager.h"
+#include "GameManager/GameManager.h"
 #include "raylib.h"
 
-GameManager::GameManager() : stage(nullptr), pause_manager(new PauseManager()), player_info(nullptr), GameOver(false), TimeUp(false) {}
+GameManager::GameManager() : stage(nullptr), pause_manager(new PauseManager()), player_info(nullptr) {}
 
 GameManager::~GameManager()
 {
@@ -178,6 +178,7 @@ void GameManager::Load_Texture()
     Font_Sprite::font_.Load_("../resources/sprite/Font.png");
     Enemies_Sprite::enemies_.Load_("../resources/sprite/Enemies.png");
     Screen_Sprite::screen_.Load_("../resources/sprite/GameOver_TimeUp.png");
+    Win_Animation::win_animation_.Load_("../resources/tiles/Tiles.png");
     BomberBill_Sprite::bomber_bill_.Load_("../resources/sprite/BomberBill.png");
 }
 
@@ -189,6 +190,7 @@ void GameManager::Unload_Texture()
     Font_Sprite::font_.Unload_();
     Enemies_Sprite::enemies_.Unload_();
     Screen_Sprite::screen_.Unload_();
+    Win_Animation::win_animation_.Unload_();
     BomberBill_Sprite::bomber_bill_.Unload_();
 }
 

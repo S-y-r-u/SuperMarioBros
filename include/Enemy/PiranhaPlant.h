@@ -13,7 +13,6 @@ class PiranhaPlant : public Enemy
 {
 private:
     PiranhaPlant_State state_;
-    std::vector<Rectangle> m_normal; // Chỉ cần 1 sprite
 
     // Vị trí cơ bản và thời gian
     Vector2 base_pos;  // Vị trí gốc (trong ống)

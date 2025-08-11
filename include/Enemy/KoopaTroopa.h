@@ -15,11 +15,6 @@ class KoopaTroopa : public Enemy
 private:
     KoopaState *current_state_;
     KoopaState *previous_state;
-    std::vector<Rectangle> walking_frames_ = Enemies_Sprite::Troopa_Green::Normal::normal_;
-    std::vector<Rectangle> shell_idle_frames_ = Enemies_Sprite::Troopa_Green::Shell_Idle::shell_idle;
-    std::vector<Rectangle> shell_moving_frames_ = Enemies_Sprite::Troopa_Green::Shell_Moving::shell_moving;
-    std::vector<Rectangle> flying_frames_ = Enemies_Sprite::Troopa_Green::Flying::flying_;
-    Rectangle be_dying_frame_ = Enemies_Sprite::Troopa_Green::be_dying;
     Vector2 before_pos_;
 
 public:

@@ -1,4 +1,4 @@
-#include "Menu/GameOver.h"
+#include "GameManager/GameOver.h"
 
 GameOver::GameOver() : timer_(0.0f), player_info(nullptr) {}
 

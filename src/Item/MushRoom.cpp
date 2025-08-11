@@ -10,13 +10,13 @@ Mush_Room::Mush_Room(Vector2 pos, State_MushRoom state)
     switch (state_)
     {
     case State_MushRoom::super_:
-        rec_ = Item_Sprite::Mushroom::super_mushroom;
+        animation_ = Animation(&Item_Sprite::item_, Item_Sprite::Mushroom::super_mushroom);
         break;
     case State_MushRoom::one_up:
-        rec_ = Item_Sprite::Mushroom::one_up_mushroom;
+        animation_ = Animation(&Item_Sprite::item_, Item_Sprite::Mushroom::one_up_mushroom);
         break;
     case State_MushRoom::posion_:
-        rec_ = Item_Sprite::Mushroom::posion_mushroom;
+        animation_ = Animation(&Item_Sprite::item_, Item_Sprite::Mushroom::posion_mushroom) ;
         break;
     default:
         break;
@@ -83,14 +83,14 @@ void Mush_Room::Move_()
     pos_.x += velocity_.x * GetFrameTime();
 
     // Chặn biên màn hình
-    if (pos_.x >= 214 * 48.0f - rec_.width * scale_screen / 2.0f)
+    if (pos_.x >= 214 * 48.0f - animation_.Get_Current_Rec().width * scale_screen / 2.0f)
     {
-        pos_.x = 214 * 48.0f - rec_.width * scale_screen / 2.0f;
+        pos_.x = 214 * 48.0f - animation_.Get_Current_Rec().width * scale_screen / 2.0f;
         direct_ = !direct_;
     }
-    else if (pos_.x <= rec_.width * scale_screen / 2.0f)
+    else if (pos_.x <= animation_.Get_Current_Rec().width * scale_screen / 2.0f)
     {
-        pos_.x = rec_.width * scale_screen / 2.0f;
+        pos_.x = animation_.Get_Current_Rec().width * scale_screen / 2.0f;
         direct_ = !direct_;
     }
 }
@@ -112,7 +112,7 @@ void Mush_Room::Appear_()
 
 void Mush_Room::Be_Delete()
 {
-    if (pos_.y - rec_.height * scale_screen >= Screen_h)
+    if (pos_.y - animation_.Get_Current_Rec().height * scale_screen >= Screen_h)
         is_delete = true;
 }
 

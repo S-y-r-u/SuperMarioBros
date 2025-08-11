@@ -1,18 +1,22 @@
 #pragma once
 #include "Block.h"
+#include "RotatingBar.h"
 #include "Abstract_Block_State.h"
 
 class Unbreakable_Block : public A_Block_State
 {
 private:
     Block &m_block;
+    RotatingBar* m_rotating_bar;
 
 public:
     Unbreakable_Block(Block &Block);
+    ~Unbreakable_Block();
 
     void Draw_() override;
-    void Update_() override {}
+    void Update_() override;
     void On_Hit(std::vector<Item *> &item, Player &player, PlayerInformation &info) override ;
+    bool Kill_Player(Player &player) override;
 
     bool Get_Elapse() override;
     Rectangle Get_Draw_Rec() const override;

@@ -2,17 +2,18 @@
 #include "Enemy\KoopaTroopaState.h"
 
 KoopaTroopa::KoopaTroopa(Vector2 pos)
-    : Enemy(pos, {75.0f, 0}, 1000.0f),
+    : Enemy(pos, {-75.0f, 0}, 1000.0f),
       current_state_(nullptr),
       previous_state(nullptr),
       before_pos_(pos)
 {
+    animation_ = Animation(&Enemies_Sprite::enemies_, Enemies_Sprite::Troopa_Green::Normal::normal_, 1 / 6.0f);
     SetState(new KoopaWalkingState());
 }
 
 // Constructor cho flying koopa
 KoopaTroopa::KoopaTroopa(Vector2 pos, bool is_flying)
-    : Enemy(pos, {120.0f, 0}, 1000.0f),
+    : Enemy(pos, {-120.0f, 0}, 1000.0f),
       current_state_(nullptr),
       previous_state(nullptr),
       before_pos_(pos)
@@ -70,12 +71,12 @@ void KoopaTroopa::Update(float dt)
 void KoopaTroopa::Draw() const
 {
     bool flip = velocity_.x >= 0;
-    Rectangle rec__ = {rec_.x, rec_.y, flip ? -1.0f * rec_.width : rec_.width, rec_.height};
-    float draw_width = rec_.width * scale_screen;
-    float draw_height = rec_.height * scale_screen;
+    Rectangle rec__ = {animation_.Get_Current_Rec().x, animation_.Get_Current_Rec().y, flip ? -1.0f * animation_.Get_Current_Rec().width : animation_.Get_Current_Rec().width, animation_.Get_Current_Rec().height};
+    float draw_width = animation_.Get_Current_Rec().width * scale_screen;
+    float draw_height = animation_.Get_Current_Rec().height * scale_screen;
     Rectangle dest_rec = {position_.x, position_.y, draw_width, draw_height};
     Vector2 origin = {draw_width / 2.0f, draw_height};
-    DrawTexturePro(sprite_.sprite, rec__, dest_rec,
+    DrawTexturePro(animation_.Get_Sprite().sprite, rec__, dest_rec,
                    {origin.x, origin.y}, // Điểm neo ở giữa
                    0.0f, WHITE);
 }
@@ -119,7 +120,7 @@ void KoopaTroopa::Notify_Be_Kicked(int direction, PlayerInformation &info)
 {
     // direction: 1 for right, -1 for left
     if (current_state_ && Can_Be_Kicked())
-        current_state_->OnKicked(this, direction , info);
+        current_state_->OnKicked(this, direction, info);
 }
 
 bool KoopaTroopa::Can_Be_Kicked() const

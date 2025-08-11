@@ -1,4 +1,4 @@
-#include "Menu/TimeUp.h"
+#include "GameManager/TimeUp.h"
 
 TimeUp::TimeUp() : player_info(nullptr), timer_(0.0f) {}
 

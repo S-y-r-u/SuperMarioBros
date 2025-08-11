@@ -2,16 +2,17 @@
 
 HiddenCoin::HiddenCoin(Vector2 pos)
     : Item(pos),
-      m_rec(Item_Sprite::Coin::Hidden::hidden_),
       velocity_({0.0f, -Push_Height}),
-      before_pos_(pos)
+      before_pos_(pos),
+      timer_(0.0f)
 {
-    rec_ = m_rec[0];
 
+    animation_ = Animation(&Item_Sprite::item_, Item_Sprite::Coin::Hidden::hidden_, 1 / 6.0f);
     const float gravity = Physics::gravity_;                       // 1000.0f
     const float total_air_time = 2 * Push_Height / gravity * 0.8f; // 1.0f
 
-    sprite_interval_ = total_air_time / static_cast<float>(m_rec.size());
+    sprite_interval_ = total_air_time / static_cast<float>(animation_.Get_Frame_Count());
+    animation_.Set_Frame_Speed(sprite_interval_);
 }
 
 void HiddenCoin::Update_()
@@ -22,18 +23,14 @@ void HiddenCoin::Update_()
 void HiddenCoin::Appear_()
 {
     const float gravity = Physics::gravity_;
+    timer_ += GetFrameTime();
 
     // Cập nhật animation theo thời gian
-    frame_ += GetFrameTime();
-    if (frame_ >= sprite_interval_)
-    {
-        frame_ = 0.0f;
-        type_++;
+    animation_.Update(GetFrameTime());
 
-        if (type_ < m_rec.size())
-            rec_ = m_rec[type_];
-        else
-            is_delete = true;
+    if(timer_ >= sprite_interval_ * animation_.Get_Frame_Count() - GetFrameTime())
+    {
+        is_delete = true;
     }
 
     // Physics

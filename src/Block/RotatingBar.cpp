@@ -1,29 +1,26 @@
-#include "Item/RotatingBarItem.h"
+#include "Block/RotatingBar.h"
 
-RotatingBar::RotatingBar(Vector2 pivotPos, float length, float speed): pivot(pivotPos), length(length), angle(0), speed(speed),
-      sprite_(Item_Sprite::item_), frames(Item_Sprite::Fire_Ball::Fly::fly_), currentFrame(0),
-      frameTime(0.3f), frameCounter(0.0f)
-{
-}
+RotatingBar::RotatingBar(Vector2 pivotPos)
+    : animation_(&Item_Sprite::item_, Item_Sprite::Fire_Ball::Fly::fly_, 1 / 6.0f),
+      pivot(pivotPos),
+      length(150.0f),
+      angle(0),
+      speed(45.0f) {}
 
 void RotatingBar::Update(float dt)
 {
     // Cập nhật góc quay
     angle += speed * dt;
-    if (angle >= 360.0f) angle -= 360.0f;
+    if (angle >= 360.0f)
+        angle -= 360.0f;
 
     // Cập nhật frame animation
-    frameCounter += dt;
-    if (frameCounter >= frameTime)
-    {
-        frameCounter -= frameTime;
-        currentFrame = (currentFrame + 1) % frames.size();
-    }
+    animation_.Update(dt);
 }
 
 void RotatingBar::Draw() const
 {
-    Rectangle sourceRec = frames[currentFrame];
+    Rectangle sourceRec = animation_.Get_Current_Rec();
     float tileW = sourceRec.width;
     float tileH = sourceRec.height;
 
@@ -32,21 +29,20 @@ void RotatingBar::Draw() const
     for (int i = 0; i < numTiles; i++)
     {
         // Offset trước khi xoay
-        Vector2 offset = { i * tileW * scale_screen, 0 };
+        Vector2 offset = {i * tileW * scale_screen, 0};
 
         // Xoay offset
         float rad = DEG2RAD * angle;
         Vector2 rotatedOffset = {
             offset.x * cosf(rad) - offset.y * sinf(rad),
-            offset.x * sinf(rad) + offset.y * cosf(rad)
-        };
+            offset.x * sinf(rad) + offset.y * cosf(rad)};
 
-        Vector2 tilePos = { pivot.x + rotatedOffset.x, pivot.y + rotatedOffset.y };
+        Vector2 tilePos = {pivot.x + rotatedOffset.x, pivot.y + rotatedOffset.y};
 
-        Rectangle destRec = { tilePos.x, tilePos.y, tileW * scale_screen, tileH * scale_screen };
-        Vector2 origin = { 0, destRec.height / 2.0f };
+        Rectangle destRec = {tilePos.x, tilePos.y, tileW * scale_screen, tileH * scale_screen};
+        Vector2 origin = {0, destRec.height / 2.0f};
 
-        DrawTexturePro(sprite_.sprite, sourceRec, destRec, origin, angle, WHITE);
+        DrawTexturePro(animation_.Get_Sprite().sprite, sourceRec, destRec, origin, angle, WHITE);
     }
 
     // Debug pivot
@@ -61,8 +57,7 @@ bool RotatingBar::CheckCollision(Rectangle rect) const
         {rect.x, rect.y},
         {rect.x + rect.width, rect.y},
         {rect.x + rect.width, rect.y + rect.height},
-        {rect.x, rect.y + rect.height}
-    };
+        {rect.x, rect.y + rect.height}};
 
     for (int i = 0; i < 4; i++)
     {
@@ -87,6 +82,5 @@ Vector2 RotatingBar::GetEndPoint() const
 {
     return {
         pivot.x + cosf(DEG2RAD * angle) * length,
-        pivot.y + sinf(DEG2RAD * angle) * length
-    };
+        pivot.y + sinf(DEG2RAD * angle) * length};
 }

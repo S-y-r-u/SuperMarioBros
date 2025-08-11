@@ -1,4 +1,4 @@
-#include "DrawScore.h"
+#include "GameManager/DrawScore.h"
 #include <iostream>
 
 DrawScore::DrawScore(const Vector2 &position, int score)

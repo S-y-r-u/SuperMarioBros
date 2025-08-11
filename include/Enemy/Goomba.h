@@ -12,7 +12,6 @@ class Goomba : public Enemy
 {
 private:
     Goomba_State state_;
-    std::vector<Rectangle> m_normal;
 
     Vector2 previous_frame_pos;
     float stomped_timer;

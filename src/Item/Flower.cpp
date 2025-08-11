@@ -5,7 +5,7 @@ Flower::Flower(Vector2 pos)
     is_appear(0), 
     before_pos(pos)
 {
-    rec_ = Item_Sprite::Flower::fire_flower;
+    animation_ = Animation(&Item_Sprite::item_, Item_Sprite::Flower::fire_flower);
 }
 
 void Flower::Update_()

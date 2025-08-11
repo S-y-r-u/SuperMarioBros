@@ -1,4 +1,4 @@
-#include "PlayerInformation.h"
+#include "GameManager/PlayerInformation.h"
 
 PlayerInformation::PlayerInformation(float time, int lives)
 {

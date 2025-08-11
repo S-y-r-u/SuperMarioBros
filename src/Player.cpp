@@ -17,7 +17,7 @@ Player ::Player(Vector2 startPos) : Character(startPos)
     isInvincible = 0;
     invincibleTimer = 0.0f;
     beforeStar = form;
-                   
+
     isDead = 0;
     isActive = 1;
     deadTimer = 0.0f;
@@ -27,6 +27,12 @@ Player ::Player(Vector2 startPos) : Character(startPos)
     currentFrame = 0;
     frameTimer = 0.0f;
     animationSpeed = 1.0f / 12.0f;
+    animationSpeedClimb = 1.0f / 20.0f;
+
+    climb_velo = {0.0f, 0.0f};
+
+    is_pose = false;
+    is_fade_out = false;
 }
 
 Player ::~Player() {}
@@ -77,6 +83,7 @@ void Player ::Jump()
         return;
     isGround = 0;
     velocity.y = JumpForce;
+    is_climbing = false;
     if (form == PlayerForm ::Small)
     {
         SoundManager::GetInstance().PlaySoundEffect("jump-small");
@@ -98,15 +105,31 @@ void Player ::Cut_Jump()
 void Player ::update(float dt)
 {
     previous_pos = position;
+
+    if (state == AnimationState::Climb && is_climbing)
+    {
+        if (currentFrame >= getAnimationFrame().size())
+            currentFrame = 0;
+        if (climb_velo.y != 0.0f)
+            frameTimer += dt;
+        if (frameTimer >= animationSpeedClimb)
+        {
+            frameTimer = 0.0f;
+            currentFrame = (currentFrame + 1) % getAnimationFrame().size();
+        }
+        position.y += climb_velo.y * dt;
+        return;
+    }
+
     if (isTransforming)
     {
-        if (isInvincible) 
+        if (isInvincible)
         {
             invincibleTimer -= dt;
-            if (invincibleTimer <= 0.0f) 
+            if (invincibleTimer <= 0.0f)
             {
                 isInvincible = false;
-                form = targetForm; 
+                form = targetForm;
             }
         }
         frameTimer += dt;
@@ -138,7 +161,7 @@ void Player ::update(float dt)
     }
 
     const auto &frame = getAnimationFrame();
-    if(position.y >= Screen_h)
+    if (position.y >= Screen_h)
         isActive = 0;
 
     if (isDead)
@@ -166,18 +189,17 @@ void Player ::update(float dt)
 
     if (isGround)
     {
-        if (velocity.x != 0.0f)
-            state = AnimationState ::Walk;
-        else
-            state = AnimationState ::Stance;
+        if (!is_fade_out && !is_pose)
+        {
+            if (velocity.x != 0.0f)
+                state = AnimationState ::Walk;
+            else
+                state = AnimationState ::Stance;
+        }
     }
     else
     {
         state = AnimationState ::Jump;
-        // if (IsKeyReleased(KEY_W))
-        // {
-        //     velocity.y *= 0.5f; // Giảm tốc độ nhảy khi nhả phím W
-        // }
     }
 
     if (currentFrame >= getAnimationFrame().size())
@@ -218,7 +240,7 @@ void Player ::collectCoin()
 
 void Player ::getMushroom()
 {
-    bool isBig = (form == PlayerForm :: Super || form == PlayerForm :: Fire || form == PlayerForm :: Invincible_Super_And_Fire);
+    bool isBig = (form == PlayerForm ::Super || form == PlayerForm ::Fire || form == PlayerForm ::Invincible_Super_And_Fire);
     if (isTransforming || isBig)
         return;
 
@@ -229,19 +251,22 @@ void Player ::getMushroom()
     currentFrame = 0;
     frameTimer = 0.0f;
 
-    if(isInvincible){
-        beforeStar = PlayerForm :: Super;
-        targetForm = PlayerForm :: Invincible_Super_And_Fire;
+    if (isInvincible)
+    {
+        beforeStar = PlayerForm ::Super;
+        targetForm = PlayerForm ::Invincible_Super_And_Fire;
     }
-    else targetForm = PlayerForm ::Super;
+    else
+        targetForm = PlayerForm ::Super;
 }
 
 void Player ::getFlower()
 {
-    if (isTransforming || form == PlayerForm ::Fire )
+    if (isTransforming || form == PlayerForm ::Fire)
         return;
 
-    if (isInvincible)  beforeStar = PlayerForm::Fire;
+    if (isInvincible)
+        beforeStar = PlayerForm::Fire;
     else
     {
         isTransforming = 1;
@@ -274,17 +299,19 @@ void Player ::getStar()
 
     isInvincible = true;
     invincibleTimer = 10.0f;
-    beforeStar = form; 
+    beforeStar = form;
 
-    if(form == PlayerForm::Fire || form == PlayerForm :: Super)
+    if (form == PlayerForm::Fire || form == PlayerForm ::Super)
         form = PlayerForm::Invincible_Super_And_Fire;
-    else form = PlayerForm::Invincible;
+    else
+        form = PlayerForm::Invincible;
 }
 
 void Player ::Die()
 {
-    if (isDead) return;
-    SoundManager::GetInstance().PlayMusic("mariodie",false);
+    if (isDead)
+        return;
+    SoundManager::GetInstance().PlayMusic("mariodie", false);
     isDead = 1;
     state = AnimationState ::Die;
 
@@ -294,20 +321,37 @@ void Player ::Die()
     deadTimer = 3.0f;
 }
 
-
-void Player :: updateCoolDown(float dt)
+void Player::Climb(float slide_speed)
 {
-    if(fireCoolDown >= 0.0f)  fireCoolDown -= dt; 
+    climb_velo = {0.0f, slide_speed};
+    state = AnimationState::Climb;
+    currentFrame = 0;
+    frameTimer = 0.0f;
+    is_climbing = true;
 }
 
-void Player :: Shoot(std::vector<FireBall*> &fireballs)
+void Player::End_Climb()
 {
-    bool canShoot = (form == PlayerForm :: Fire || form == PlayerForm :: Invincible_Super_And_Fire);
-    if(!canShoot || isTransforming || isDead || fireCoolDown > 0 || fireballs.size() >= 3){
+    climb_velo = {0.0f, 0.0f};
+    frameTimer = 0.0f;
+    currentFrame = 0;
+}
+
+void Player ::updateCoolDown(float dt)
+{
+    if (fireCoolDown >= 0.0f)
+        fireCoolDown -= dt;
+}
+
+void Player ::Shoot(std::vector<FireBall *> &fireballs)
+{
+    bool canShoot = (form == PlayerForm ::Fire || form == PlayerForm ::Invincible_Super_And_Fire);
+    if (!canShoot || isTransforming || isDead || fireCoolDown > 0 || fireballs.size() >= 3)
+    {
         return;
     }
 
-    state = AnimationState :: Shoot;
+    state = AnimationState ::Shoot;
     fireCoolDown = 0.3f;
     currentFrame = 0;
     frameTimer = 0.0f;
@@ -316,9 +360,36 @@ void Player :: Shoot(std::vector<FireBall*> &fireballs)
     Rectangle playerPos = get_draw_rec();
 
     fireBallStartPos.y += playerPos.height * 0.6f;
-    if(!isFacingLeft)    fireBallStartPos.x += playerPos.width - 15;
-    else fireBallStartPos.x += 5;
+    if (!isFacingLeft)
+        fireBallStartPos.x += playerPos.width - 15;
+    else
+        fireBallStartPos.x += 5;
 
     fireballs.push_back(new FireBall(fireBallStartPos, isFacingLeft));
     SoundManager::GetInstance().PlaySoundEffect("fireball");
+}
+
+void Player::Set_Is_Facing_Right(bool value)
+{
+    isFacingLeft = !value;
+}
+
+void Player::Pose(float dt)
+{
+    is_pose = true;
+    frameTimer = 0.0f;
+    currentFrame = 0;
+    velocity.x = 0.0f;
+    state = AnimationState::Pose;
+    animationSpeed = dt / getAnimationFrame().size();
+}
+
+void Player::Fade_Out(float dt)
+{
+    is_fade_out = true;
+    frameTimer = 0.0f;
+    currentFrame = 0;
+    velocity.x = 0.0f;
+    state = AnimationState::Fade_Out;
+    animationSpeed = dt / getAnimationFrame().size();
 }

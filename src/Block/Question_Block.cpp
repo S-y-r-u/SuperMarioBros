@@ -1,14 +1,13 @@
 #include "Block/Question_Block.h"
 
 Question_Block::Question_Block(Block &block)
-    : m_block(block),
-      m_rec(Item_Sprite::Question_Brick::question_),
-      frame_(0.0f), type_(0),
+    : A_Block_State(&Item_Sprite::item_),
+      m_block(block),
       velocity_y(0.0f),
       elapse_(false)
 {
     before_pos = m_block.Get_Pos();
-    rec_ = m_rec[type_];
+    animation_ = Animation(&Item_Sprite::item_, Item_Sprite::Question_Brick::question_, 1 / 6.0f);
 }
 
 void Question_Block::Draw_()
@@ -16,11 +15,11 @@ void Question_Block::Draw_()
     Rectangle dest_rec = {
         m_block.Get_Pos().x,
         m_block.Get_Pos().y,
-        rec_.width * scale_screen,
-        rec_.height * scale_screen};
+        animation_.Get_Current_Rec().width * scale_screen,
+        animation_.Get_Current_Rec().height * scale_screen};
     DrawTexturePro(
-        m_block.Get_Sprite().sprite,
-        rec_,
+        animation_.Get_Sprite().sprite,
+        animation_.Get_Current_Rec(),
         dest_rec,
         {dest_rec.width / 2.0f, dest_rec.height},
         0.0f,
@@ -29,13 +28,7 @@ void Question_Block::Draw_()
 
 void Question_Block::Animation_()
 {
-    frame_ += GetFrameTime();
-    if (frame_ >= 1 / 6.0f)
-    {
-        type_ = (type_ + 1) % m_rec.size();
-        frame_ = 0.0f;
-    }
-    rec_ = m_rec[type_];
+    animation_.Update(GetFrameTime());
 }
 
 void Question_Block::Update_()
@@ -94,8 +87,8 @@ bool Question_Block::Get_Elapse()
 Rectangle Question_Block::Get_Draw_Rec() const
 {
     return {
-        m_block.Get_Pos().x - rec_.width * scale_screen / 2.0f,
-        m_block.Get_Pos().y - rec_.height * scale_screen,
-        rec_.width * scale_screen,
-        rec_.height * scale_screen};
+        m_block.Get_Pos().x - animation_.Get_Current_Rec().width * scale_screen / 2.0f,
+        m_block.Get_Pos().y - animation_.Get_Current_Rec().height * scale_screen,
+        animation_.Get_Current_Rec().width * scale_screen,
+        animation_.Get_Current_Rec().height * scale_screen};
 }

@@ -1,12 +1,13 @@
 #include "Block/Breakable_Block.h"
 
 Breakable_BLock::Breakable_BLock(Block &block)
-    : m_block(block),
+    : A_Block_State(&Item_Sprite::item_),
+      m_block(block),
       is_delete(false),
       rotation(0.0f)
 {
-    rec_ = Item_Sprite::Brown_Brick::break_;
-    before_pos = {m_block.Get_Pos().x, m_block.Get_Pos().y - rec_.height};
+    animation_ = Animation(&Item_Sprite::item_, Item_Sprite::Brown_Brick::break_);
+    before_pos = {m_block.Get_Pos().x, m_block.Get_Pos().y - animation_.Get_Current_Rec().height};
     up_pos_left = down_pos_left = before_pos;
 
     up_velocity = {-Move_, -Break_Height}; // bay lên
@@ -15,42 +16,43 @@ Breakable_BLock::Breakable_BLock(Block &block)
 
 void Breakable_BLock::Draw_()
 {
-    Vector2 origin = {rec_.width * scale_screen / 2.0f, rec_.height * scale_screen / 2.0f};
+    Vector2 origin = {animation_.Get_Current_Rec().width * scale_screen / 2.0f, animation_.Get_Current_Rec().height * scale_screen / 2.0f};
 
     Rectangle dest_rec_up_left = {
         up_pos_left.x,
         up_pos_left.y,
-        rec_.width * scale_screen,
-        rec_.height * scale_screen};
+        animation_.Get_Current_Rec().width * scale_screen,
+        animation_.Get_Current_Rec().height * scale_screen};
 
     Rectangle dest_rec_up_right = {
         before_pos.x + (before_pos.x - up_pos_left.x),
         up_pos_left.y,
-        rec_.width * scale_screen,
-        rec_.height * scale_screen};
+        animation_.Get_Current_Rec().width * scale_screen,
+        animation_.Get_Current_Rec().height * scale_screen};
 
     Rectangle dest_rec_down_left = {
         down_pos_left.x,
         down_pos_left.y,
-        rec_.width * scale_screen,
-        rec_.height * scale_screen};
+        animation_.Get_Current_Rec().width * scale_screen,
+        animation_.Get_Current_Rec().height * scale_screen};
 
     Rectangle dest_rec_down_right = {
         before_pos.x + (before_pos.x - down_pos_left.x),
         down_pos_left.y,
-        rec_.width * scale_screen,
-        rec_.height * scale_screen};
+        animation_.Get_Current_Rec().width * scale_screen,
+        animation_.Get_Current_Rec().height * scale_screen};
 
-    DrawTexturePro(m_block.Get_Sprite().sprite, rec_, dest_rec_up_left, origin, rotation, WHITE);
-    DrawTexturePro(m_block.Get_Sprite().sprite, rec_, dest_rec_up_right, origin, rotation, WHITE);
-    DrawTexturePro(m_block.Get_Sprite().sprite, rec_, dest_rec_down_left, origin, rotation, WHITE);
-    DrawTexturePro(m_block.Get_Sprite().sprite, rec_, dest_rec_down_right, origin, rotation, WHITE);
+    DrawTexturePro(animation_.Get_Sprite().sprite, animation_.Get_Current_Rec(), dest_rec_up_left, origin, rotation, WHITE);
+    DrawTexturePro(animation_.Get_Sprite().sprite, animation_.Get_Current_Rec(), dest_rec_up_right, origin, rotation, WHITE);
+    DrawTexturePro(animation_.Get_Sprite().sprite, animation_.Get_Current_Rec(), dest_rec_down_left, origin, rotation, WHITE);
+    DrawTexturePro(animation_.Get_Sprite().sprite, animation_.Get_Current_Rec(), dest_rec_down_right, origin, rotation, WHITE);
 }
 
 void Breakable_BLock::Update_()
 {
     Fall_();
     Be_Delete();
+    animation_.Update(GetFrameTime());
 }
 
 bool Breakable_BLock::Get_Elapse() { return true; }
@@ -85,7 +87,7 @@ void Breakable_BLock::Fall_()
 
 void Breakable_BLock::Be_Delete()
 {
-    if (up_pos_left.y - rec_.height * scale_screen / 2.0f >= Screen_h)
+    if (up_pos_left.y - animation_.Get_Current_Rec().height * scale_screen / 2.0f >= Screen_h)
         is_delete = true;
 }
 

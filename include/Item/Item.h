@@ -2,8 +2,9 @@
 #include "Constants.h"
 #include "Sprite.h"
 #include "Player.h"
-#include "PlayerInformation.h"
-#include "DrawScore.h"
+#include "GameManager/PlayerInformation.h"
+#include "GameManager/DrawScore.h"
+#include "GameManager/Animation.h"
 
 constexpr float Mush_Room_And_Star_Speed = 120.0f;
 constexpr float Appear_Animation = 0.75f;
@@ -11,14 +12,10 @@ constexpr float Tile_Size = 16.0f * scale_screen;
 
 class Item
 {
-private:
-    const SpriteSheet& item_;
 
 protected:
     Vector2 pos_;
-    Rectangle rec_;
-    float frame_;
-    int type_;
+    Animation animation_;
     bool appear_animation;
     bool is_delete;
 

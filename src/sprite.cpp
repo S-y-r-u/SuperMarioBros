@@ -84,6 +84,12 @@ namespace Mario_Sprite
             Rectangle f14 = {301, 225, 12, 15};
             std::vector<Rectangle> fade_out = {f1, f2, f3, f4, f5, f6, f7, f8, f9, f10, f11, f12, f13, f14};
         }
+        namespace Pose
+        {
+            Rectangle p1 = {134, 92, 14, 16};
+            Rectangle p2 = {153, 92, 16, 16};
+            std::vector<Rectangle> pose = {p1, p2};
+        }
         namespace Small_To_Super
         {
             Rectangle s1 = {179, 152, 12, 15};
@@ -185,6 +191,18 @@ namespace Mario_Sprite
             Rectangle s16 = {321, 402, 14, 30};
             Rectangle s17 = {342, 402, 14, 30};
             std::vector<Rectangle> small_to_super = {s1, s2, s3, s4, s5, s6, s7, s8, s9, s10, s11, s12, s13, s14, s15, s16, s17};
+        }
+        namespace Pose
+        {
+            Rectangle p1 = {344, 490, 14, 16};
+            Rectangle p2 = {365, 490, 14, 16};
+            Rectangle p3 = {386, 490, 14, 16};
+            Rectangle p4 = {407, 490, 14, 16};
+            Rectangle p5 = {426, 490, 16, 16};
+            Rectangle p6 = {447, 490, 16, 16};
+            Rectangle p7 = {468, 490, 16, 16};
+            Rectangle p8 = {489, 490, 16, 16};
+            std::vector<Rectangle> pose = {p1, p2, p3, p4, p5, p6, p7};
         }
     }
 
@@ -308,6 +326,12 @@ namespace Mario_Sprite
             Rectangle enter = {515, 121, 16, 30};
             std::vector<Rectangle> enter_pipe = {enter};
         }
+        namespace Pose
+        {
+            Rectangle p1 = {385, 121, 16, 30};
+            Rectangle p2 = {406, 121, 16, 29};
+            std::vector<Rectangle> pose = {p1, p2};
+        }
         namespace Fade_Out
         {
             Rectangle f1 = {385, 205, 16, 29};
@@ -426,6 +450,19 @@ namespace Mario_Sprite
             Rectangle e4 = {960, 332, 16, 30};
             std::vector<Rectangle> enter_pipe = {e1, e2, e3, e4};
         }
+        namespace Pose
+        {
+
+            Rectangle p1 = {897, 380, 16, 30};
+            Rectangle p2 = {918, 380, 16, 30};
+            Rectangle p3 = {939, 380, 16, 30};
+            Rectangle p4 = {960, 380, 16, 30};
+            Rectangle p5 = {981, 380, 16, 29};
+            Rectangle p6 = {1002, 380, 16, 30};
+            Rectangle p7 = {1023, 380, 16, 30};
+            Rectangle p8 = {1044, 380, 16, 30};
+            std::vector<Rectangle> pose = {p1, p2, p3, p4, p5, p6, p7, p8};
+        }
     }
 
     namespace Fire
@@ -508,6 +545,12 @@ namespace Mario_Sprite
             Rectangle h13 = {1056, 156, 12, 15};
             std::vector<Rectangle> hit_ = {h1, h2, h3, h4, h5, h6, h7, h8, h9, h10, h11, h12, h13};
         }
+        namespace Pose
+        {
+            Rectangle p1 = {793, 121, 16, 30};
+            Rectangle p2 = {814, 121, 16, 29};
+            std::vector<Rectangle> pose = {p1, p2};
+        }
     }
 }
 
@@ -586,6 +629,13 @@ namespace Luigi_Sprite
             Rectangle s9 = {262, 148, 14, 22};
             Rectangle s10 = {284, 139, 14, 31};
             std::vector<Rectangle> small_to_super = {s1, s2, s3, s4, s5, s6, s7, s8, s9, s10};
+        }
+        namespace Pose
+        {
+            Rectangle p1 = {134, 94, 14, 16};
+            Rectangle p2 = {154, 94, 15, 16};
+            std::vector<Rectangle> pose = {p1, p2};
+
         }
     }
 
@@ -672,6 +722,18 @@ namespace Luigi_Sprite
             Rectangle s14 = {279, 410, 14, 31};
             Rectangle s15 = {300, 410, 14, 31};
             std::vector<Rectangle> small_to_super = {s1, s2, s3, s4, s5, s6, s7, s8, s9, s10, s11, s12, s13, s14, s15};
+        }
+        namespace Pose
+        {
+            Rectangle p1 = {344, 501, 14, 16};
+            Rectangle p2 = {365, 501, 15, 16};
+            Rectangle p3 = {386, 501, 15, 16};
+            Rectangle p4 = {407, 501, 15, 16};
+            Rectangle p5 = {427, 501, 15, 16};
+            Rectangle p6 = {448, 501, 15, 16};
+            Rectangle p7 = {469, 501, 15, 16};
+            Rectangle p8 = {490, 501, 15, 16};
+            std::vector<Rectangle> pose = {p1, p2, p3, p4, p5, p6, p7, p8};
         }
     }
 
@@ -830,6 +892,12 @@ namespace Luigi_Sprite
             Rectangle h13 = {701, 147, 12, 15};
             std::vector<Rectangle> hit_ = {h1, h2, h3, h4, h5, h6, h7, h8, h9, h10, h11, h12, h13};
         }
+        namespace Pose
+        {
+            Rectangle p1 = {385, 122, 16, 31};
+            Rectangle p2 = {406, 122, 16, 30};
+            std::vector<Rectangle> pose = {p1, p2};
+        }
     }
 
     namespace Invincible_Super_And_Fire
@@ -913,6 +981,18 @@ namespace Luigi_Sprite
             Rectangle e4 = {941, 332, 16, 30};
             std::vector<Rectangle> enter_pipe = {e1, e2, e3, e4};
         }
+        namespace Pose
+        {
+            Rectangle p1 = {878, 387, 16, 31};
+            Rectangle p2 = {899, 387, 16, 31};
+            Rectangle p3 = {920, 387, 16, 31};
+            Rectangle p4 = {941, 387, 16, 31};
+            Rectangle p5 = {962, 387, 16, 30};
+            Rectangle p6 = {983, 387, 16, 30};
+            Rectangle p7 = {1004, 387, 16, 30};
+            Rectangle p8 = {1025, 387, 16, 30};
+            std::vector<Rectangle> pose = {p1, p2, p3, p4, p5, p6, p7, p8};
+        }
     }
 
     namespace Fire
@@ -994,6 +1074,12 @@ namespace Luigi_Sprite
             Rectangle h12 = {1012, 157, 16, 16};
             Rectangle h13 = {1036, 158, 11, 15};
             std::vector<Rectangle> hit_ = {h1, h2, h3, h4, h5, h6, h7, h8, h9, h10, h11, h12, h13};
+        }
+        namespace Pose
+        {
+            Rectangle p1 = {771, 122, 16, 31};
+            Rectangle p2 = {792, 122, 16, 30};
+            std::vector<Rectangle> pose = {p1, p2};
         }
     }
 }
@@ -1384,13 +1470,40 @@ namespace Enemies_Sprite
 namespace BomberBill_Sprite
 {
     SpriteSheet bomber_bill_;
-    Rectangle n1 = {8,82,25,15};
-    Rectangle n2 = {38,82,25,17};
-    Rectangle n3 = {70,79,25,21};
-    Rectangle n4 = {99,80,26,17};
-    Rectangle n5 = {129,82,24,15};
-    Rectangle n6 = {158,82,25,15};
-    Rectangle n7 = {185,80,24,19};
-    Rectangle n8 = {216,82,25,15};
+    Rectangle n1 = {8, 82, 25, 15};
+    Rectangle n2 = {38, 82, 25, 17};
+    Rectangle n3 = {70, 79, 25, 21};
+    Rectangle n4 = {99, 80, 26, 17};
+    Rectangle n5 = {129, 82, 24, 15};
+    Rectangle n6 = {158, 82, 25, 15};
+    Rectangle n7 = {185, 80, 24, 19};
+    Rectangle n8 = {216, 82, 25, 15};
     std::vector<Rectangle> bomber_bill_normal = {n1, n2, n3, n4, n5, n6, n7, n8};
+}
+
+namespace Win_Animation
+{
+    SpriteSheet win_animation_;
+    namespace flag_castle_2_side
+    {
+        Rectangle f1 = {1, 341, 14, 16};
+        Rectangle f2 = {18, 341, 15, 16};
+        Rectangle f3 = {1, 358, 14, 16};
+        std::vector<Rectangle> flag_castle_2_side_ = {f1, f2, f3};
+    }
+    namespace flag_castle_top
+    {
+        Rectangle f1 = {1, 189, 13, 16};
+        Rectangle f2 = {18, 189, 14, 16};
+        Rectangle f3 = {35, 189, 14, 16};
+        Rectangle f4 = {52, 189, 15, 16};
+        std::vector<Rectangle> flag_castle_top_ = {f1, f2, f3, f4};
+    }
+    namespace flag_pole
+    {
+        Rectangle f1 = {1, 172, 16, 16};
+        Rectangle f2 = {18, 172, 14, 16};
+        Rectangle f3 = {35, 172, 11, 16};
+        std::vector<Rectangle> flag_pole_ = {f1, f2, f3};
+    }
 }

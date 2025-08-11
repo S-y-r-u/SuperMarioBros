@@ -10,10 +10,9 @@ PiranhaPlant::PiranhaPlant(Vector2 pos, Player *player_ptr)
       state_(PiranhaPlant_State::underground),
       base_pos(pos),
       delta_time(0.0f),
-      state_timer(0.0f),
-      m_normal(Enemies_Sprite::Piranha_Plant_Green::plant_) // Chỉ load 1 sprite
+      state_timer(0.0f)
 {
-    rec_ = m_normal[current_frame];
+    animation_ = Animation(&Enemies_Sprite::enemies_, Enemies_Sprite::Piranha_Plant_Green::plant_, 0.25f);
     position_ = base_pos;                       // Bắt đầu ở dưới ống
     is_ground = true;                           // Luôn "trên mặt đất" vì gắn với ống
     above_pos = {pos.x, pos.y - emerge_height}; // Vị trí khi nhô lên hoàn toàn
@@ -28,12 +27,11 @@ void PiranhaPlant::Draw() const
         Rectangle dest_rec = {
             position_.x,
             position_.y,
-            rec_.width * scale_screen,
-            rec_.height * scale_screen};
+            animation_.Get_Current_Rec().width * scale_screen,
+            animation_.Get_Current_Rec().height * scale_screen};
 
-        DrawTexturePro(sprite_.sprite, rec_, dest_rec,
-                       {rec_.width * scale_screen / 2.0f, rec_.height * scale_screen},
-                       0.0f, WHITE);
+        DrawTexturePro(animation_.Get_Sprite().sprite, animation_.Get_Current_Rec(), dest_rec,
+                       {dest_rec.width / 2.0f, dest_rec.height}, 0.0f, WHITE);
     }
 }
 
@@ -46,7 +44,7 @@ void PiranhaPlant::Update(float dt)
     Animate_();
 
     // PiranhaPlant không bao giờ rời khỏi màn hình trừ khi bị tiêu diệt
-    if (state_ == PiranhaPlant_State::be_fired_or_hit && position_.y - rec_.height >= Screen_h)
+    if (state_ == PiranhaPlant_State::be_fired_or_hit && position_.y - animation_.Get_Current_Rec().height >= Screen_h)
         is_active = 0;
 }
 
@@ -59,14 +57,14 @@ bool PiranhaPlant::Can_Be_Fired_Or_Hit() const { return true; }
 // PiranhaPlant không bị ảnh hưởng bởi trọng lực thông thường
 void PiranhaPlant::Notify_Fall(float dt) { /* Không làm gì */ }
 void PiranhaPlant::Notify_On_Ground() { /* Không làm gì */ }
-void PiranhaPlant::Notify_Be_Stomped(PlayerInformation& info) { /* Không thể bị stomp */ }
+void PiranhaPlant::Notify_Be_Stomped(PlayerInformation &info) { /* Không thể bị stomp */ }
 
 // Thông báo bị tấn công
-void PiranhaPlant::Notify_Be_Fired_Or_Hit(PlayerInformation& info)
+void PiranhaPlant::Notify_Be_Fired_Or_Hit(PlayerInformation &info)
 {
     if (state_ != PiranhaPlant_State::be_fired_or_hit)
     {
-        info.UpdateScore(Score_PiranhaPlant); 
+        info.UpdateScore(Score_PiranhaPlant);
         Score_Manager &score_manager = Score_Manager::GetInstance();
         Rectangle dest_rec = Get_Draw_Rec();
         score_manager.AddScore({dest_rec.x, dest_rec.y}, Score_PiranhaPlant);
@@ -153,18 +151,7 @@ void PiranhaPlant::UpdatePosition(float dt)
 // Cập nhật hoạt ảnh
 void PiranhaPlant::Animate_()
 {
-    if (state_ == PiranhaPlant_State::be_fired_or_hit)
-        return;
-
-    frame_timer += GetFrameTime();
-
-    // Dùng m_normal cho mọi trạng thái
-    if (frame_timer >= 0.25f)
-    {
-        current_frame = (current_frame + 1) % m_normal.size();
-        frame_timer = 0.0f;
-    }
-    rec_ = m_normal[current_frame];
+    animation_.Update(GetFrameTime());
 }
 
 // Xử lý khi bị tấn công
@@ -182,7 +169,8 @@ void PiranhaPlant::Be_Fired_Or_Hit()
 // Kiểm tra player có gần không
 bool PiranhaPlant::IsPlayerNearby() const
 {
-    if (!player) return false;
+    if (!player)
+        return false;
     Vector2 player_pos = player->getPosition();
     float distance = std::abs(player_pos.x - position_.x);
 

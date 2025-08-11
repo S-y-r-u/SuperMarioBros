@@ -6,18 +6,13 @@ BomberBill::BomberBill(Vector2 startPos, float maxDistance, float speed)
       initial_x(startPos.x),
       moving_right(true),
       run_speed(speed),
-      asprite_(BomberBill_Sprite::bomber_bill_),
-      animation_timer(0.0f),
-      current_frame(0),
       state_(BomberBill_State::Flying),
       death_timer(0.0f),
       fall_speed(300.0f)
 {
     // Khởi tạo vector chứa 6 frame animation
-    m_normal = BomberBill_Sprite::bomber_bill_normal;
-    
-    // Thiết lập sprite rectangle ban đầu
-    rec_ = m_normal[0]; // Frame đầu tiên
+
+    animation_ = Animation(&BomberBill_Sprite::bomber_bill_, BomberBill_Sprite::bomber_bill_normal, 0.1);
     previous_frame_pos = startPos;
 }
 
@@ -79,21 +74,15 @@ void BomberBill::Update_Animation(float dt)
     if (state_ != BomberBill_State::Flying)
         return;
 
-    animation_timer += dt;
-    
-    if (animation_timer >= frame_duration)
-    {
-        // Chuyển sang frame tiếp theo
-        current_frame = (current_frame + 1) % m_normal.size(); // Lặp qua 6 frame
-        rec_ = m_normal[current_frame]; // Cập nhật rectangle hiện tại
-        animation_timer = 0.0f; // Reset timer
-    }
+    animation_.Update(dt);
 }
 
 void BomberBill::Start_Death_Animation()
 {
     is_dead = true ;
     state_ = BomberBill_State::Dying;
+    Rectangle rec = Get_Draw_Rec();
+    Score_Manager::GetInstance().AddScore({rec.x, rec.y}, score);
     velocity_.x *= 0.5f; // Giảm tốc độ ngang khi chết
     velocity_.y = -100.0f; // Bật lên một chút trước khi rơi
     death_timer = 0.0f;
@@ -108,7 +97,7 @@ void BomberBill::Draw() const
         return;
 
     Rectangle destRec = Get_Draw_Rec();
-    Rectangle sourceRec = rec_; // Sử dụng frame hiện tại
+    Rectangle sourceRec = animation_.Get_Current_Rec(); // Sử dụng frame hiện tại
     
     // Thay đổi màu khi đang chết
     Color tint = (state_ == BomberBill_State::Dying) ? RED : WHITE;
@@ -118,12 +107,12 @@ void BomberBill::Draw() const
     {
         sourceRec.width = -sourceRec.width; // Lật ngang
         // Bay sang phải - vẽ bình thường
-        DrawTexturePro(asprite_.sprite, sourceRec, destRec, {0, 0}, 0.0f, tint);
+        DrawTexturePro(animation_.Get_Sprite().sprite, sourceRec, destRec, {0, 0}, 0.0f, tint);
     }
     else
     {
         // Bay sang trái - lật ngang sprite
-        DrawTexturePro(asprite_.sprite, sourceRec, destRec, {0, 0}, 0.0f, tint);
+        DrawTexturePro(animation_.Get_Sprite().sprite, sourceRec, destRec, {0, 0}, 0.0f, tint);
     }
 }
 

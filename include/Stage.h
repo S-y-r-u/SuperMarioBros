@@ -7,7 +7,6 @@
 #include "Item/MushRoom.h"
 #include "Item/Star.h"
 #include "Item/Spawn_Item.h"
-#include "Item/RotatingBarItem.h"
 #include "Block/Block.h"
 #include "Enemy/Enemy.h"
 #include "Enemy/Goomba.h"
@@ -21,8 +20,9 @@
 #include <unordered_map>
 #include <fstream>
 #include <string>
-#include "PlayerInformation.h"
-#include "DrawScore.h"
+#include "GameManager/PlayerInformation.h"
+#include "GameManager/DrawScore.h"
+#include "GameManager/Win_Animation.h"
 
 class Stage
 {
@@ -34,24 +34,26 @@ protected:
     Texture MapTexture;
     int Map[214][15];
     Player *player;
-    PlayerInformation& information;
+    PlayerInformation &information;
+    Win_Animation_Manager *win_animation;
     Camera2D camera = {0};
     std::vector<KeyboardKey> Keyboard;
 
-    std::vector<RotatingBar*> rotatingBars;
     std::vector<Item *> items;
     std::vector<Block *> blocks;
     std::vector<Enemy *> enemies;
-    std::vector<FireBall*> fireballs;
-    std::unordered_map<Enemy*, std::vector<Enemy *>> enemy_map;
+    std::vector<FireBall *> fireballs;
+    std::unordered_map<Enemy *, std::vector<Enemy *>> enemy_map;
     Player_Mode player_mode;
-    //Thời gian chờ khi nhân vật chết
+    Flag_Pole *flag_pole;
+    // Thời gian chờ khi nhân vật chết
     float cool_down_after_die = 3.0f;
     float timer_after_die = 0.0f;
     bool Reset_Game;
+    bool is_game_won;
 
 public:
-    Stage(PlayerInformation& info);
+    Stage(PlayerInformation &info);
     virtual ~Stage();
     void Run();
     void Draw();
@@ -71,5 +73,6 @@ public:
     void Check_FireBall_Vs_World();
     void Clear_Keyboard();
     bool Need_Reset_Game() const;
-    void LoadEnemiesFromFile(const std::string& filename);
+    void LoadMapFromFile(const std::string &filename);
+    void LoadEnemiesFromFile(const std::string &filename);
 };

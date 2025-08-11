@@ -48,6 +48,4 @@ private:
     Player_Mode player_mode = Player_Mode::MARIO_PLAYER;
     Game_Mode game_mode = Game_Mode::Play_Through;
     // Trạng thái game over
-    bool GameOver;
-    bool TimeUp;
 };

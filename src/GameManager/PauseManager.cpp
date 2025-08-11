@@ -1,5 +1,5 @@
-#include "Menu/PauseManager.h"
-#include "Menu/Concrete_Pause.h"
+#include "GameManager/PauseManager.h"
+#include "GameManager/Concrete_Pause.h"
 #include <iostream>
 
 PauseManager::PauseManager()

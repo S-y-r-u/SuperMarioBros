@@ -6,9 +6,6 @@ class Question_Block : public A_Block_State
 {
 private:
     Block &m_block;
-    std::vector<Rectangle> m_rec;
-    float frame_;
-    int type_;
     Vector2 before_pos;
     float velocity_y;
     const float Push_Height = 150.0f;

@@ -10,28 +10,22 @@ void KoopaState::OnFired(KoopaTroopa *koopa)
 // ---------- WALKING ----------
 void KoopaWalkingState::Enter(KoopaTroopa *koopa)
 {
-    koopa->rec_ = koopa->walking_frames_[0];
-    koopa->velocity_.x = 75.0f;
+
+    koopa->animation_.Set_Frames(Enemies_Sprite::Troopa_Green::Normal::normal_);
+    koopa->animation_.Set_Frame_Speed(1 / 6.0f);
+    koopa->velocity_.x = -75.0f;
     koopa->velocity_.y = 0; // dừng lại
     koopa->gravity_ = 1000.0f;
-    koopa->frame_timer = 0.0f;
-    koopa->current_frame = 0;
 }
 
 void KoopaWalkingState::Update(KoopaTroopa *koopa, float dt)
 {
     koopa->velocity_.y += koopa->gravity_ * dt; // apply gravity
     // std::cout << koopa->velocity_.y << std::endl;
-    koopa->frame_timer += dt;
-    if (koopa->frame_timer >= koopa->animation_speed)
-    {
-        koopa->current_frame = (koopa->current_frame + 1) % koopa->walking_frames_.size();
-        koopa->rec_ = koopa->walking_frames_[koopa->current_frame];
-        koopa->frame_timer = 0.0f;
-    }
+    koopa->animation_.Update(dt);
 }
 
-void KoopaWalkingState::OnStomped(KoopaTroopa *koopa , PlayerInformation &info)
+void KoopaWalkingState::OnStomped(KoopaTroopa *koopa, PlayerInformation &info)
 {
     koopa->SetState(new KoopaShellIdleState());
 }
@@ -39,37 +33,35 @@ void KoopaWalkingState::OnStomped(KoopaTroopa *koopa , PlayerInformation &info)
 // ---------- SHELL IDLE ----------
 void KoopaShellIdleState::Enter(KoopaTroopa *koopa)
 {
-    koopa->rec_ = koopa->shell_idle_frames_[0];
+    koopa->animation_.Set_Frames(Enemies_Sprite::Troopa_Green::Shell_Idle::shell_idle);
     koopa->velocity_.y = -100.f; // dừng lại
     koopa->velocity_.x = 0;
-    koopa->current_frame = 0;
-    koopa->frame_timer = 0.0f;
+    timer = 0.0f;
 }
 
 void KoopaShellIdleState::Update(KoopaTroopa *koopa, float dt)
 {
     immobile_timer += dt;
-    koopa->frame_timer += dt;
+    timer += dt;
 
     koopa->velocity_.y += koopa->gravity_ * dt; // apply gravity
 
-    if (koopa->frame_timer >= 3.0f && koopa->frame_timer < 5.0f)
+    if (timer >= 3.0f && timer < 5.0f)
     {
-        koopa->current_frame = 1; // Chuyển sang frame 2 sau 2 giây
-        koopa->rec_ = koopa->shell_idle_frames_[koopa->current_frame];
+        koopa->animation_.Set_Frame(1);
     }
-    else if (koopa->frame_timer >= 5.0f)
+    else if (timer >= 5.0f)
     {
         koopa->SetState(new KoopaWalkingState());
     }
 }
 
-void KoopaShellIdleState::OnStomped(KoopaTroopa *koopa , PlayerInformation &info)
+void KoopaShellIdleState::OnStomped(KoopaTroopa *koopa, PlayerInformation &info)
 {
-    OnKicked(koopa,1,info); // Khi bị giẫm sẽ chuyển sang trạng thái shell moving
+    OnKicked(koopa, 1, info); // Khi bị giẫm sẽ chuyển sang trạng thái shell moving
 }
 
-void KoopaShellIdleState::OnKicked(KoopaTroopa *koopa , int direction, PlayerInformation &info)
+void KoopaShellIdleState::OnKicked(KoopaTroopa *koopa, int direction, PlayerInformation &info)
 {
     if (immobile_timer >= InChange_Frame_Time)
     {
@@ -85,26 +77,19 @@ void KoopaShellIdleState::OnKicked(KoopaTroopa *koopa , int direction, PlayerInf
 // ---------- SHELL MOVING ----------
 void KoopaShellMovingState::Enter(KoopaTroopa *koopa)
 {
-    koopa->rec_ = koopa->shell_moving_frames_[0];
+    koopa->animation_.Set_Frames(Enemies_Sprite::Troopa_Green::Shell_Moving::shell_moving);
+    koopa->animation_.Set_Frame_Speed(1 / 6.0f);
     koopa->velocity_.x = (koopa->velocity_.x >= 0) ? 600.0f : -600.0f;
     koopa->velocity_.y = 0; // dừng lại
-    koopa->current_frame = 0;
-    koopa->frame_timer = 0;
 }
 
 void KoopaShellMovingState::Update(KoopaTroopa *koopa, float dt)
 {
-    koopa->frame_timer += dt;
-    if (koopa->frame_timer >= koopa->animation_speed)
-    {
-        koopa->current_frame = (koopa->current_frame + 1) % koopa->shell_moving_frames_.size();
-        koopa->rec_ = koopa->shell_moving_frames_[koopa->current_frame];
-        koopa->frame_timer = 0.0f;
-    }
+    koopa->animation_.Update(dt);
     koopa->velocity_.y += koopa->gravity_ * dt; // apply gravity
 }
 
-void KoopaShellMovingState::OnStomped(KoopaTroopa *koopa , PlayerInformation &info)
+void KoopaShellMovingState::OnStomped(KoopaTroopa *koopa, PlayerInformation &info)
 {
     // đá lại thì dừng
     koopa->SetState(new KoopaShellIdleState());
@@ -113,7 +98,7 @@ void KoopaShellMovingState::OnStomped(KoopaTroopa *koopa , PlayerInformation &in
 // ---------- DYING ----------
 void KoopaDyingState::Enter(KoopaTroopa *koopa)
 {
-    koopa->rec_ = koopa->be_dying_frame_;
+    koopa->animation_.Set_Rec(Enemies_Sprite::Troopa_Green::be_dying);
     koopa->velocity_.x = 0;
     koopa->velocity_.y = -200.0f; // upward movement
     koopa->is_dead = true;
@@ -146,12 +131,11 @@ void KoopaDyingState::Update(KoopaTroopa *koopa, float dt)
 //_______Flying _______________
 void KoopaFlyingState::Enter(KoopaTroopa *koopa)
 {
-    koopa->rec_ = koopa->flying_frames_[0];
+    koopa->animation_.Set_Frames(Enemies_Sprite::Troopa_Green::Flying::flying_);
+    koopa->animation_.Set_Frame_Speed(0.5f);
     koopa->velocity_.x = (koopa->velocity_.x >= 0) ? 90.0f : -90.0f;
     koopa->velocity_.y = -fly_speed; // bay lên ban đầu
     koopa->gravity_ = 600.0f;
-    koopa->current_frame = 0;
-    koopa->frame_timer = 0.0f;
     fly_timer = 0.0f;
 }
 
@@ -171,16 +155,10 @@ void KoopaFlyingState::Update(KoopaTroopa *koopa, float dt)
         fly_timer = 0;
     }
 
-    koopa->frame_timer += dt;
-    if (koopa->frame_timer >= 0.5f)
-    {
-        koopa->current_frame = (koopa->current_frame + 1) % koopa->flying_frames_.size();
-        koopa->frame_timer = 0.0f;
-        koopa->rec_ = koopa->flying_frames_[koopa->current_frame];
-    }
+    koopa->animation_.Update(dt);
 }
 
-void KoopaFlyingState::OnStomped(KoopaTroopa *koopa , PlayerInformation &info)
+void KoopaFlyingState::OnStomped(KoopaTroopa *koopa, PlayerInformation &info)
 {
     // Khi bị giẫm sẽ thành shell
     koopa->SetState(new KoopaWalkingState());

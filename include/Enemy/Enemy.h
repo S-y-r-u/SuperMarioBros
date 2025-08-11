@@ -1,26 +1,23 @@
 #pragma once
 #include "Constants.h"
 #include "Sprite.h"
-#include "DrawScore.h"
-#include "PlayerInformation.h"
+#include "GameManager/DrawScore.h"
+#include "GameManager/PlayerInformation.h"
+#include "GameManager/Animation.h"
 #include <raymath.h>
 
 class Enemy
 {
 protected:
-    const SpriteSheet& sprite_;
+    Animation animation_;
     Vector2 position_;
     Vector2 velocity_;
-    Rectangle rec_;
     float gravity_;
-    float frame_timer;
-    const float animation_speed = 1.0f / 5.0f;
-    int current_frame;
     bool is_ground;
     bool is_active, is_dead;
     bool first_appear = false;
 public:
-    Enemy(Vector2 startPos, Vector2 velocity, float gravity);
+    Enemy(Vector2 start_pos, Vector2 velocity, float gravity);
     virtual ~Enemy();
 
     virtual void Update(float dt) = 0;

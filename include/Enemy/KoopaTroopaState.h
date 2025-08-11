@@ -36,6 +36,7 @@ private:
     const int Score_Shell = 100;
     const float InChange_Frame_Time = 1.0f; // seconds
     float immobile_timer = 0.0f;
+    float timer;
 
 public:
     void Enter(KoopaTroopa *koopa) override;

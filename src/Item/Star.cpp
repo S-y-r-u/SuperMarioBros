@@ -9,7 +9,7 @@ Star::Star(Vector2 pos)
       velocity_({0.0f, -Star_Ini_Velo}),
       previous_frame_pos(pos)
 {
-    rec_ = Item_Sprite::Star::invincible_star;
+    animation_ = Animation(&Item_Sprite::item_, Item_Sprite::Star::invincible_star);
 }
 
 void Star::Notify_On_Ground()
@@ -45,21 +45,6 @@ void Star::Move_(float dt)
         pos_.x += speed;
     else
         pos_.x -= speed;
-
-    // Va chạm biên
-    float left_bound = rec_.width * scale_screen / 2.0f;
-    float right_bound = 214 * 48.0f - left_bound;
-
-    if (pos_.x >= right_bound)
-    {
-        pos_.x = right_bound;
-        direct_ = !direct_;
-    }
-    else if (pos_.x <= left_bound)
-    {
-        pos_.x = left_bound;
-        direct_ = !direct_;
-    }
 }
 
 void Star::Appear_()
@@ -84,7 +69,7 @@ void Star::Appear_()
 
 void Star::Be_Delete()
 {
-    if (pos_.y - rec_.height * scale_screen >= Screen_h)
+    if (pos_.y - animation_.Get_Current_Rec().height * scale_screen >= Screen_h)
         is_delete = true;
 }
 

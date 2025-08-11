@@ -92,6 +92,12 @@ namespace Mario_Sprite
             extern Rectangle s10;
             extern std::vector<Rectangle> small_to_super;
         }
+        namespace Pose
+        {
+            extern Rectangle p1;
+            extern Rectangle p2;
+            extern std::vector<Rectangle> pose;
+        }
     }
 
     namespace Invincible
@@ -182,6 +188,18 @@ namespace Mario_Sprite
             //
             extern std::vector<Rectangle> small_to_super;
         }
+        namespace Pose
+        {
+            extern Rectangle p1;
+            extern Rectangle p2;
+            extern Rectangle p3;
+            extern Rectangle p4;
+            extern Rectangle p5;
+            extern Rectangle p6;
+            extern Rectangle p7;
+            extern Rectangle p8;
+            extern std::vector<Rectangle> pose;
+        }
     }
 
     namespace Super
@@ -351,6 +369,12 @@ namespace Mario_Sprite
             extern Rectangle h12;
             extern std::vector<Rectangle> hit_;
         }
+        namespace Pose
+        {
+            extern Rectangle p1;
+            extern Rectangle p2;
+            extern std::vector<Rectangle> pose;
+        }
     }
 
     namespace Invincible_Super_And_Fire
@@ -433,6 +457,18 @@ namespace Mario_Sprite
             extern Rectangle e3;
             extern Rectangle e4;
             extern std::vector<Rectangle> enter_pipe;
+        }
+        namespace Pose
+        {
+            extern Rectangle p1;
+            extern Rectangle p2;
+            extern Rectangle p3;
+            extern Rectangle p4;
+            extern Rectangle p5;
+            extern Rectangle p6;
+            extern Rectangle p7;
+            extern Rectangle p8;
+            extern std::vector<Rectangle> pose;
         }
     }
 
@@ -518,6 +554,12 @@ namespace Mario_Sprite
             extern Rectangle h13;
             extern std::vector<Rectangle> hit_;
         }
+        namespace Pose
+        {
+            extern Rectangle p1;
+            extern Rectangle p2;
+            extern std::vector<Rectangle> pose;
+        }
     }
 }
 
@@ -599,6 +641,12 @@ namespace Luigi_Sprite
             extern Rectangle s9;
             extern Rectangle s10;
             extern std::vector<Rectangle> small_to_super;
+        }
+        namespace Pose
+        {
+            extern Rectangle p1;
+            extern Rectangle p2;
+            extern std::vector<Rectangle> pose;
         }
     }
 
@@ -688,6 +736,18 @@ namespace Luigi_Sprite
             //
             extern std::vector<Rectangle> small_to_super;
         }
+        namespace Pose
+        {
+            extern Rectangle p1;
+            extern Rectangle p2;
+            extern Rectangle p3;
+            extern Rectangle p4;
+            extern Rectangle p5;
+            extern Rectangle p6;
+            extern Rectangle p7;
+            extern Rectangle p8;
+            extern std::vector<Rectangle> pose;
+        }
     }
 
     namespace Super
@@ -857,6 +917,12 @@ namespace Luigi_Sprite
             extern Rectangle h13;
             extern std::vector<Rectangle> hit_;
         }
+        namespace Pose
+        {
+            extern Rectangle p1;
+            extern Rectangle p2;
+            extern std::vector<Rectangle> pose;
+        }
     }
 
     namespace Invincible_Super_And_Fire
@@ -939,6 +1005,18 @@ namespace Luigi_Sprite
             extern Rectangle e3;
             extern Rectangle e4;
             extern std::vector<Rectangle> enter_pipe;
+        }
+        namespace Pose
+        {
+            extern Rectangle p1;
+            extern Rectangle p2;
+            extern Rectangle p3;
+            extern Rectangle p4;
+            extern Rectangle p5;
+            extern Rectangle p6;
+            extern Rectangle p7;
+            extern Rectangle p8;
+            extern std::vector<Rectangle> pose;
         }
     }
 
@@ -1023,6 +1101,12 @@ namespace Luigi_Sprite
             //
             extern Rectangle h13;
             extern std::vector<Rectangle> hit_;
+        }
+        namespace Pose
+        {
+            extern Rectangle p1;
+            extern Rectangle p2;
+            extern std::vector<Rectangle> pose;
         }
     }
 }
@@ -1424,4 +1508,32 @@ namespace BomberBill_Sprite
     extern Rectangle n7;
     extern Rectangle n8;
     extern std::vector<Rectangle> bomber_bill_normal;
+}
+
+namespace Win_Animation
+{
+    extern SpriteSheet win_animation_;
+
+    namespace flag_castle_2_side
+    {
+        extern Rectangle f1;
+        extern Rectangle f2;
+        extern Rectangle f3;
+        extern std::vector<Rectangle> flag_castle_;
+    }
+    namespace flag_castle_top
+    {
+        extern Rectangle f1;
+        extern Rectangle f2;
+        extern Rectangle f3;
+        extern Rectangle f4;
+        extern std::vector<Rectangle> flag_castle_top_;
+    }
+    namespace flag_pole
+    {
+        extern Rectangle f1;
+        extern Rectangle f2;
+        extern Rectangle f3;
+        extern std::vector<Rectangle> flag_pole_;
+    }
 }
