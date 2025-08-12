@@ -1,13 +1,10 @@
 #include "Stage.h"
 #include "algorithm"
 
-Stage::Stage(PlayerInformation &info) : information(info)
-{
-    source = {0, 0, 3424, 240};
-    dest = {0, 0, 10272, 720};
-    Reset_Game = false;
-    is_game_won = false;
-}
+Stage::Stage(PlayerInformation &info)
+    : information(info),
+      Reset_Game(false),
+      Is_Game_Won(false) {}
 
 Stage::~Stage()
 {
@@ -37,6 +34,7 @@ Stage::~Stage()
     }
 
     delete flag_pole;
+    delete flag_castle;
     delete win_animation;
 
     Score_Manager &score_manager = Score_Manager::GetInstance();
@@ -50,10 +48,10 @@ Stage::~Stage()
 
 void Stage::Run()
 {
-    if (!is_game_won)
+    if (!Is_Game_Won)
     {
-        is_game_won = win_animation->Check_Win_Animation();
-        if (is_game_won)
+        Is_Game_Won = win_animation->Check_Win_Animation();
+        if (Is_Game_Won)
         {
             Keyboard.clear();
         }
@@ -62,28 +60,35 @@ void Stage::Run()
         win_animation->Update(GetFrameTime());
 
     Player_Update();
-
     if (!player->Get_isTransforming())
     {
         Non_Player_Update();
     }
+
     if (!player->Get_isActive() && !Reset_Game)
         Cool_Down_After_Die(GetFrameTime());
+    if (win_animation->End_Animation())
+        Cool_Down_After_Win(GetFrameTime());
 }
 
 void Stage::Cool_Down_After_Die(float dt)
 {
-    timer_after_die += dt;
-    if (timer_after_die >= cool_down_after_die)
+    timer_ += dt;
+    if (timer_ >= cool_down_after_die)
     {
         Reset_Game = true;
-        timer_after_die = 0.0f;
+        timer_ = 0.0f;
     }
+}
+
+void Stage::Cool_Down_After_Win(float dt)
+{
+    timer_ += dt;
 }
 
 void Stage::Player_Update()
 {
-    if (!is_game_won)
+    if (!Is_Game_Won)
     {
         if (IsKeyPressed(KEY_A))
             Keyboard.emplace_back(KEY_A);
@@ -145,6 +150,8 @@ void Stage::Non_Player_Update()
         camera.target.x = MapTexture.width * scale_screen - Screen_w;
 
     flag_pole->Update(GetFrameTime());
+    flag_castle->Update(GetFrameTime());
+
     Check_Item_Vs_Ground();
     Check_Item_Vs_Block();
     Check_Enemy_Vs_Ground();
@@ -253,6 +260,8 @@ void Stage::Draw()
 {
     BeginMode2D(camera);
 
+    DrawLayer();
+
     for (Enemy *enemy : enemies)
     {
         PiranhaPlant *piranha = dynamic_cast<PiranhaPlant *>(enemy);
@@ -261,6 +270,9 @@ void Stage::Draw()
             piranha->Draw();
         }
     }
+    
+    flag_pole->Draw();
+    flag_castle->Draw();
 
     DrawTexturePro(MapTexture, source, dest, {0, 0}, 0, WHITE);
 
@@ -291,9 +303,8 @@ void Stage::Draw()
 
     score_manager.Draw();
 
-    flag_pole->Draw();
-
-    player->draw();
+    if (!win_animation->Player_Disappear())
+        player->draw();
 
     EndMode2D();
 
@@ -373,12 +384,12 @@ void Stage::Check_Player_Vs_Block()
                 player->Set_Pos({player->getPosition().x, rec_map.y + rec_map.height + ph});
                 player->Set_Velocity({player->get_Velocity().x, 0.f});
                 if (player->getPosition().x > rec_map.x + rec_map.width &&
-                    !block->Surrounded_Block[3])  
+                    !block->Surrounded_Block[3])
                 {
                     block->On_Hit(items, *player, information);
                 }
                 else if (player->getPosition().x < rec_map.x &&
-                    !block->Surrounded_Block[2])
+                         !block->Surrounded_Block[2])
                 {
                     block->On_Hit(items, *player, information);
                 }
@@ -427,47 +438,54 @@ void Stage::Check_Player_Vs_Ground()
             if (!CheckCollisionRecs(currRec, rec_map))
                 continue;
 
-            float overlapX = std::min(currRec.x + currRec.width - rec_map.x,
-                                      rec_map.x + rec_map.width - currRec.x);
-            float overlapY = std::min(currRec.y + currRec.height - rec_map.y,
-                                      rec_map.y + rec_map.height - currRec.y);
-            if (overlapX < overlapY)
+            if (id == 2)
             {
-                // Va chạm ngang
-                if (currRec.x < rec_map.x)
+                player->Die();
+            }
+            else
+            {
+                float overlapX = std::min(currRec.x + currRec.width - rec_map.x,
+                                          rec_map.x + rec_map.width - currRec.x);
+                float overlapY = std::min(currRec.y + currRec.height - rec_map.y,
+                                          rec_map.y + rec_map.height - currRec.y);
+                if (overlapX < overlapY)
                 {
-                    // Từ trái sang
-                    if (Map[i][j-1] == 0)
+                    // Va chạm ngang
+                    if (currRec.x < rec_map.x)
                     {
-                        player->Set_Pos({rec_map.x - pw / 2.0f , player->getPosition().y});
-                        player->Set_Velocity({0, player->get_Velocity().y});
+                        // Từ trái sang
+                        if (Map[i][j - 1] == 0)
+                        {
+                            player->Set_Pos({rec_map.x - pw / 2.0f, player->getPosition().y});
+                            player->Set_Velocity({0, player->get_Velocity().y});
+                        }
+                    }
+                    else
+                    {
+                        // Từ phải sang
+                        if (Map[i][j + 1] == 0)
+                        {
+                            player->Set_Pos({rec_map.x + rec_map.width + pw / 2.0f, player->getPosition().y});
+                            player->Set_Velocity({0, player->get_Velocity().y});
+                        }
                     }
                 }
                 else
                 {
-                    // Từ phải sang
-                    if (Map[i][j + 1] == 0)
+                    // Va chạm dọc
+                    if (currRec.y <= rec_map.y && Map[i - 1][j] == 0 && player->get_Velocity().y >= 0)
                     {
-                        player->Set_Pos({rec_map.x + rec_map.width + pw / 2.0f , player->getPosition().y});
-                        player->Set_Velocity({0, player->get_Velocity().y});
+                        // Từ trên xuống
+                        player->Set_Pos({player->getPosition().x, rec_map.y});
+                        player->Set_Velocity({player->get_Velocity().x, 0});
+                        player->Set_isGround(true);
                     }
-                }
-            }
-            else
-            {
-                // Va chạm dọc
-                if (currRec.y <= rec_map.y && Map[i-1][j] == 0 && player->get_Velocity().y >= 0)
-                {
-                    // Từ trên xuống
-                    player->Set_Pos({player->getPosition().x , rec_map.y });
-                    player->Set_Velocity({player->get_Velocity().x, 0});
-                    player->Set_isGround(true);
-                }
-                else if (currRec.y + currRec.height > rec_map.y + rec_map.height && Map[i+1][j] == 0 && player->get_Velocity().y < 0)
-                {
-                    // Từ dưới lên
-                    player->Set_Pos({player->getPosition().x, rec_map.y + rec_map.height + ph});
-                    player->Set_Velocity({player->get_Velocity().x, 0});
+                    else if (currRec.y + currRec.height > rec_map.y + rec_map.height && Map[i + 1][j] == 0 && player->get_Velocity().y < 0)
+                    {
+                        // Từ dưới lên
+                        player->Set_Pos({player->getPosition().x, rec_map.y + rec_map.height + ph});
+                        player->Set_Velocity({player->get_Velocity().x, 0});
+                    }
                 }
             }
         }
@@ -967,15 +985,20 @@ void Stage::Check_FireBall_Vs_World()
             }
         }
 
-        for (int i = 0; i < Map.size() ; i++)
-            for (int j = 0; j < Map[0].size() ; j++)
+        for (int i = 0; i < Map.size(); i++)
+            for (int j = 0; j < Map[0].size(); j++)
             {
                 if (Map[i][j] == 0)
                     continue;
                 Rectangle rec_map = {j * 16.0f * scale_screen, i * 16.0f * scale_screen, 16.0f * scale_screen, 16.0f * scale_screen};
                 if (CheckCollisionRecs(rec_fireball, rec_map))
                 {
-                    if (fireball->getVelocity().y > 0 && rec_fireball.y + rec_fireball.height - (fireball->getVelocity().y * GetFrameTime()) <= rec_map.y)
+                    if (Map[i][j] == 2)
+                    {
+                        fireball->explode();
+                        goto next_fireball;
+                    }
+                    else if (fireball->getVelocity().y > 0 && rec_fireball.y + rec_fireball.height - (fireball->getVelocity().y * GetFrameTime()) <= rec_map.y)
                     {
                         fireball->setPosition({rec_fireball.x, rec_map.y - rec_fireball.height});
                         fireball->reboundOnSurface();
@@ -1124,26 +1147,60 @@ void Stage::LoadBlockFromFile(const std::string &filename)
     file.close();
 }
 
-void Stage::LoadMapFromFile(const std::string &filename) {
+void Stage::LoadMapFromFile(const std::string &filename)
+{
     std::ifstream file(filename);
-    if (!file.is_open()) {
+    if (!file.is_open())
+    {
         std::cerr << "Cannot open file: " << filename << "\n";
         return;
     }
 
     Map.clear();
     std::string line;
-    while (std::getline(file, line)) {
+    while (std::getline(file, line))
+    {
         std::stringstream ss(line);
         std::vector<int> row;
         int value;
-        while (ss >> value) {
+        while (ss >> value)
+        {
             row.push_back(value);
         }
-        if (!row.empty()) {
+        if (!row.empty())
+        {
             Map.push_back(row);
         }
     }
 
     file.close();
+}
+
+void Stage::DrawLayer()
+{
+    for (int i = 0; i < 2; i++)
+    {
+        if (Layer[i].width == 0 || Layer[i].height == 0)
+            continue; // tránh lỗi ảnh hỏng
+        int x = 0;
+        float scale = dest.height / (float)Layer[i].height;
+
+        while (x <= dest.width)
+        {
+            Rectangle source = {0, 0, (float)Layer[i].width, (float)Layer[i].height};
+            Rectangle destRect = {(float)x, 0, Layer[i].width * scale, Layer[i].height * scale};
+            DrawTexturePro(Layer[i], source, destRect, {0, 0}, 0, WHITE);
+            x += Layer[i].width * scale;
+        }
+    }
+}
+
+bool Stage::Game_Won() const
+{
+    return Is_Game_Won;
+}
+
+bool Stage::Trans_Game() const
+{
+    return Is_Game_Won && timer_ >= cool_down_after_win;
 }

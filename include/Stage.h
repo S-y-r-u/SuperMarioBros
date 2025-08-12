@@ -15,27 +15,29 @@
 #include "Enemy/KoopaTroopa.h"
 #include "Enemy/BomberBill.h"
 #include "Enemy/Spawn_Enemy.h"
+#include "GameManager/PlayerInformation.h"
+#include "GameManager/DrawScore.h"
+#include "GameManager/Win_Animation.h"
+#include "GameManager/I_Stage.h"
 #include <vector>
 #include <algorithm>
 #include <unordered_map>
 #include <fstream>
 #include <string>
-#include "GameManager/PlayerInformation.h"
-#include "GameManager/DrawScore.h"
-#include "GameManager/Win_Animation.h"
 
-class Stage
+class Stage : public I_Stage
 {
-private:
+protected:
     Rectangle source;
     Rectangle dest;
-
-protected:
     Texture MapTexture;
-    std::vector < std::vector < int > > Map;
+    std::vector<std::vector<int>> Map;
+    Texture Layer[2];
+    
     Player *player;
     PlayerInformation &information;
     Win_Animation_Manager *win_animation;
+    
     Camera2D camera = {0};
     std::vector<KeyboardKey> Keyboard;
 
@@ -44,36 +46,56 @@ protected:
     std::vector<Enemy *> enemies;
     std::vector<FireBall *> fireballs;
     std::unordered_map<Enemy *, std::vector<Enemy *>> enemy_map;
+    
     Player_Mode player_mode;
+    
     Flag_Pole *flag_pole;
+    Flag_Castle *flag_castle;
+    
     // Thời gian chờ khi nhân vật chết
-    float cool_down_after_die = 3.0f;
-    float timer_after_die = 0.0f;
+    const float cool_down_after_die = 2.0f;
+    const float cool_down_after_win = 2.0f;
+    float timer_ = 0.0f;
+    
     bool Reset_Game;
-    bool is_game_won;
+    bool Is_Game_Won;
 
 public:
     Stage(PlayerInformation &info);
     virtual ~Stage();
-    void Run();
-    void Draw();
+    void Run() override;
+    void Draw() override;
 
     void Cool_Down_After_Die(float dt);
+    void Cool_Down_After_Win(float dt);
+
     void Player_Update();
     void Non_Player_Update();
+
     void Check_Player_Vs_Ground();
     void Check_Player_Vs_Block();
     void Check_Player_Vs_Enemy();
+
     void Check_Enemy_Vs_Ground();
     void Check_Enemy_Vs_Block();
     void Check_Enemy_Vs_Enemy();
+
     void Check_Item_Vs_Block();
     void Check_Item_Vs_Ground();
+
     void Check_Block_Vs_Block();
+
     void Check_FireBall_Vs_World();
+    
     void Clear_Keyboard();
-    bool Need_Reset_Game() const;
+
     void LoadBlockFromFile(const std::string &filename);
-    void LoadEnemiesFromFile(const std::string &filename);
     void LoadMapFromFile(const std::string &filename);
+    void LoadEnemiesFromFile(const std::string &filename);
+
+    bool Need_Reset_Game() const;
+    bool Game_Won() const;
+    bool Trans_Game() const;
+
+    void DrawLayer();
 };

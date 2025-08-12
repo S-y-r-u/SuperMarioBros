@@ -7,6 +7,7 @@
 constexpr int Screen_w = 1248;
 constexpr int Screen_h = 720;
 constexpr float scale_screen = 3.0f;
+constexpr float Tile_Size = 48.0f;
 
 // Program states
 enum ProgramState

@@ -1,14 +1,13 @@
 #include "GameManager/PlayerInformation.h"
 
 PlayerInformation::PlayerInformation(float time, int lives)
-{
-    score = 0;
-    coins = 0;
-    this->time = time;
-    this->lives = lives;
-    coins_frame = 0;
-    rec_ = Font_Sprite::Coin::coin[0];
-}
+    : animation_(&Font_Sprite::font_, Font_Sprite::Coin::coin, 1 / 6.0f),
+      score(0),
+      coins(0),
+      time(time),
+      lives(lives),
+      is_game_won(false),
+      up_score(false) {}
 
 PlayerInformation::PlayerInformation(const PlayerInformation &other)
     : score(other.score),
@@ -16,11 +15,11 @@ PlayerInformation::PlayerInformation(const PlayerInformation &other)
       world(other.world),
       time(other.time),
       lives(other.lives),
-      coin_timer(other.coin_timer),
-      coins_frame(other.coins_frame),
-      rec_(other.rec_) {}
+      is_game_won(other.is_game_won),
+      up_score(other.up_score),
+      animation_(other.animation_) {}
 
-PlayerInformation& PlayerInformation::operator=(const PlayerInformation &other)
+PlayerInformation &PlayerInformation::operator=(const PlayerInformation &other)
 {
     if (this != &other)
     {
@@ -29,9 +28,9 @@ PlayerInformation& PlayerInformation::operator=(const PlayerInformation &other)
         world = other.world;
         time = other.time;
         lives = other.lives;
-        coin_timer = other.coin_timer;
-        coins_frame = other.coins_frame;
-        rec_ = other.rec_;
+        is_game_won = other.is_game_won;
+        up_score = other.up_score;
+        animation_ = other.animation_;
     }
     return *this;
 }
@@ -53,14 +52,14 @@ void PlayerInformation::UpdateCoins(const int &c)
 
 void PlayerInformation::Update(const float &dt)
 {
-    time -= 2 * dt;
-    coin_timer += dt;
-    if (coin_timer >= Coin_Animation_Speed)
+    if (!is_game_won && !up_score)
+        time -= 2 * dt;
+    else if (up_score)
     {
-        coin_timer = 0.0f;
-        coins_frame = (coins_frame + 1) % Font_Sprite::Coin::coin.size();
+        time -= 40 * dt;
+        score += 20;
     }
-    rec_ = Font_Sprite::Coin::coin[coins_frame];
+    animation_.Update(dt);
 }
 
 void PlayerInformation::Draw() const
@@ -74,8 +73,8 @@ void PlayerInformation::Draw() const
     Font_Sprite::DrawText(score_str, score_x, 82, WHITE);
 
     // COINS Icon
-    Rectangle dest_rec = {255, 110, rec_.width * scale_screen, rec_.height * scale_screen};
-    DrawTexturePro(Font_Sprite::font_.sprite, rec_, dest_rec,
+    Rectangle dest_rec = {255, 110, animation_.Get_Current_Rec().width * scale_screen, animation_.Get_Current_Rec().height * scale_screen};
+    DrawTexturePro(Font_Sprite::font_.sprite, animation_.Get_Current_Rec(), dest_rec,
                    {dest_rec.width / 2.0f, dest_rec.height}, 0.0f, WHITE);
 
     // COINS Text
@@ -121,8 +120,6 @@ void PlayerInformation::ResetTime()
 void PlayerInformation::ResetCoin()
 {
     coins = 0;
-    coins_frame = 0;
-    rec_ = Font_Sprite::Coin::coin[0];
 }
 
 void PlayerInformation::ResetScore()
@@ -133,4 +130,21 @@ void PlayerInformation::ResetScore()
 float PlayerInformation::GetTime() const
 {
     return time;
+}
+
+void PlayerInformation::Game_Won()
+{
+    is_game_won = true;
+}
+
+void PlayerInformation::Up_Score()
+{
+    up_score = true;
+}
+
+void PlayerInformation::Set_Time_To_0()
+{
+    time = 0;
+    up_score = false;
+    is_game_won = true;
 }

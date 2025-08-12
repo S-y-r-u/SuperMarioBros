@@ -1,6 +1,7 @@
 #pragma once
 #include "sprite.h"
 #include "raylib.h"
+#include "Constants.h"
 #include "GameManager/Animation.h"
 
 class Flag
@@ -20,4 +21,5 @@ public:
     Vector2 Get_Pos() const;
     void Set_Velocity(Vector2 vel);
     void Update_Pos();
+    Vector2 Get_Velo() const;
 };

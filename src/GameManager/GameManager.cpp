@@ -1,12 +1,20 @@
 #include "GameManager/GameManager.h"
 #include "raylib.h"
 
-GameManager::GameManager() : stage(nullptr), pause_manager(new PauseManager()), player_info(nullptr) {}
+GameManager::GameManager()
+    : stage(nullptr),
+      intro_stage(nullptr),
+      current_stage(nullptr),
+      pause_manager(new PauseManager()),
+      player_info(nullptr),
+      timer(0.0f) {}
 
 GameManager::~GameManager()
 {
     delete stage;
     delete pause_manager;
+    delete intro_stage;
+    current_stage = nullptr;
     delete player_info;
 }
 
@@ -16,6 +24,11 @@ void GameManager::SetDifficulty(Difficulty diff)
     difficulty = diff;
 
     // Delete the old stage if it exists
+    if (intro_stage)
+    {
+        delete intro_stage;
+        intro_stage = nullptr;
+    }
     if (stage)
     {
         delete stage;
@@ -35,17 +48,23 @@ void GameManager::SetDifficulty(Difficulty diff)
         case Difficulty::Easy:
             player_info = new PlayerInformation(400, 3);
             player_info->SetWorld("EASY");
+            intro_stage = new Intro_Easy(*player_info, player_mode);
             stage = new EasyMap(player_mode, *player_info); // Replace with your actual Easy stage class
+            current_stage = intro_stage;
             break;
         case Difficulty::Medium:
             player_info = new PlayerInformation(400, 3);
             player_info->SetWorld("MEDIUM");
+            intro_stage = new Intro_Medium(*player_info, player_mode);
             stage = new MediumMap(player_mode, *player_info); // Replace with your actual Medium stage class
+            current_stage = intro_stage;
             break;
         case Difficulty::Hard:
             player_info = new PlayerInformation(400, 3);
             player_info->SetWorld("HARD");
+            intro_stage = new Intro_Easy(*player_info, player_mode);
             stage = new HardMap(player_mode, *player_info); // Replace with your actual Hard stage class
+            current_stage = intro_stage;
             break;
         default:
             stage = nullptr;
@@ -57,7 +76,9 @@ void GameManager::SetDifficulty(Difficulty diff)
     {
         player_info = new PlayerInformation(400, 6);
         player_info->SetWorld("EASY");
+        intro_stage = new Intro_Easy(*player_info, player_mode);
         stage = new EasyMap(player_mode, *player_info);
+        current_stage = intro_stage;
     }
 }
 
@@ -65,8 +86,13 @@ void GameManager::SetDifficulty(Difficulty diff)
 void GameManager::ResetGame(Difficulty diff)
 {
     difficulty = diff;
-    SoundManager::GetInstance().PlayMusic("playingMusic",true);
+    SoundManager::GetInstance().PlayMusic("playingMusic", true);
     // Delete the old stage if it exists
+    if (intro_stage)
+    {
+        delete intro_stage;
+        intro_stage = nullptr;
+    }
     if (stage)
     {
         delete stage;
@@ -82,13 +108,19 @@ void GameManager::ResetGame(Difficulty diff)
         switch (difficulty)
         {
         case Difficulty::Easy:
+            intro_stage = new Intro_Easy(*player_info, player_mode);
             stage = new EasyMap(player_mode, *player_info); // Replace with your actual Easy stage class
+            current_stage = intro_stage;
             break;
         case Difficulty::Medium:
+            intro_stage = new Intro_Medium(*player_info, player_mode);
             stage = new MediumMap(player_mode, *player_info); // Replace with your actual Medium stage class
+            current_stage = intro_stage;
             break;
         case Difficulty::Hard:
+            intro_stage = new Intro_Easy(*player_info, player_mode);
             stage = new HardMap(player_mode, *player_info); // Replace with your actual Hard stage class
+            current_stage = intro_stage;
             break;
         default:
             stage = nullptr;
@@ -103,13 +135,19 @@ void GameManager::ResetGame(Difficulty diff)
         switch (difficulty)
         {
         case Difficulty::Easy:
+            intro_stage = new Intro_Easy(*player_info, player_mode);
             stage = new EasyMap(player_mode, *player_info); // Replace with your actual Easy stage class
+            current_stage = intro_stage;
             break;
         case Difficulty::Medium:
+            intro_stage = new Intro_Medium(*player_info, player_mode);
             stage = new MediumMap(player_mode, *player_info); // Replace with your actual Medium stage class
+            current_stage = intro_stage;
             break;
         case Difficulty::Hard:
+            intro_stage = new Intro_Easy(*player_info, player_mode);
             stage = new HardMap(player_mode, *player_info); // Replace with your actual Hard stage class
+            current_stage = intro_stage;
             break;
         default:
             stage = nullptr;
@@ -118,56 +156,123 @@ void GameManager::ResetGame(Difficulty diff)
     }
 }
 
+void GameManager::TransGame()
+{
+    switch (difficulty)
+    {
+    case Difficulty::Easy:
+        player_info->SetWorld("MEDIUM");
+        difficulty = Difficulty::Medium;
+        break;
+    case Difficulty::Medium:
+        player_info->SetWorld("HARD");
+        difficulty = Difficulty::Hard;
+        break;
+    default:
+        break;
+    }
+    SoundManager::GetInstance().PlayMusic("playingMusic", true);
+    // Delete the old stage if it exists
+    if (intro_stage)
+    {
+        delete intro_stage;
+        intro_stage = nullptr;
+    }
+    if (stage)
+    {
+        delete stage;
+        stage = nullptr;
+    }
+    player_info->ResetTime();
+    switch (difficulty)
+    {
+    case Difficulty::Medium:
+        intro_stage = new Intro_Medium(*player_info, player_mode);
+        stage = new MediumMap(player_mode, *player_info); // Replace with your actual Medium stage class
+        current_stage = intro_stage;
+        break;
+    case Difficulty::Hard:
+        intro_stage = new Intro_Easy(*player_info, player_mode);
+        stage = new HardMap(player_mode, *player_info); // Replace with your actual Hard stage class
+        current_stage = intro_stage;
+        break;
+    }
+}
+
 int GameManager::Update()
 {
-    // Lấy trạng thái pause
-    int pause_select = pause_manager->Get_Pause_Select(); // Get_Pause_Select() sử dụng Update_() của I_Pause_State
-    if (pause_select == PauseSelect::Pause_Exit_Select)
+    if (current_stage == intro_stage)
     {
-        return menuState;
-    }
-    // Chơi lại từ đầu
-    if (pause_select == PauseSelect::Pause_Restart_Select && game_mode == Game_Mode::Play_Level)
-    {
-        SetDifficulty(difficulty);
-    }
-    if (pause_select == PauseSelect::Pause_Restart_Select && game_mode == Game_Mode::Play_Through)
-    {
-        SetDifficulty(Difficulty::Easy);
-    }
-
-    if (pause_manager->Get_Pause_State() == PauseState::Pause_None_State)
-    {
-        stage->Run();
+        timer += GetFrameTime();
+        if (timer >= End_Intro)
+        {
+            current_stage = stage;
+            timer = 0.0f;
+        }
     }
     else
-        stage->Clear_Keyboard();
+    // Lấy trạng thái pause
+    {
+        Stage *cur_stage = dynamic_cast<Stage *>(current_stage);
+        int pause_select = PauseSelect::Pause_None_Select;
+        if (!cur_stage->Game_Won())
+            pause_select = pause_manager->Get_Pause_Select(); // Get_Pause_Select() sử dụng Update_() của I_Pause_State
+        if (pause_select == PauseSelect::Pause_Exit_Select)
+        {
+            return menuState;
+        }
+        // Chơi lại từ đầu
+        if (pause_select == PauseSelect::Pause_Restart_Select && game_mode == Game_Mode::Play_Level)
+        {
+            SetDifficulty(difficulty);
+        }
+        if (pause_select == PauseSelect::Pause_Restart_Select && game_mode == Game_Mode::Play_Through)
+        {
+            SetDifficulty(Difficulty::Easy);
+        }
 
-    // Reset game if player dies
-    if (stage->Need_Reset_Game())
-    {
-        player_info->DecreaseLives();
-        if (player_info->GetLives() <= 0)
-            return gameOverState; // Trả về trạng thái Game Over nếu hết mạng
-        // Trả về trạng thái Time Up nếu hết thời gian
-        ResetGame(difficulty);
-    }
-    if (player_info->GetTime() <= 0.0f)
-    {
-        return timeUpState;
+        if (pause_manager->Get_Pause_State() == PauseState::Pause_None_State)
+        {
+            cur_stage->Run();
+        }
+        else
+            cur_stage->Clear_Keyboard();
+
+        // Reset game if player dies
+        if (cur_stage->Need_Reset_Game())
+        {
+            player_info->DecreaseLives();
+            if (player_info->GetLives() <= 0)
+                return gameOverState; // Trả về trạng thái Game Over nếu hết mạng
+            // Trả về trạng thái Time Up nếu hết thời gian
+            ResetGame(difficulty);
+        }
+        if (player_info->GetTime() <= 0.0f && !cur_stage->Game_Won())
+        {
+            return timeUpState;
+        }
+        if (cur_stage->Trans_Game() && difficulty != Difficulty::Hard && game_mode == Game_Mode::Play_Through)
+        {
+            TransGame();
+        }
+        else if(cur_stage->Trans_Game())
+            return menuState;
     }
     return gameManagerState; // Continue in game manager state
 }
 
 void GameManager::Draw()
 {
-    stage->Draw(); // Assuming Stage has a Draw method
+    current_stage->Draw(); // Assuming Stage has a Draw method
     // Draw stage and game elements here
     if (pause_manager->Get_Pause_State() != PauseState::Pause_None_State)
     {
         DrawRectangle(0, 0, GetScreenWidth(), GetScreenHeight(), Color{0, 0, 0, 128});
     }
-    pause_manager->Draw();
+    if (dynamic_cast<Stage *>(current_stage))
+    {
+        pause_manager->Draw();
+    }
 }
 
 void GameManager::Load_Texture()
@@ -180,6 +285,7 @@ void GameManager::Load_Texture()
     Screen_Sprite::screen_.Load_("../resources/sprite/GameOver_TimeUp.png");
     Win_Animation::win_animation_.Load_("../resources/tiles/Tiles.png");
     BomberBill_Sprite::bomber_bill_.Load_("../resources/sprite/BomberBill.png");
+    Intro::intro_.Load_("../resources/sprite/Intro.png");
 }
 
 void GameManager::Unload_Texture()
@@ -192,6 +298,7 @@ void GameManager::Unload_Texture()
     Screen_Sprite::screen_.Unload_();
     Win_Animation::win_animation_.Unload_();
     BomberBill_Sprite::bomber_bill_.Unload_();
+    Intro::intro_.Unload_();
 }
 
 void GameManager::SetPlayerMode(Player_Mode mode)

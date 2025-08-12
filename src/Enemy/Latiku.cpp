@@ -1,4 +1,5 @@
 #include "Enemy/Latiku.h"
+#include "Constants.h"
 #include <raymath.h>
 
 // Constructor: khởi tạo Latiku với vị trí, trọng lực, con trỏ tới Player và danh sách kẻ địch
@@ -28,7 +29,7 @@ void Latiku::Update(float dt)
         top_left.y,
         bottom_right.x - top_left.x,
         bottom_right.y - top_left.y};
-    if (214 * 48.0f - top_left.x <= dis_to_finish)
+    if (214 * Tile_Size - top_left.x <= dis_to_finish)
     {
         state_ = Latiku_State::disappear;
     }

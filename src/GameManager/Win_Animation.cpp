@@ -1,22 +1,25 @@
 #include "GameManager/Win_Animation.h"
 
-Win_Animation_Manager::Win_Animation_Manager(float pos, Player &player, Flag_Pole &flag_pole, PlayerInformation &player_info)
+Win_Animation_Manager::Win_Animation_Manager(Player &player, Flag_Pole &flag_pole, Flag_Castle &flag_castle, PlayerInformation &player_info)
     : player_(player),
       flag_pole_(flag_pole),
+      flag_castle_(flag_castle),
       player_info_(player_info),
-      Flag_Pos_X(pos),
-      Castle_Door_X(pos + 288.0f),
+      Flag_Pos_X(flag_pole.Get_Pos().x),
+      Castle_Door_X(flag_pole.Get_Pos().x + 288.0f),
       preparing_to_castle(false),
       go_to_castle(false),
       is_climbing(false),
       frame_timer(0.0f),
       is_pose(false),
-      is_fade_out(false) {}
+      is_fade_out(false),
+      flag_raise(false),
+      player_disappear(false) {}
 
 int Win_Animation_Manager::Calculate_Bonus_Points()
 {
     float heightRange = Flag_Bottom_y - Flag_Top_y;
-    float relativePos = (Flag_Bottom_y - player_.getPosition().y - player_.get_draw_rec().height) / heightRange; // 1.0 = cao nhất
+    float relativePos = (Flag_Bottom_y - player_.getPosition().y + player_.get_draw_rec().height) / heightRange; // 1.0 = cao nhất
 
     if (relativePos > 0.9f)
         return 5000;
@@ -48,8 +51,9 @@ void Win_Animation_Manager::Enter_Win_Animation()
     flag_pole_.Set_Velocity({0, Slide_Speed});
     player_.Climb(Slide_Speed);
     player_.Set_Pos({Flag_Pos_X - player_.get_draw_rec().width / 2.0f, player_.getPosition().y});
-    mario_base_y = Flag_Bottom_y + 48.0f - 10.0f;
+    mario_base_y = Flag_Bottom_y + Tile_Size - 10.0f;
     is_climbing = true;
+    player_info_.Game_Won();
 }
 
 void Win_Animation_Manager::Update(float dt)
@@ -62,6 +66,9 @@ void Win_Animation_Manager::Update(float dt)
         Go_To_Castle();
     if (is_pose)
         Pose();
+    if (is_fade_out)
+        Fade_Out();
+    Raise_Flag();
 }
 
 void Win_Animation_Manager::Climb_Flag_Pole()
@@ -118,4 +125,38 @@ void Win_Animation_Manager::Pose()
         frame_timer = 0.0f;
         player_.Fade_Out(Cool_Down_Time);
     }
+}
+
+void Win_Animation_Manager::Fade_Out()
+{
+    frame_timer += GetFrameTime();
+    if (frame_timer >= Cool_Down_Time)
+    {
+        is_fade_out = false;
+        frame_timer = 0.0f;
+        player_info_.Up_Score();
+        player_disappear = true;
+    }
+}
+
+bool Win_Animation_Manager::End_Animation()
+{
+    if (flag_raise && flag_castle_.Get_Velo().y == 0.0f)
+        return true;
+    return false;
+}
+
+void Win_Animation_Manager::Raise_Flag()
+{
+    if (player_info_.GetTime() < 0)
+    {
+        player_info_.Set_Time_To_0();
+        flag_raise = true;
+        flag_castle_.Set_Velocity({0, -Slide_Speed / 2.0f});
+    }
+}
+
+bool Win_Animation_Manager::Player_Disappear()
+{
+    return player_disappear;
 }

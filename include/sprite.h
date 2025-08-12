@@ -1537,3 +1537,10 @@ namespace Win_Animation
         extern std::vector<Rectangle> flag_pole_;
     }
 }
+
+namespace Intro
+{
+    extern SpriteSheet intro_;
+    extern Rectangle mario;
+    extern Rectangle luigi;
+}

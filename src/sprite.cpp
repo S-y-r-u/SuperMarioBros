@@ -1249,6 +1249,8 @@ namespace Font_Sprite
                 source = Character::character[c - 'A'];
             else if (c == '%')
                 source = Percent::percent;
+            else if (c == '-')
+                source = Hyphen::hyphen;
             else
                 source = Character::character[c - 'a'];
             Rectangle dest = {x, y, source.width * scale, source.height * scale};
@@ -1506,4 +1508,11 @@ namespace Win_Animation
         Rectangle f3 = {35, 172, 11, 16};
         std::vector<Rectangle> flag_pole_ = {f1, f2, f3};
     }
+}
+
+namespace Intro
+{
+    SpriteSheet intro_;
+    Rectangle mario = {4, 272, 14, 14};
+    Rectangle luigi = {20, 270, 15, 16};
 }

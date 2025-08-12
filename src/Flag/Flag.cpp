@@ -31,3 +31,8 @@ void Flag::Update_Pos()
 {
     pos_.y += velocity_.y * GetFrameTime();
 }
+
+Vector2 Flag::Get_Velo() const
+{
+    return velocity_;
+}

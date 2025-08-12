@@ -4,13 +4,9 @@ HardMap::HardMap(Player_Mode mode, PlayerInformation &info) : Stage(info)
 {
     player_mode = mode;
     MapTexture = LoadTexture("map/Hard.png");
-    std::ifstream fi;
-    fi.open("map/Hard.txt");
-    for (int i = 0; i < 15; ++i)
-        for (int j = 0; j < 214; ++j)
-            fi >> Map[j][i];
-    fi.close();
-    LoadMapFromFile("map/Block_Hard.txt");
+    LoadMapFromFile("map/Hard.txt");
+    source = {0, 0, static_cast<float>(MapTexture.width), static_cast<float>(MapTexture.height)};
+    dest = {0, 0, static_cast<float>(MapTexture.width * scale_screen), static_cast<float>(MapTexture.height * scale_screen)};
     if (player_mode == Player_Mode::MARIO_PLAYER)
         player = new Mario({400, 200});
     else if (player_mode == Player_Mode::LUIGI_PLAYER)
@@ -20,7 +16,8 @@ HardMap::HardMap(Player_Mode mode, PlayerInformation &info) : Stage(info)
     camera.rotation = 0;
     camera.zoom = 1;
     flag_pole = new Flag_Pole({9530, 144});
-    win_animation = new Win_Animation_Manager(9530, *player, *flag_pole, information);
+    flag_castle = new Flag_Castle({9530, 144});
+    win_animation = new Win_Animation_Manager(*player, *flag_pole, *flag_castle, information);
 }
 
 HardMap::~HardMap()

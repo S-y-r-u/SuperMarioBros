@@ -8,7 +8,6 @@
 
 constexpr float Mush_Room_And_Star_Speed = 120.0f;
 constexpr float Appear_Animation = 0.75f;
-constexpr float Tile_Size = 16.0f * scale_screen;
 
 class Item
 {
