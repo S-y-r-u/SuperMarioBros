@@ -67,7 +67,6 @@ void Stage::Run()
     {
         Non_Player_Update();
     }
-
     if (!player->Get_isActive() && !Reset_Game)
         Cool_Down_After_Die(GetFrameTime());
 }
@@ -146,7 +145,6 @@ void Stage::Non_Player_Update()
         camera.target.x = MapTexture.width * scale_screen - Screen_w;
 
     flag_pole->Update(GetFrameTime());
-
     Check_Item_Vs_Ground();
     Check_Item_Vs_Block();
     Check_Enemy_Vs_Ground();
@@ -410,15 +408,13 @@ void Stage::Check_Player_Vs_Ground()
         currCenterBottom.y - ph,
         pw,
         ph};
-
-    int mapWidth = sizeof(Map[0]) / sizeof(Map[0][0]);
-    int mapHeight = sizeof(Map) / sizeof(Map[0]);
-
-    for (int i = 0; i < mapWidth; i++)
+    int mapHeight = Map.size();
+    int mapWidth = Map[0].size();
+    for (int i = 0; i < mapHeight; i++)
     {
-        for (int j = 0; j < mapHeight; j++)
+        for (int j = 0; j < mapWidth; j++)
         {
-            int id = Map[j][i];
+            int id = Map[i][j];
             if (id == 0)
                 continue;
 
@@ -441,7 +437,7 @@ void Stage::Check_Player_Vs_Ground()
                 if (currRec.x < rec_map.x)
                 {
                     // Từ trái sang
-                    if (Map[j - 1][i] == 0)
+                    if (Map[i][j-1] == 0)
                     {
                         player->Set_Pos({rec_map.x - pw / 2.0f , player->getPosition().y});
                         player->Set_Velocity({0, player->get_Velocity().y});
@@ -450,7 +446,7 @@ void Stage::Check_Player_Vs_Ground()
                 else
                 {
                     // Từ phải sang
-                    if (Map[j + 1][i] == 0)
+                    if (Map[i][j + 1] == 0)
                     {
                         player->Set_Pos({rec_map.x + rec_map.width + pw / 2.0f , player->getPosition().y});
                         player->Set_Velocity({0, player->get_Velocity().y});
@@ -460,14 +456,14 @@ void Stage::Check_Player_Vs_Ground()
             else
             {
                 // Va chạm dọc
-                if (currRec.y <= rec_map.y && Map[j][i - 1] == 0 && player->get_Velocity().y >= 0)
+                if (currRec.y <= rec_map.y && Map[i-1][j] == 0 && player->get_Velocity().y >= 0)
                 {
                     // Từ trên xuống
                     player->Set_Pos({player->getPosition().x , rec_map.y });
                     player->Set_Velocity({player->get_Velocity().x, 0});
                     player->Set_isGround(true);
                 }
-                else if (currRec.y + currRec.height > rec_map.y + rec_map.height && Map[j][i + 1] == 0 && player->get_Velocity().y < 0)
+                else if (currRec.y + currRec.height > rec_map.y + rec_map.height && Map[i+1][j] == 0 && player->get_Velocity().y < 0)
                 {
                     // Từ dưới lên
                     player->Set_Pos({player->getPosition().x, rec_map.y + rec_map.height + ph});
@@ -592,11 +588,11 @@ void Stage::Check_Item_Vs_Ground()
 
         item->Notify_Fall();
 
-        for (int i = 0; i < 15; i++)
+        for (int i = 0; i < Map.size(); i++)
         {
-            for (int j = 0; j < 214; j++)
+            for (int j = 0; j < Map[i].size(); j++)
             {
-                int id = Map[j][i];
+                int id = Map[i][j];
                 if (id == 0)
                     continue;
 
@@ -608,7 +604,7 @@ void Stage::Check_Item_Vs_Ground()
                 // Va chạm từ trên xuống
                 if (prev.y <= rec_map.y &&
                     i > 0 &&
-                    Map[j][i - 1] == 0)
+                    Map[i - 1][j] == 0)
                 {
                     item->Set_Pos({item->Get_Pos().x, rec_map.y});
                     item->Notify_On_Ground();
@@ -796,12 +792,11 @@ void Stage::Check_Enemy_Vs_Ground()
         enemy->Notify_Fall(GetFrameTime());
 
         bool avoid_branch = false;
-
-        for (int i = 0; i < 15; i++)
+        for (int i = 0; i < Map.size(); i++)
         {
-            for (int j = 0; j < 214; j++)
+            for (int j = 0; j < Map[0].size(); j++)
             {
-                int id = Map[j][i];
+                int id = Map[i][j];
                 if (id == 0)
                     continue;
 
@@ -813,7 +808,7 @@ void Stage::Check_Enemy_Vs_Ground()
                 // Va chạm từ trên xuống
                 if (prev.y <= rec_map.y &&
                     i > 0 &&
-                    Map[j][i - 1] == 0)
+                    Map[i - 1][j] == 0)
                 {
                     enemy->Set_Pos({enemy->Get_Pos().x, rec_map.y});
                     enemy->Notify_On_Ground();
@@ -972,10 +967,10 @@ void Stage::Check_FireBall_Vs_World()
             }
         }
 
-        for (int i = 0; i < 15; i++)
-            for (int j = 0; j < 214; j++)
+        for (int i = 0; i < Map.size() ; i++)
+            for (int j = 0; j < Map[0].size() ; j++)
             {
-                if (Map[j][i] == 0)
+                if (Map[i][j] == 0)
                     continue;
                 Rectangle rec_map = {j * 16.0f * scale_screen, i * 16.0f * scale_screen, 16.0f * scale_screen, 16.0f * scale_screen};
                 if (CheckCollisionRecs(rec_fireball, rec_map))
@@ -1074,7 +1069,7 @@ void Stage::LoadEnemiesFromFile(const std::string &filename)
     file.close();
 }
 
-void Stage::LoadMapFromFile(const std::string &filename)
+void Stage::LoadBlockFromFile(const std::string &filename)
 {
     std::ifstream file(filename);
     if (!file.is_open())
@@ -1082,9 +1077,9 @@ void Stage::LoadMapFromFile(const std::string &filename)
         // Nếu không mở được file, in ra lỗi
         return;
     }
-    for (int i = 0; i < 15; ++i)
+    for (int i = 0; i < Map.size(); ++i)
     {
-        for (int j = 0; j < 214; ++j)
+        for (int j = 0; j < Map[0].size(); ++j)
         {
             int var;
             file >> var;
@@ -1126,5 +1121,29 @@ void Stage::LoadMapFromFile(const std::string &filename)
                 blocks.push_back(new Block(pos, 0, "rotating_bar", "unbreakable"));
         }
     }
+    file.close();
+}
+
+void Stage::LoadMapFromFile(const std::string &filename) {
+    std::ifstream file(filename);
+    if (!file.is_open()) {
+        std::cerr << "Cannot open file: " << filename << "\n";
+        return;
+    }
+
+    Map.clear();
+    std::string line;
+    while (std::getline(file, line)) {
+        std::stringstream ss(line);
+        std::vector<int> row;
+        int value;
+        while (ss >> value) {
+            row.push_back(value);
+        }
+        if (!row.empty()) {
+            Map.push_back(row);
+        }
+    }
+
     file.close();
 }

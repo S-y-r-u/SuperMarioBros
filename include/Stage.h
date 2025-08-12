@@ -32,7 +32,7 @@ private:
 
 protected:
     Texture MapTexture;
-    int Map[214][15];
+    std::vector < std::vector < int > > Map;
     Player *player;
     PlayerInformation &information;
     Win_Animation_Manager *win_animation;
@@ -73,6 +73,7 @@ public:
     void Check_FireBall_Vs_World();
     void Clear_Keyboard();
     bool Need_Reset_Game() const;
-    void LoadMapFromFile(const std::string &filename);
+    void LoadBlockFromFile(const std::string &filename);
     void LoadEnemiesFromFile(const std::string &filename);
+    void LoadMapFromFile(const std::string &filename);
 };

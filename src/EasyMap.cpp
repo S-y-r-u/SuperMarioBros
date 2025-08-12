@@ -4,13 +4,8 @@ EasyMap::EasyMap(Player_Mode mode, PlayerInformation &info) : Stage(info)
 {
     player_mode = mode;
     MapTexture = LoadTexture("map/Easy/Easy.png");
-    std::ifstream fi;
-    fi.open("map/Easy/Easy.txt");
-    for (int i = 0; i < 15; ++i)
-        for (int j = 0; j < 214; ++j)
-            fi >> Map[j][i];
-    fi.close();
-    LoadMapFromFile("map/Easy/Block_Easy.txt");
+    LoadMapFromFile("map/Easy/Easy.txt");
+    LoadBlockFromFile("map/Easy/Block_Easy.txt");
     if (player_mode == Player_Mode::MARIO_PLAYER)
         player = new Mario({400, 200});
     else if (player_mode == Player_Mode::LUIGI_PLAYER)

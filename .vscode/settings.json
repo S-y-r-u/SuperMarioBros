@@ -81,6 +81,7 @@
     "variant": "cpp",
     "xtree": "cpp",
     "list": "cpp",
-    "xhash": "cpp"
+    "xhash": "cpp",
+    "sstream": "cpp"
   }
 }
