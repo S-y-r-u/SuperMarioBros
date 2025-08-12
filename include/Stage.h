@@ -91,7 +91,6 @@ public:
 
     void LoadBlockFromFile(const std::string &filename);
     void LoadMapFromFile(const std::string &filename);
-<<<<<<< Updated upstream
     void LoadEnemiesFromFile(const std::string &filename);
 
     bool Need_Reset_Game() const;
@@ -99,8 +98,6 @@ public:
     bool Trans_Game() const;
 
     void DrawLayer();
-=======
     json to_json() const;
     void from_json(const json& j);
->>>>>>> Stashed changes
 };
