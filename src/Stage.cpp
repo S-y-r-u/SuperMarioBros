@@ -305,7 +305,6 @@ void Stage::Draw()
 void Stage::Check_Player_Vs_Block()
 {
     // Lấy pos center-bottom ở frame trước và hiện tại
-    Vector2 prevCenterBottom = player->Get_Previous_Pos();
     Vector2 currCenterBottom = player->getPosition();
     Vector2 velocity = player->get_Velocity();
 
@@ -313,13 +312,6 @@ void Stage::Check_Player_Vs_Block()
     Rectangle currRec = player->get_draw_rec();
     float pw = currRec.width;
     float ph = currRec.height;
-
-    // Rectangle frame trước
-    Rectangle prevRec = {
-        prevCenterBottom.x - pw / 2.0f,
-        prevCenterBottom.y - ph,
-        pw,
-        ph};
 
     // Rectangle hiện tại
     Rectangle currRect = {
@@ -348,7 +340,7 @@ void Stage::Check_Player_Vs_Block()
         if (overlapX < overlapY && velocity.x != 0)
         {
             // Va chạm ngang
-            if (prevCenterBottom.x + pw / 2.0f <= rec_map.x)
+            if (currRec.x < rec_map.x)
             {
                 if (!block->Surrounded_Block[2])
                 {
@@ -370,14 +362,14 @@ void Stage::Check_Player_Vs_Block()
         else
         {
             // Va chạm dọc
-            if (prevCenterBottom.y <= rec_map.y && !block->Surrounded_Block[0] && velocity.y >= 0)
+            if (currRec.y <= rec_map.y && !block->Surrounded_Block[0] && velocity.y >= 0)
             {
                 // Từ trên xuống
                 player->Set_Pos({player->getPosition().x, rec_map.y});
                 player->Set_Velocity({player->get_Velocity().x, 0.f});
                 player->Set_isGround(true);
             }
-            else if (prevCenterBottom.y - ph >= rec_map.y + rec_map.height && !block->Surrounded_Block[1] && velocity.y < 0)
+            else if (currRec.y + currRec.height > rec_map.y + rec_map.height && !block->Surrounded_Block[1] && velocity.y < 0)
             {
                 // Từ dưới lên
                 player->Set_Pos({player->getPosition().x, rec_map.y + rec_map.height + ph});
@@ -404,7 +396,6 @@ void Stage::Check_Player_Vs_Block()
 void Stage::Check_Player_Vs_Ground()
 {
     // Vị trí center-bottom của frame trước và hiện tại
-    Vector2 prevCenterBottom = player->Get_Previous_Pos();
     Vector2 currCenterBottom = player->getPosition();
     Vector2 velocity = player->get_Velocity();
 
@@ -412,13 +403,6 @@ void Stage::Check_Player_Vs_Ground()
     Rectangle currDrawRec = player->get_draw_rec();
     float pw = currDrawRec.width;
     float ph = currDrawRec.height;
-
-    // Rectangle của frame trước
-    Rectangle prevRec = {
-        prevCenterBottom.x - pw / 2.0f,
-        prevCenterBottom.y - ph,
-        pw,
-        ph};
 
     // Rectangle hiện tại
     Rectangle currRec = {
@@ -451,16 +435,15 @@ void Stage::Check_Player_Vs_Ground()
                                       rec_map.x + rec_map.width - currRec.x);
             float overlapY = std::min(currRec.y + currRec.height - rec_map.y,
                                       rec_map.y + rec_map.height - currRec.y);
-
             if (overlapX < overlapY)
             {
                 // Va chạm ngang
-                if (prevCenterBottom.x + pw / 2.0f <= rec_map.x)
+                if (currRec.x < rec_map.x)
                 {
                     // Từ trái sang
                     if (Map[j - 1][i] == 0)
                     {
-                        player->Set_Pos({rec_map.x - pw / 2.0f - 0.1f, player->getPosition().y});
+                        player->Set_Pos({rec_map.x - pw / 2.0f , player->getPosition().y});
                         player->Set_Velocity({0, player->get_Velocity().y});
                     }
                 }
@@ -469,7 +452,7 @@ void Stage::Check_Player_Vs_Ground()
                     // Từ phải sang
                     if (Map[j + 1][i] == 0)
                     {
-                        player->Set_Pos({rec_map.x + rec_map.width + pw / 2.0f + 0.1f, player->getPosition().y});
+                        player->Set_Pos({rec_map.x + rec_map.width + pw / 2.0f , player->getPosition().y});
                         player->Set_Velocity({0, player->get_Velocity().y});
                     }
                 }
@@ -477,18 +460,18 @@ void Stage::Check_Player_Vs_Ground()
             else
             {
                 // Va chạm dọc
-                if (prevCenterBottom.y <= rec_map.y && Map[j][i - 1] == 0 && velocity.y >= 0)
+                if (currRec.y <= rec_map.y && Map[j][i - 1] == 0 && player->get_Velocity().y >= 0)
                 {
                     // Từ trên xuống
-                    player->Set_Pos({player->getPosition().x , rec_map.y});
-                    player->Set_Velocity({player->get_Velocity().x, 0.f});
+                    player->Set_Pos({player->getPosition().x , rec_map.y });
+                    player->Set_Velocity({player->get_Velocity().x, 0});
                     player->Set_isGround(true);
                 }
-                else if (prevCenterBottom.y - ph >= rec_map.y + rec_map.height && Map[j][i + 1] == 0 && velocity.y < 0)
+                else if (currRec.y + currRec.height > rec_map.y + rec_map.height && Map[j][i + 1] == 0 && player->get_Velocity().y < 0)
                 {
                     // Từ dưới lên
                     player->Set_Pos({player->getPosition().x, rec_map.y + rec_map.height + ph});
-                    player->Set_Velocity({player->get_Velocity().x, 0.f});
+                    player->Set_Velocity({player->get_Velocity().x, 0});
                 }
             }
         }

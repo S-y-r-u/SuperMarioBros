@@ -356,8 +356,8 @@ void Player ::Shoot(std::vector<FireBall *> &fireballs)
     currentFrame = 0;
     frameTimer = 0.0f;
 
-    Vector2 fireBallStartPos = position;
     Rectangle playerPos = get_draw_rec();
+    Vector2 fireBallStartPos = {playerPos.x, playerPos.y};
 
     fireBallStartPos.y += playerPos.height * 0.6f;
     if (!isFacingLeft)
