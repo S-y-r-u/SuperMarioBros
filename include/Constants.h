@@ -2,6 +2,9 @@
 #include <string>
 #include <sstream>
 #include <iostream>
+#include "json.hpp"
+
+using json = nlohmann::json;
 
 // Screen dimensions
 constexpr int Screen_w = 1248;

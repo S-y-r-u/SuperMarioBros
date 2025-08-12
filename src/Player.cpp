@@ -50,10 +50,6 @@ Rectangle Player ::get_draw_rec()
     }
 }
 
-Vector2 Player::Get_Previous_Pos()
-{
-    return previous_pos;
-}
 
 void Player ::Set_isGround(bool value)
 {
@@ -104,8 +100,6 @@ void Player ::Cut_Jump()
 
 void Player ::update(float dt)
 {
-    previous_pos = position;
-
     if (state == AnimationState::Climb && is_climbing)
     {
         if (currentFrame >= getAnimationFrame().size())
