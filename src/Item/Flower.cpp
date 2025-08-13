@@ -37,3 +37,30 @@ void Flower::Appear_()
 }
 
 bool Flower::Can_Move() const { return false; }
+
+
+json Flower::to_json() const {
+    json j;
+    j["type"] = "flower" ; // hoặc lưu type khác nếu cần
+    //item
+    j["pos"] = { pos_.x, pos_.y };
+    j["appear_animation"] = appear_animation;
+    j["is_delete"] = is_delete;
+
+    //flower
+    j["before_pos"] = { before_pos.x, before_pos.y };
+    j["is_appear"] = is_appear;
+
+    return j;
+}
+
+void Flower::from_json(const json& j) {
+    pos_ = { j["pos"][0].get<float>(), j["pos"][1].get<float>() };
+    appear_animation = j["appear_animation"].get<int>();
+    is_delete = j["is_delete"].get<bool>();
+
+    //flower
+    before_pos = { j["before_pos"][0].get<float>(), j["before_pos"][1].get<float>() };
+    is_appear = j["is_appear"].get<bool>();
+
+}

@@ -1,3 +1,4 @@
+
 #pragma once
 #include "raylib.h"
 #include "Constants.h"
@@ -25,4 +26,8 @@ public:
 
     Vector2 GetPivot() const;
     Vector2 GetEndPoint() const;
+
+        // Serialize/Deserialize
+    json to_json() const;
+    void from_json(const json& j);
 };

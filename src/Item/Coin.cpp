@@ -20,3 +20,18 @@ void Coin::Activate_(Player &player, PlayerInformation &info)
 }
 
 bool Coin::Can_Move() const { return false; }
+
+json Coin::to_json() const {
+    json j;
+    j["type"] = "coin" ; // hoặc lưu type khác nếu cần
+    //item
+    j["pos"] = { pos_.x, pos_.y };
+    j["appear_animation"] = appear_animation;
+    j["is_delete"] = is_delete;
+}
+
+void Coin::from_json(const json& j) {
+    pos_ = { j["pos"][0].get<float>(), j["pos"][1].get<float>() };
+    appear_animation = j["appear_animation"].get<int>();
+    is_delete = j["is_delete"].get<bool>();
+}

@@ -44,4 +44,7 @@ public:
     A_Block_State *GetNormalState() const;
     A_Block_State *GetUnbreakableState() const;
     A_Block_State *GetBreakableState() const;
+
+    json to_json() const;
+    void from_json(const json& j);
 };

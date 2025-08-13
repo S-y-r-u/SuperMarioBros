@@ -49,26 +49,18 @@ Stage::~Stage()
 
 void Stage::Run()
 {   
-    std::cerr << "1" << std::endl;
     if (!Is_Game_Won)
     {
-        std::cerr << "2" << std::endl;
         Is_Game_Won = win_animation->Check_Win_Animation();
-        std::cerr << "3" << std::endl;
         if (Is_Game_Won)
         {
-            std::cerr << "4" << std::endl;
             Keyboard.clear();
-            std::cerr << "5" << std::endl;
         }
     }
     else
     {
-        std::cerr << "6" << std::endl;
         win_animation->Update(GetFrameTime());
-        std::cerr << "7" << std::endl;
     }
-    std::cerr << "8" << std::endl;
 
     Player_Update();
     if (!player->Get_isTransforming())
@@ -1235,7 +1227,6 @@ json Stage::to_json() const {
         camera.rotation,
         camera.zoom
     };
-    j["enemies_size"] = enemies.size();
     for (const auto& enemy : enemies) {
         int type = -1;
         if (dynamic_cast<Goomba*>(enemy)) type = static_cast<int>(EnemyType::Goomba);
@@ -1252,6 +1243,14 @@ json Stage::to_json() const {
             result_json[it.key()] = it.value();
         }
         j["enemies"].push_back(result_json);
+    }
+    // Lưu danh sách items
+    for (const auto& item : items) {
+        j["items"].push_back(item->to_json());
+    }
+    // Lưu thông tin về các block
+    for (const auto& block : blocks) {
+        j["blocks"].push_back(block->to_json());
     }
     return j;
 }
@@ -1308,6 +1307,32 @@ void Stage::from_json(const json& j) {
                 enemy_data.erase("type");
                 enemies.back()->from_json(enemy_data);
             }
+        }
+    }
+
+    // Xóa các item cũ nếu có
+    for (auto it : items) delete it;
+    items.clear();
+    if (j.contains("items")) {
+        for (const auto& item_j : j.at("items")) {
+            std::string type = item_j.value("type", "");
+            size_t old_size = items.size();
+            Spawn_Item::Item_Spawn(type, items, {0,0}, *player, information , 1);
+            if (items.size() > old_size) {
+                Item* item = items.back();
+                item->from_json(item_j);
+            }
+        }
+    }
+
+    //should to delete
+    for (auto bl : blocks) delete bl;
+    blocks.clear();
+    if (j.contains("blocks")) {
+        for (const auto& block_j : j.at("blocks")) {
+            Block* block = new Block({0, 0}, 0, "", "");
+            block->from_json(block_j);
+            blocks.push_back(block);
         }
     }
     // Khởi tạo lại các resource/phức tạp nếu cần

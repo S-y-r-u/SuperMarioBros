@@ -108,3 +108,31 @@ bool Star::Can_Move() const
 {
     return true;
 }
+
+json Star::to_json() const {
+    json j;
+    j["type"] = "star" ; // hoặc lưu type khác nếu cần
+    //item
+    j["pos"] = { pos_.x, pos_.y };
+    j["appear_animation"] = appear_animation;
+    j["is_delete"] = is_delete;
+
+    //star 
+    j["direction"] = direct_;
+    j["is_appear"] = is_appear;
+    j["before_pos"] = { before_pos.x, before_pos.y };
+    j["velocity"] = { velocity_.x, velocity_.y };
+    return j;
+}
+
+void Star::from_json(const json& j) {
+    pos_ = { j["pos"][0].get<float>(), j["pos"][1].get<float>() };
+    appear_animation = j["appear_animation"].get<int>();
+    is_delete = j["is_delete"].get<bool>();
+
+    //star
+    direct_ = j["direction"].get<bool>();
+    is_appear = j["is_appear"].get<bool>();
+    before_pos = { j["before_pos"][0].get<float>(), j["before_pos"][1].get<float>() };
+    velocity_ = { j["velocity"][0].get<float>(), j["velocity"][1].get<float>() };
+}

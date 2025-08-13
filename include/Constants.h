@@ -54,3 +54,4 @@ enum class EnemyType
     BomberBill,
     Spiny
 };
+

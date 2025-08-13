@@ -62,3 +62,25 @@ bool Unbreakable_Block::Kill_Player(Player &player)
         return m_rotating_bar->CheckCollision(player.get_draw_rec());
     return false;
 }
+
+// Serialize Unbreakable_Block
+json Unbreakable_Block::to_json() const {
+    json j;
+    // Nếu có rotating bar thì lưu
+    if (m_rotating_bar) {
+        j["rotating_bar"] = m_rotating_bar->to_json();
+    }
+    j["animation"] = animation_.to_json();
+    // Có thể lưu thêm animation nếu muốn
+    return j;
+}
+
+void Unbreakable_Block::from_json(const json& j) {
+    // Nếu có rotating_bar thì đọc lại
+    if (j.contains("rotating_bar")) {
+        if (!m_rotating_bar) m_rotating_bar = new RotatingBar({0,0});
+        m_rotating_bar->from_json(j["rotating_bar"]);
+    }
+    animation_.from_json(j["animation"]);
+    // Có thể đọc thêm animation nếu muốn
+}

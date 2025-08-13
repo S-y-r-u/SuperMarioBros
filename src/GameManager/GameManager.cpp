@@ -225,7 +225,6 @@ int GameManager::Update()
     else if (current_stage == stage)
     // Lấy trạng thái pause
     {
-        std::cout << "[DEBUG] Updating game manager state\n";
         Stage *cur_stage = dynamic_cast<Stage *>(current_stage);
         int pause_select = PauseSelect::Pause_None_Select;
         if (!cur_stage->Game_Won())
@@ -364,8 +363,6 @@ PlayerInformation &GameManager::GetPlayerInformation() const
 json GameManager::to_json() const {
     json j;
     j["difficulty"] = static_cast<int>(difficulty);
-    std::cout << "[DEBUG] type of difficulty in JSON: " 
-              << j["difficulty"].type_name() << "\n";
 
 
     j["player_mode"] = static_cast<int>(player_mode);

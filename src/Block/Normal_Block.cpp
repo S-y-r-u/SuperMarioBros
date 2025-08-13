@@ -111,3 +111,27 @@ bool Normal_Block::Get_Elapse()
 {
     return elapse_ || change_state;
 }
+
+// Demo: Serialize Normal_Block
+json Normal_Block::to_json() const {
+    json j;
+    j["elapse"] = elapse_;
+    j["change_state"] = change_state;
+    j["is_break"] = is_break;
+    j["before_pos"] = {before_pos.x, before_pos.y};
+    j["velocity_y"] = velocity_y;
+    j["animation"] = animation_.to_json();
+    // Có thể lưu thêm animation nếu muốn
+    return j;
+}
+
+void Normal_Block::from_json(const json& j) {
+    elapse_ = j.value("elapse", false);
+    change_state = j.value("change_state", false);
+    is_break = j.value("is_break", false);
+    before_pos.x = j["before_pos"][0];
+    before_pos.y = j["before_pos"][1];
+    velocity_y = j.value("velocity_y", 0.0f);
+    animation_.from_json(j["animation"]);
+    // Có thể đọc thêm animation nếu muốn
+}

@@ -20,4 +20,8 @@ public:
 
     bool Get_Elapse() override;
     Rectangle Get_Draw_Rec() const override;
+
+        // Serialize/Deserialize
+    json to_json() const;
+    void from_json(const json& j);
 };

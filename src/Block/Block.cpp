@@ -103,3 +103,48 @@ A_Block_State *Block::GetBreakableState() const
 {
     return break_state_;
 }
+
+
+// Demo: Serialize Block (chỉ cho Normal_Block)
+json Block::to_json() const {
+    json j;
+    j["pos"] = {pos_.x, pos_.y};
+    j["item_count"] = item_count_;
+    j["type_item"] = type_item_;
+    // Lưu state hiện tại
+    if (current_state_ == normal_state_) {
+        j["current_state"] = "normal";
+        j["state_data"] = static_cast<Normal_Block*>(normal_state_)->to_json();
+    } else if (current_state_ == question_state_) {
+        j["current_state"] = "question";
+        j["state_data"] = static_cast<Question_Block*>(question_state_)->to_json();
+    } else if (current_state_ == break_state_) {
+        j["current_state"] = "breakable";
+        j["state_data"] = static_cast<Breakable_BLock*>(break_state_)->to_json();
+    } else if (current_state_ == unbreakable_state_) {
+        j["current_state"] = "unbreakable";
+        j["state_data"] = static_cast<Unbreakable_Block*>(unbreakable_state_)->to_json();
+    }
+    return j;
+}
+
+void Block::from_json(const json& j) {
+    pos_.x = j["pos"][0];
+    pos_.y = j["pos"][1];
+    item_count_ = j["item_count"];
+    type_item_ = j["type_item"];
+    std::string state = j.value("current_state", "normal");
+    if (state == "normal" && normal_state_) {
+        current_state_ = normal_state_;
+        static_cast<Normal_Block*>(normal_state_)->from_json(j["state_data"]);
+    } else if (state == "question" && question_state_) {
+        current_state_ = question_state_;
+        static_cast<Question_Block*>(question_state_)->from_json(j["state_data"]);
+    } else if (state == "breakable" && break_state_) {
+        current_state_ = break_state_;
+        static_cast<Breakable_BLock*>(break_state_)->from_json(j["state_data"]);
+    } else if (state == "unbreakable" && unbreakable_state_) {
+        current_state_ = unbreakable_state_;
+        static_cast<Unbreakable_Block*>(unbreakable_state_)->from_json(j["state_data"]);
+    }
+}

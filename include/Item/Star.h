@@ -30,4 +30,7 @@ public:
     Vector2 Get_Previous_Frame_Pos() override;
     bool Get_Direct() const;
     bool Can_Move() const override;
+
+    json to_json() const override;
+    void from_json(const json& j) override;
 };

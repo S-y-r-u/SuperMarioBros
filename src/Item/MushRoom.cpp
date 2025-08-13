@@ -138,3 +138,41 @@ Vector2 Mush_Room::Get_Previous_Frame_Pos() { return previous_frame_pos; }
 bool Mush_Room::Get_Direct() const { return direct_; }
 
 bool Mush_Room::Can_Move() const { return true; }
+
+json Mush_Room::to_json() const {
+    json j;
+    j["type"] = "super_mushroom" ; // hoặc lưu type khác nếu cần
+    //item
+    j["pos"] = { pos_.x, pos_.y };
+    j["appear_animation"] = appear_animation;
+    j["is_delete"] = is_delete;
+    j["animation"] = animation_.to_json();
+
+    //mushroom
+    j["state"] = static_cast<int>(state_);
+    j["direction"] = direct_;
+    j["falling"] = fall_;
+    j["appearing"] = is_appear;
+    j["jumping"] = jump_;
+    j["velocity"] = { velocity_.x, velocity_.y };
+    j["previous_frame_pos"] = { previous_frame_pos.x, previous_frame_pos.y };
+    j["before_pos"] = { before_pos_.x, before_pos_.y };
+    return j;
+}
+
+void Mush_Room::from_json(const json& j) {
+    pos_ = { j["pos"][0].get<float>(), j["pos"][1].get<float>() };
+    appear_animation = j["appear_animation"].get<int>();
+    is_delete = j["is_delete"].get<bool>();
+    animation_.from_json(j["animation"]);
+
+    // mushroom
+    state_ = static_cast<State_MushRoom>(j["state"].get<int>());
+    direct_ = j["direction"].get<bool>();
+    fall_ = j["falling"].get<bool>();
+    is_appear = j["appearing"].get<bool>();
+    jump_ = j["jumping"].get<bool>();
+    velocity_ = { j["velocity"][0].get<float>(), j["velocity"][1].get<float>() };
+    previous_frame_pos = { j["previous_frame_pos"][0].get<float>(), j["previous_frame_pos"][1].get<float>() };
+    before_pos_ = { j["before_pos"][0].get<float>(), j["before_pos"][1].get<float>() };
+}

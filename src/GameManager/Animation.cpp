@@ -129,3 +129,45 @@ void Animation::Set_Frame_Speed(float speed)
 {
     frame_speed_ = speed;
 }
+
+
+// ---------------------
+// JSON serialization
+// ---------------------
+json Animation::to_json() const {
+    json j;
+    // Không serialize sprite_ (con trỏ), chỉ serialize index frame, speed, elapsed, frames
+    j["frame_index"] = frame_index_;
+    j["frame_speed"] = frame_speed_;
+    j["elapsed_time"] = elapsed_time_;
+    // Serialize frames_
+    j["frames"] = json::array();
+    for (const auto& rec : frames_) {
+        j["frames"].push_back({rec.x, rec.y, rec.width, rec.height});
+    }
+    // Serialize current_rec_
+    j["current_rec"] = {current_rec_.x, current_rec_.y, current_rec_.width, current_rec_.height};
+    return j;
+}
+
+void Animation::from_json(const json& j) {
+    frame_index_ = j.value("frame_index", 0);
+    frame_speed_ = j.value("frame_speed", 0.1f);
+    elapsed_time_ = j.value("elapsed_time", 0.0f);
+    // Deserialize frames_
+    frames_.clear();
+    if (j.contains("frames")) {
+        for (const auto& arr : j["frames"]) {
+            if (arr.is_array() && arr.size() == 4) {
+                frames_.push_back({arr[0], arr[1], arr[2], arr[3]});
+            }
+        }
+    }
+    // Deserialize current_rec_
+    if (j.contains("current_rec")) {
+        auto arr = j["current_rec"];
+        if (arr.is_array() && arr.size() == 4) {
+            current_rec_ = {arr[0], arr[1], arr[2], arr[3]};
+        }
+    }
+}
