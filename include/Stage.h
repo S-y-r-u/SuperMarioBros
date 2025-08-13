@@ -98,4 +98,6 @@ public:
     bool Change_State() override;
 
     void DrawLayer();
+    json to_json() const;
+    void from_json(const json& j);
 };

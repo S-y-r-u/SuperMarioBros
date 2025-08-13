@@ -21,7 +21,6 @@ class Character{
         Vector2 getPosition() const;
         void Set_Pos(Vector2 newPos) { position = newPos; }
         virtual Rectangle get_draw_rec() = 0;
-        virtual Vector2 Get_Previous_Pos() = 0;
         virtual void MoveRight() = 0;
         virtual void MoveLeft() = 0;  
         virtual void StopMoving() = 0;

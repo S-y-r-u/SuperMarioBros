@@ -88,7 +88,7 @@ void Stage::Cool_Down_After_Win(float dt)
 
 void Stage::Player_Update()
 {
-    if (!Is_Game_Won)
+    if (!Is_Game_Won || player->Get_isDead())
     {
         if (IsKeyPressed(KEY_A))
             Keyboard.emplace_back(KEY_A);
