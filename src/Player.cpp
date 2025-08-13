@@ -33,6 +33,10 @@ Player ::Player(Vector2 startPos) : Character(startPos)
 
     is_pose = false;
     is_fade_out = false;
+
+    isImmune = false;
+    immunityTimer = 0.0f;
+    isCrouching = false;
 }
 
 Player ::~Player() {}
@@ -46,7 +50,11 @@ Rectangle Player ::get_draw_rec()
     }
     else
     {
-        return {position.x - 14 * scale_screen / 2.0f , position.y - 30 * scale_screen, 14 * scale_screen, 30 * scale_screen};
+        if (isCrouching) {
+            float crouchHeight = 22 * scale_screen;
+            return {position.x - 14 * scale_screen / 2.0f, position.y - crouchHeight, 14 * scale_screen, crouchHeight};
+        } 
+        else return {position.x - 14 * scale_screen / 2.0f , position.y - 30 * scale_screen, 14 * scale_screen, 30 * scale_screen};
     }
 }
 
@@ -71,6 +79,16 @@ void Player ::MoveLeft()
 void Player ::StopMoving()
 {
     velocity.x = 0.0f;
+}
+
+void Player ::Crouch(){
+    bool canCrouch = (form == PlayerForm :: Super || form == PlayerForm :: Fire || form == PlayerForm :: Invincible_Super_And_Fire);
+    if(!canCrouch || !isGround || velocity.x != 0.0f)  return;
+    isCrouching = true;
+}
+
+void Player ::StopCrouch(){
+    isCrouching = false;
 }
 
 void Player ::Jump()
@@ -113,6 +131,13 @@ void Player ::update(float dt)
         }
         position.y += climb_velo.y * dt;
         return;
+    }
+
+    if(isImmune){
+        immunityTimer -= dt;
+        if(immunityTimer <= 0.0f){
+            isImmune = false;
+        }
     }
 
     if (isTransforming)
@@ -170,22 +195,25 @@ void Player ::update(float dt)
 
     velocity.y += gravity * dt;
 
-    // ma sat truot
-    if (velocity.x != 0.0f)
-    {
-        velocity.x *= pow(friction, dt * 60);
-        if (abs(velocity.x) < 1.0f)
-            velocity.x = 0.0f;
+    if(!isCrouching){
+        if (isGround && velocity.x != 0.0f)
+        {
+            velocity.x *= pow(friction, dt * 60);
+            if (abs(velocity.x) < 1.0f)
+                velocity.x = 0.0f;
+        }
+        position.x += velocity.x * dt;
     }
-
-    position.x += velocity.x * dt;
     position.y += velocity.y * dt;
 
     if (isGround)
     {
+        
         if (!is_fade_out && !is_pose)
         {
-            if (velocity.x != 0.0f)
+            if(isCrouching)
+                state = AnimationState :: Crouch;
+            else if (velocity.x != 0.0f)
                 state = AnimationState ::Walk;
             else
                 state = AnimationState ::Stance;
@@ -193,6 +221,7 @@ void Player ::update(float dt)
     }
     else
     {
+        isCrouching = false;
         state = AnimationState ::Jump;
     }
 
@@ -225,7 +254,11 @@ void Player ::draw()
     }
 
     Rectangle dest = {position.x - frame[currentFrame].width * scale_screen / 2.0f , position.y - frame[currentFrame].height * scale_screen, frame[currentFrame].width * scale_screen, frame[currentFrame].height * scale_screen};
-    DrawTexturePro(texture->sprite, source, dest, {0, 0}, 0.0f, WHITE);
+    
+    if(isImmune && (int)(GetTime() * 10) % 2 != 0){
+        // khong ve
+    }
+    else DrawTexturePro(texture->sprite, source, dest, {0, 0}, 0.0f, WHITE);
 }
 
 void Player ::collectCoin()
@@ -386,6 +419,25 @@ void Player::Fade_Out(float dt)
     velocity.x = 0.0f;
     state = AnimationState::Fade_Out;
     animationSpeed = dt / getAnimationFrame().size();
+}
+
+void Player :: TakeDamage(){
+    if(isInvincible || isTransforming || isDead || isImmune) return;
+
+    if(form == PlayerForm :: Super || form == PlayerForm :: Fire){
+        isTransforming = true;
+        state = AnimationState :: Hit;
+        targetForm = PlayerForm :: Small;
+        isImmune = true;
+        immunityTimer = 2.5f;
+
+        velocity = {0.0f, 0.0f};
+        currentFrame = 0;
+        frameTimer = 0.0f;
+    }
+    else if(form == PlayerForm :: Small){
+        Die();
+    }
 }
 
 

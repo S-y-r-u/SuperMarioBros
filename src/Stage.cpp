@@ -115,7 +115,11 @@ void Stage::Player_Update()
             player->Cut_Jump();
         if (IsKeyPressed(KEY_SPACE))
             player->Shoot(fireballs);
-        if (Keyboard.empty())
+        if (IsKeyDown(KEY_S))
+            player->Crouch();
+        if (IsKeyReleased(KEY_S))
+            player->StopCrouch();
+        if (Keyboard.empty() && !IsKeyDown(KEY_S))
             player->StopMoving();
         else if (Keyboard.back() == KEY_A)
             player->MoveLeft();
@@ -546,7 +550,7 @@ void Stage::Check_Player_Vs_Enemy()
                 }
                 else
                 {
-                    player->Die();
+                    player->TakeDamage();
                 }
             }
             else
@@ -560,7 +564,7 @@ void Stage::Check_Player_Vs_Enemy()
                 }
                 else
                 {
-                    player->Die();
+                    player->TakeDamage();
                 }
             }
         }
@@ -585,12 +589,12 @@ void Stage::Check_Player_Vs_Enemy()
                 }
                 else
                 {
-                    player->Die();
+                    player->TakeDamage();
                 }
             }
             else
             {
-                player->Die();
+                player->TakeDamage();
                 // Player ở phía dưới enemy
             }
         }

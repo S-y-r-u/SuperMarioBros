@@ -39,6 +39,10 @@ class Player : public Character{
         bool is_pose;
         bool is_fade_out;
 
+        bool isImmune;
+        float immunityTimer;
+        bool isCrouching;
+
         virtual std::vector<Rectangle>& getAnimationFrame() const = 0;
 
     public:
@@ -62,6 +66,8 @@ class Player : public Character{
         void MoveRight() override;
         void MoveLeft() override;
         void StopMoving() override;
+        void Crouch();
+        void StopCrouch();
         void Jump();
         void Cut_Jump();
 
@@ -83,6 +89,8 @@ class Player : public Character{
 
         void Pose(float dt);
         void Fade_Out(float dt);
+        
+        void TakeDamage();
 
         json to_json() const;
         void from_json(const json& j);
