@@ -192,3 +192,47 @@ float PiranhaPlant::GetCurrentTargetY() const
         return position_.y;
     }
 }
+
+json PiranhaPlant::to_json() const {
+    json j;
+
+    // Thuộc tính kế thừa từ Enemy
+    j["position"] = { position_.x, position_.y };
+    j["velocity"] = { velocity_.x, velocity_.y };
+    j["gravity"] = gravity_;
+    j["is_ground"] = is_ground;
+    j["is_active"] = is_active;
+    j["is_dead"] = is_dead;
+    j["first_appear"] = first_appear;
+
+    // Thuộc tính riêng của PiranhaPlant
+    j["state"] = static_cast<int>(state_);
+    j["base_pos"] = { base_pos.x, base_pos.y };
+    j["above_pos"] = { above_pos.x, above_pos.y };
+    j["delta_time"] = delta_time;
+    j["state_timer"] = state_timer;
+
+    return j;
+}
+
+void PiranhaPlant::from_json(const json& j) {
+    // Thuộc tính kế thừa từ Enemy
+    position_.x = j.at("position")[0];
+    position_.y = j.at("position")[1];
+    velocity_.x = j.at("velocity")[0];
+    velocity_.y = j.at("velocity")[1];
+    gravity_ = j.at("gravity");
+    is_ground = j.at("is_ground");
+    is_active = j.at("is_active");
+    is_dead = j.at("is_dead");
+    first_appear = j.at("first_appear");
+
+    // Thuộc tính riêng của PiranhaPlant
+    state_ = static_cast<PiranhaPlant_State>(j.at("state").get<int>());
+    base_pos.x = j.at("base_pos")[0];
+    base_pos.y = j.at("base_pos")[1];
+    above_pos.x = j.at("above_pos")[0];
+    above_pos.y = j.at("above_pos")[1];
+    delta_time = j.at("delta_time");
+    state_timer = j.at("state_timer");
+}

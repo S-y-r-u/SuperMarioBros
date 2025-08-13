@@ -8,7 +8,7 @@ private:
     RecButton playButton;
     RecButton settingBtn;
     RecButton infoButton;
-    RecButton quitButton;
+    RecButton continueButton;
     RecButton mapButton;
     RecButton characterButton;
     Texture* MenuTexture;

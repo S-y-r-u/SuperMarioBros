@@ -50,4 +50,7 @@ public:
     virtual void Notify_Be_Kicked(int direction, PlayerInformation& info) {}
     virtual void Collision_With_Other_Enemy(Vector2 velo, Vector2 pos);
     virtual bool Need_Check_Collision_With_Other_Enemy() const;
+
+    virtual json to_json() const {} ;
+    virtual void from_json(const json& j){} ;
 };

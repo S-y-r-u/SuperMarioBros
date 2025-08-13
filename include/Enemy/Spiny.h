@@ -40,6 +40,8 @@ public:
     bool Can_Jump() const override;
     void Collision_With_Other_Enemy(Vector2 velo, Vector2 pos) override;
 
+    json to_json() const override;
+    void from_json(const json& j) override;
 private:
     void Animate_();
     void Move_(float dt);

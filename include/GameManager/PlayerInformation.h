@@ -35,4 +35,7 @@ public:
     void Game_Won();
     void Up_Score();
     void Set_Time_To_0();
+
+    void from_json(const json &j);
+    json to_json() const;
 };

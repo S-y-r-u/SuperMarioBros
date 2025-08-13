@@ -36,8 +36,6 @@ KoopaTroopa::~KoopaTroopa()
 
 void KoopaTroopa::SetState(KoopaState *new_state)
 {
-    if (current_state_)
-        current_state_->Exit(this);
     delete previous_state;
     previous_state = current_state_;
     current_state_ = new_state;
@@ -143,3 +141,77 @@ void KoopaTroopa::Collision_With_Other_Enemy(Vector2 velo, Vector2 pos)
 {
     Notify_Change_Direct();
 }
+json KoopaTroopa::to_json() const {
+    json j;
+
+    // Enemy base
+    j["position"] = { position_.x, position_.y };
+    j["velocity"] = { velocity_.x, velocity_.y };
+    j["gravity"] = gravity_;
+    j["is_ground"] = is_ground;
+    j["is_active"] = is_active;
+    j["is_dead"] = is_dead;
+    j["first_appear"] = first_appear;
+
+    // KoopaTroopa riêng
+    j["before_pos"] = { before_pos_.x, before_pos_.y };
+
+    // Lưu state
+    json state_json;
+    if (auto s = dynamic_cast<KoopaWalkingState*>(current_state_)) {
+        state_json["name"] = "walking";
+    } else if (auto s = dynamic_cast<KoopaShellIdleState*>(current_state_)) {
+        state_json["name"] = "shell_idle";
+        state_json["timer"] = s->GetTimer(); // cần hàm getter
+    } else if (auto s = dynamic_cast<KoopaShellMovingState*>(current_state_)) {
+        state_json["name"] = "shell_moving";
+    } else if (auto s = dynamic_cast<KoopaDyingState*>(current_state_)) {
+        state_json["name"] = "dying";
+    } else if (auto s = dynamic_cast<KoopaFlyingState*>(current_state_)) {
+        state_json["name"] = "flying";
+        state_json["flying_timer"] = s->GetFlyingTimer();
+    }
+    j["state"] = state_json;
+
+    return j;
+}
+
+void KoopaTroopa::from_json(const json& j) {
+    // Enemy base
+    position_.x = j.at("position")[0];
+    position_.y = j.at("position")[1];
+    velocity_.x = j.at("velocity")[0];
+    velocity_.y = j.at("velocity")[1];
+    gravity_ = j.at("gravity");
+    is_ground = j.at("is_ground");
+    is_active = j.at("is_active");
+    is_dead = j.at("is_dead");
+    first_appear = j.at("first_appear");
+
+    // KoopaTroopa riêng
+    before_pos_.x = j.at("before_pos")[0];
+    before_pos_.y = j.at("before_pos")[1];
+
+    // State
+    auto state_json = j.at("state");
+    std::string name = state_json.at("name").get<std::string>();
+
+    if (name == "walking") {
+        SetState(new KoopaWalkingState());
+    } else if (name == "shell_idle") {
+        auto s = new KoopaShellIdleState();
+        s->SetTimer(state_json.at("timer")); // cần hàm setter
+        SetState(s);
+    } else if (name == "shell_moving") {
+        auto s = new KoopaShellMovingState();
+        SetState(s);
+    } else if (name == "dying") {
+        SetState(new KoopaDyingState());
+    } else if (name == "flying") {
+        auto s = new KoopaFlyingState();
+        s->SetFlyingTimer(state_json.at("flying_timer"));
+        SetState(s);
+    }
+}
+
+

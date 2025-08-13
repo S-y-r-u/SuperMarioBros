@@ -12,6 +12,7 @@
 #include "Menu/ChoosingCharacter.h"
 #include "GameManager/GameOver.h"
 #include "GameManager/TimeUp.h"
+#include "Menu/ContinueState.h"
 
 class UI {
 public:

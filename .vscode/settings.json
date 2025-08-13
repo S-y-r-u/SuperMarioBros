@@ -82,6 +82,15 @@
     "xtree": "cpp",
     "list": "cpp",
     "xhash": "cpp",
-    "sstream": "cpp"
+    "sstream": "cpp",
+    "any": "cpp",
+    "chrono": "cpp",
+    "codecvt": "cpp",
+    "filesystem": "cpp",
+    "forward_list": "cpp",
+    "iomanip": "cpp",
+    "ranges": "cpp",
+    "ratio": "cpp",
+    "valarray": "cpp"
   }
 }

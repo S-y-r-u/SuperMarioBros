@@ -215,6 +215,7 @@ void GameManager::TransGame()
 
 int GameManager::Update()
 {
+    
     if (current_stage == intro_stage)
     {
         current_stage->Run();
@@ -224,12 +225,22 @@ int GameManager::Update()
     else if (current_stage == stage)
     // Lấy trạng thái pause
     {
+        std::cout << "[DEBUG] Updating game manager state\n";
         Stage *cur_stage = dynamic_cast<Stage *>(current_stage);
         int pause_select = PauseSelect::Pause_None_Select;
         if (!cur_stage->Game_Won())
             pause_select = pause_manager->Get_Pause_Select(); // Get_Pause_Select() sử dụng Update_() của I_Pause_State
         if (pause_select == PauseSelect::Pause_Exit_Select)
         {
+            return menuState;
+        }
+        if (pause_select == PauseSelect::Pause_Save_Select){
+            json save_data = to_json();
+            std::ofstream f("save.json");
+            if (f.is_open()) {
+                f << save_data.dump(4);
+                f.close();
+            }
             return menuState;
         }
         // Chơi lại từ đầu
@@ -348,4 +359,51 @@ Game_Mode GameManager::GetGameMode() const
 PlayerInformation &GameManager::GetPlayerInformation() const
 {
     return *player_info;
+}
+
+json GameManager::to_json() const {
+    json j;
+    j["difficulty"] = static_cast<int>(difficulty);
+    std::cout << "[DEBUG] type of difficulty in JSON: " 
+              << j["difficulty"].type_name() << "\n";
+
+
+    j["player_mode"] = static_cast<int>(player_mode);
+    j["game_mode"] = static_cast<int>(game_mode);
+    if (player_info) {
+        j["player_info"] = player_info->to_json();
+    }
+    if (stage) {
+        j["stage"] = stage->to_json();
+    }
+    // Có thể lưu thêm thông tin khác nếu cần
+    return j;
+}
+
+void GameManager::from_json(const json& j) {
+    difficulty = static_cast<Difficulty>(j["difficulty"].get<int>());
+    player_mode = static_cast<Player_Mode>(j.at("player_mode").get<int>());
+    game_mode = static_cast<Game_Mode>(j.at("game_mode").get<int>());
+    if (j.contains("player_info")) {
+        if (player_info) delete player_info;
+        player_info = new PlayerInformation(200,5);
+        player_info->from_json(j.at("player_info"));
+    }
+    if (j.contains("stage") ) {
+        if (stage) delete stage;
+        switch (difficulty) {
+            case Difficulty::Easy:
+                stage = new EasyMap(player_mode,*player_info);
+                break;
+            case Difficulty::Medium:
+                stage = new MediumMap(player_mode,*player_info);
+                break;
+            case Difficulty::Hard:
+                stage = new HardMap(player_mode,*player_info);
+                break;
+        }
+        stage->from_json(j.at("stage"));
+    }
+    current_stage = stage ;
+    std::cerr<< "Resources reinitialized." << std::endl;
 }

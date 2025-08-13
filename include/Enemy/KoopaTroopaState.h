@@ -8,7 +8,6 @@ public:
     virtual ~KoopaState() = default;
 
     virtual void Enter(KoopaTroopa *koopa) {}
-    virtual void Exit(KoopaTroopa *koopa) {}
     virtual void Update(KoopaTroopa *koopa, float dt) = 0;
     virtual void OnStomped(KoopaTroopa *koopa, PlayerInformation &info) {}
     virtual void OnFired(KoopaTroopa *koopa);
@@ -44,6 +43,8 @@ public:
     void OnStomped(KoopaTroopa *koopa, PlayerInformation &info) override; // kick to move
     void OnKicked(KoopaTroopa *koopa , int direction , PlayerInformation &info) override;
     int Get_Score() const override { return Score_Shell; }
+    float GetTimer() const { return timer; }
+    void SetTimer(float t) { timer = t; }
 };
 
 // ------ SHELL MOVING ------
@@ -79,12 +80,14 @@ class KoopaFlyingState : public KoopaState
 {
 private:
     float fly_timer = 0.0f;
-    float fly_interval = 10.5f;
-    float fly_speed = 240.0f;
+    const float fly_interval = 10.5f;
+    const float fly_speed = 240.0f;
 
 public:
     void Enter(KoopaTroopa *koopa) override;
     void Update(KoopaTroopa *koopa, float dt) override;
     void OnStomped(KoopaTroopa *koopa , PlayerInformation &info) override;
     int Get_Score() const override { return 0; }
+    float GetFlyingTimer() const { return fly_timer; }
+    void SetFlyingTimer(float timer) { fly_timer = timer; }
 };

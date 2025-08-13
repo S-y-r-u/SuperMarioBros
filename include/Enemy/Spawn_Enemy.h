@@ -9,17 +9,7 @@
 #include "Player.h"
 #include <string>
 #include <unordered_map>
-
-enum class EnemyType
-{
-    Goomba,
-    KoopaTroopaWalking,
-    KoopaTroopaFlying,
-    Latiku,
-    PiranhaPlant,
-    BomberBill,
-    Spiny
-};
+#include "Constants.h"
 
 
 class Spawn_Enemy

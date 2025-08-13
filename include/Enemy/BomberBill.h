@@ -11,21 +11,21 @@ enum class BomberBill_State
 class BomberBill : public Enemy
 {
 private:
-    float max_distance;      // Khoảng cách tối đa có thể chạy
+    const float max_distance = 300.0f;      // Khoảng cách tối đa có thể chạy
     float initial_x;         // Vị trí x ban đầu
     bool moving_right;       // True nếu đang chạy sang phải, false nếu chạy sang trái
-    float run_speed;         // Tốc độ chạy
+    const float run_speed = 300.0f;         // Tốc độ chạy
     Vector2 previous_frame_pos; // Lưu vị trí trước đó để có thể sử dụng trong các thông báo
 
     // Death animation variables
     BomberBill_State state_;
     float death_timer;
     const float death_duration = 1.0f; // Thời gian rơi trước khi biến mất
-    float fall_speed;
+    const float fall_speed = 300.0f;   // Tốc độ rơi
     const int score = 100;
 
 public:
-    BomberBill(Vector2 startPos, float maxDistance = 300.0f, float speed = 300.0f);
+    BomberBill(Vector2 startPos , float speed = 300.0f);
     ~BomberBill();
 
     void Update(float dt) override;
@@ -41,6 +41,8 @@ public:
     void Notify_On_Ground() override;
     void Notify_Be_Stomped(PlayerInformation& info) override;
 
+    json to_json() const override;
+    void from_json(const json& j) override;
 private:
     void Update_Animation(float dt);
     void Start_Death_Animation();

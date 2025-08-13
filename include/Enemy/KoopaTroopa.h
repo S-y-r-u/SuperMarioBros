@@ -41,4 +41,7 @@ public:
     bool Can_Be_Kicked() const override;
     bool Kill_Other_Enemies() const override;
     void Collision_With_Other_Enemy(Vector2 velo, Vector2 pos) override;
+
+    json to_json() const override ;
+    void from_json(const json& j) override;
 };

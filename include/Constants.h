@@ -21,7 +21,8 @@ enum ProgramState
     choosingCharacterState = 3,
     gameManagerState = 4,
     gameOverState = 5,
-    timeUpState = 6
+    timeUpState = 6,
+    continueState = 7
 };
 
 enum class Player_Mode
@@ -43,11 +44,13 @@ namespace Physics
     constexpr float gravity_ = 1000.0f;
 }
 
-// Colors (if you want to define custom colors, otherwise use raylib's built-in colors)
-// Example:
-// #include "raylib.h"
-// constexpr Color MARIO_RED = { 228, 53, 36, 255 };
-
-// Asset paths (if you want to centralize them)
-// constexpr const char* FONT_PATH = "Assets/Fonts/LilitaOne-Regular.ttf";
-// constexpr const char* ICON_PATH = "Assets/Images/mario_icon.png";
+enum class EnemyType
+{
+    Goomba,
+    KoopaTroopaWalking,
+    KoopaTroopaFlying,
+    Latiku,
+    PiranhaPlant,
+    BomberBill,
+    Spiny
+};

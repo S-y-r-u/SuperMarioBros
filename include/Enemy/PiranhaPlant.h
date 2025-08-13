@@ -47,6 +47,9 @@ public:
     bool Can_Be_Fired_Or_Hit() const override;
     bool Need_Check_Ground_Block() const override { return false; } // Không cần kiểm tra block dưới vì chỉ nhô lên/rút xuống
 
+    json to_json() const override;
+    void from_json(const json& j) override;
+
 private:
     void UpdateStateMachine(float dt);
     void UpdatePosition(float dt);

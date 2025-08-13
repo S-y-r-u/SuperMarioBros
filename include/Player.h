@@ -83,4 +83,7 @@ class Player : public Character{
 
         void Pose(float dt);
         void Fade_Out(float dt);
+
+        json to_json() const;
+        void from_json(const json& j);
 };

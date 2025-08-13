@@ -6,7 +6,7 @@ Menu::Menu() :
     playButton("PLAY", 350, 400, 200, 50),
     settingBtn("SETTINGS", 640, 400, 200, 50),
     infoButton("INFO", 350, 600, 200, 50),
-    quitButton("QUIT", 640, 600, 200, 50),
+    continueButton("CONTINUE", 640, 600, 200, 50),
     mapButton("MAP", 350, 500, 200, 50),
     characterButton("CHARACTER", 640, 500, 200, 50),
     titleBaseY(50.0f),      // Vị trí Y cơ bản của title
@@ -33,7 +33,7 @@ void Menu::Draw() {
     playButton.Draw();
     settingBtn.Draw();
     infoButton.Draw();
-    quitButton.Draw();
+    continueButton.Draw();
     mapButton.Draw();
     characterButton.Draw();
 }
@@ -54,11 +54,11 @@ int Menu::Update() {
     if (infoButton.Update()) {
         // return infoState;
     }
-    if (quitButton.Update()) {
-        // return quitState;
+    if (continueButton.Update()) {
+        return ProgramState::continueState;
     }
     if (mapButton.Update()) {
-        return choosingStageState;
+        return ProgramState::choosingStageState;
     }
     if (characterButton.Update()) {
         return choosingCharacterState;

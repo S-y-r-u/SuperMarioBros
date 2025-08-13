@@ -16,7 +16,8 @@ enum PauseSelect
     Pause_None_Select = 0,
     Pause_Resume_Select,
     Pause_Restart_Select,
-    Pause_Exit_Select
+    Pause_Exit_Select,
+    Pause_Save_Select
 };
 
 class PauseManager

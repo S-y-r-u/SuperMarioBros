@@ -35,6 +35,8 @@ public:
     bool Can_Be_Stomped() const override;
     bool Can_Be_Fired_Or_Hit() const override;
 
+    json to_json() const;
+    void from_json(const json& j);
 private:
     void Move_(float dt);
     void Animate_();

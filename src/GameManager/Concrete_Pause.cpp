@@ -27,7 +27,8 @@ Pause_Menu::Pause_Menu(PauseManager &pm)
     : pause_manager(pm),
       resume_button("Resume", (Screen_w - 200) / 2, 290, 200, 50),
       restart_button("Restart", (Screen_w - 200) / 2, 390, 200, 50),
-      exit_button("Exit", (Screen_w - 200) / 2, 490, 200, 50)
+      exit_button("Exit", (Screen_w - 200) / 2, 490, 200, 50),
+      save_button("Save", (Screen_w - 200) / 2, 590, 200, 50)
 {
     pause_background = LoadTexture("Menu/Pause_Menu.png");
 }
@@ -44,6 +45,7 @@ void Pause_Menu::Draw_()
     resume_button.Draw();
     restart_button.Draw();
     exit_button.Draw();
+    save_button.Draw();
 }
 
 int Pause_Menu::Update_()
@@ -53,6 +55,11 @@ int Pause_Menu::Update_()
         pause_manager.Set_Pause_State(pause_manager.Get_Non_Pause_State());
         return PauseSelect::Pause_Resume_Select;
         // Trở về trạng thái không pause
+    }
+    if (save_button.Update())
+    {
+        pause_manager.Set_Pause_State(pause_manager.Get_Non_Pause_State());
+        return PauseSelect::Pause_Save_Select;
     }
     if (restart_button.Update())
     {
@@ -65,6 +72,9 @@ int Pause_Menu::Update_()
         pause_manager.Set_Pause_State(pause_manager.Get_Exit_Confirmation_State());
         return PauseSelect::Pause_None_Select;
         // Chuyển sang trạng thái xác nhận thoát
+    }
+    if (save_button.Update()){
+        
     }
     return PauseSelect::Pause_None_Select;
     // Không có lựa chọn nào được thực hiện

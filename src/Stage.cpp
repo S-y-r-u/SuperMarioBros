@@ -1,5 +1,6 @@
 #include "Stage.h"
 #include "algorithm"
+#include "Enemy/KoopaTroopaState.h"
 
 Stage::Stage(PlayerInformation &info)
     : information(info),
@@ -47,17 +48,27 @@ Stage::~Stage()
 }
 
 void Stage::Run()
-{
+{   
+    std::cerr << "1" << std::endl;
     if (!Is_Game_Won)
     {
+        std::cerr << "2" << std::endl;
         Is_Game_Won = win_animation->Check_Win_Animation();
+        std::cerr << "3" << std::endl;
         if (Is_Game_Won)
         {
+            std::cerr << "4" << std::endl;
             Keyboard.clear();
+            std::cerr << "5" << std::endl;
         }
     }
     else
+    {
+        std::cerr << "6" << std::endl;
         win_animation->Update(GetFrameTime());
+        std::cerr << "7" << std::endl;
+    }
+    std::cerr << "8" << std::endl;
 
     Player_Update();
     if (!player->Get_isTransforming())
@@ -1203,4 +1214,101 @@ bool Stage::Game_Won() const
 bool Stage::Change_State() 
 {
     return Is_Game_Won && timer_ >= cool_down_after_win;
+}
+
+
+json Stage::to_json() const {
+    json j;
+    j["source"] = {source.x, source.y, source.width, source.height};
+    j["dest"] = {dest.x, dest.y, dest.width, dest.height};
+    j["Map"] = Map;
+    j["player_mode"] = static_cast<int>(player_mode);
+    j["timer_"] = timer_;
+    j["Reset_Game"] = Reset_Game;
+    j["Is_Game_Won"] = Is_Game_Won;
+    if (player) {
+        j["player"] = player->to_json();
+    }
+    j["camera"] = {
+        camera.offset.x, camera.offset.y,
+        camera.target.x, camera.target.y,
+        camera.rotation,
+        camera.zoom
+    };
+    j["enemies_size"] = enemies.size();
+    for (const auto& enemy : enemies) {
+        int type = -1;
+        if (dynamic_cast<Goomba*>(enemy)) type = static_cast<int>(EnemyType::Goomba);
+        else if (dynamic_cast<KoopaTroopa*>(enemy)) type = static_cast<int>(EnemyType::KoopaTroopaWalking);
+        else if (dynamic_cast<Latiku*>(enemy)) type = static_cast<int>(EnemyType::Latiku);
+        else if (dynamic_cast<PiranhaPlant*>(enemy)) type = static_cast<int>(EnemyType::PiranhaPlant);
+        else if (dynamic_cast<BomberBill*>(enemy)) type = static_cast<int>(EnemyType::BomberBill);
+        else if (dynamic_cast<Spiny*>(enemy)) type = static_cast<int>(EnemyType::Spiny);
+        json enemy_json = enemy->to_json();
+        // Đặt type lên đầu object
+        json result_json;
+        result_json["type"] = type;
+        for (auto it = enemy_json.begin(); it != enemy_json.end(); ++it) {
+            result_json[it.key()] = it.value();
+        }
+        j["enemies"].push_back(result_json);
+    }
+    return j;
+}
+
+void Stage::from_json(const json& j) {
+    auto src = j.at("source");
+    source = {src[0], src[1], src[2], src[3]};
+    auto dst = j.at("dest");
+    dest = {dst[0], dst[1], dst[2], dst[3]};
+    Map = j.at("Map").get<std::vector<std::vector<int>>>();
+    player_mode = static_cast<Player_Mode>(j.at("player_mode").get<int>());
+    timer_ = j.at("timer_").get<float>();
+    Reset_Game = j.at("Reset_Game").get<bool>();
+    Is_Game_Won = j.at("Is_Game_Won").get<bool>();
+    if (j.contains("player")) {
+        if (player) delete player;
+        if (player_mode == Player_Mode::MARIO_PLAYER) {
+            player = new Mario({100,100});
+        }
+        else if (player_mode == Player_Mode::LUIGI_PLAYER) {
+            player = new Luigi({100,100});
+        }
+        else {
+            player = new Mario({100,100});
+        }
+        player->from_json(j.at("player"));
+    }
+    if (j.contains("camera")) {
+        auto cam = j.at("camera");
+        camera.offset = {cam[0], cam[1]};
+        camera.target = {cam[2], cam[3]};
+        camera.rotation = cam[4];
+        camera.zoom = cam[5];
+    }
+    
+    if (win_animation) delete win_animation;
+    win_animation = new Win_Animation_Manager(*player, *flag_pole, *flag_castle, information);
+
+    // Xóa các enemy cũ nếu có
+    for (auto e : enemies) delete e;
+    const_cast<std::vector<Enemy*>&>(enemies).clear();
+    const_cast<std::unordered_map<Enemy*, std::vector<Enemy*>>&>(enemy_map).clear();
+    if (j.contains("enemies")) {
+        for (const auto& enemy_j : j.at("enemies")) {
+            int type = enemy_j.value("type", -1);
+            Vector2 pos = {0,0};
+            if (enemy_j.contains("position")) {
+                auto p = enemy_j["position"];
+                pos = {p[0], p[1]};
+            }
+            Spawn_Enemy::SpawnEnemies(static_cast<EnemyType>(type), pos, player, const_cast<std::unordered_map<Enemy*, std::vector<Enemy*>>&>(enemy_map), const_cast<std::vector<Enemy*>&>(enemies), camera);
+            if (!enemies.empty()) {
+                json enemy_data = enemy_j;
+                enemy_data.erase("type");
+                enemies.back()->from_json(enemy_data);
+            }
+        }
+    }
+    // Khởi tạo lại các resource/phức tạp nếu cần
 }

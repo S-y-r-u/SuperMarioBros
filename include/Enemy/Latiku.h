@@ -51,6 +51,8 @@ public:
     bool Need_Check_Ground_Block() const;
     bool Need_Check_Collision_With_Other_Enemy() const override;
 
+    json to_json() const override;
+    void from_json(const json& j) override;
 private:
     void Spawn_Spiny();
     void Animate_(float dt);

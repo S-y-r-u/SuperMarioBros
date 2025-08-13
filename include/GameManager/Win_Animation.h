@@ -17,6 +17,8 @@ public:
     bool End_Animation();
     bool Player_Disappear();
 
+    json to_json() const;
+    void from_json(const json& j);
 private:
     Player &player_;
     Flag_Pole &flag_pole_;

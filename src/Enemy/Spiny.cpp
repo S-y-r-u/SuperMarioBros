@@ -154,3 +154,45 @@ void Spiny::Collision_With_Other_Enemy(Vector2 velo, Vector2 pos)
             Notify_Change_Direct();
     }
 }
+
+
+json Spiny::to_json() const {
+    json j;
+
+    // Thuộc tính kế thừa từ Enemy
+    j["position"] = { position_.x, position_.y };
+    j["velocity"] = { velocity_.x, velocity_.y };
+    j["gravity"] = gravity_;
+    j["is_ground"] = is_ground;
+    j["is_active"] = is_active;
+    j["is_dead"] = is_dead;
+    j["first_appear"] = first_appear;
+
+    // Thuộc tính riêng của Spiny
+    j["state"] = static_cast<int>(state_);
+    j["previous_frame_pos"] = { previous_frame_pos.x, previous_frame_pos.y };
+    j["is_jump"] = is_jump;
+    j["prev_ground"] = prev_ground;
+
+    return j;
+}
+
+void Spiny::from_json(const json& j) {
+    // Thuộc tính kế thừa từ Enemy
+    position_.x = j.at("position")[0];
+    position_.y = j.at("position")[1];
+    velocity_.x = j.at("velocity")[0];
+    velocity_.y = j.at("velocity")[1];
+    gravity_ = j.at("gravity");
+    is_ground = j.at("is_ground");
+    is_active = j.at("is_active");
+    is_dead = j.at("is_dead");
+    first_appear = j.at("first_appear");
+
+    // Thuộc tính riêng của Spiny
+    state_ = static_cast<Spiny_State>(j.at("state").get<int>());
+    previous_frame_pos.x = j.at("previous_frame_pos")[0];
+    previous_frame_pos.y = j.at("previous_frame_pos")[1];
+    is_jump = j.at("is_jump");
+    prev_ground = j.at("prev_ground");
+}

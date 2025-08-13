@@ -1,14 +1,11 @@
 #include "Enemy/BomberBill.h"
 
-BomberBill::BomberBill(Vector2 startPos, float maxDistance, float speed)
+BomberBill::BomberBill(Vector2 startPos , float speed)
     : Enemy(startPos, {speed, 0}, 0.0f), // Không có trọng lực ban đầu
-      max_distance(maxDistance),
       initial_x(startPos.x),
       moving_right(true),
-      run_speed(speed),
       state_(BomberBill_State::Flying),
-      death_timer(0.0f),
-      fall_speed(300.0f)
+      death_timer(0.0f)
 {
     // Khởi tạo vector chứa 6 frame animation
 
@@ -168,4 +165,47 @@ void BomberBill::Notify_Be_Stomped(PlayerInformation& info)
         // Thêm điểm cho player
         // info.AddScore(100); // Ví dụ
     }
+}
+
+json BomberBill::to_json() const {
+    json j;
+    
+    // Thuộc tính của Enemy
+    j["position"] = { position_.x, position_.y };
+    j["velocity"] = { velocity_.x, velocity_.y };
+    j["gravity"] = gravity_;
+    j["is_ground"] = is_ground;
+    j["is_active"] = is_active;
+    j["is_dead"] = is_dead;
+    j["first_appear"] = first_appear;
+
+    // Thuộc tính của BomberBill
+    j["initial_x"] = initial_x;
+    j["moving_right"] = moving_right;
+    j["previous_frame_pos"] = { previous_frame_pos.x, previous_frame_pos.y };
+    j["state"] = static_cast<int>(state_);
+    j["death_timer"] = death_timer;
+
+    return j;
+}
+
+void BomberBill::from_json(const json& j) {
+    // Thuộc tính của Enemy
+    position_.x = j.at("position")[0];
+    position_.y = j.at("position")[1];
+    velocity_.x = j.at("velocity")[0];
+    velocity_.y = j.at("velocity")[1];
+    gravity_ = j.at("gravity");
+    is_ground = j.at("is_ground");
+    is_active = j.at("is_active");
+    is_dead = j.at("is_dead");
+    first_appear = j.at("first_appear");
+
+    // Thuộc tính của BomberBill
+    initial_x = j.at("initial_x");
+    moving_right = j.at("moving_right");
+    previous_frame_pos.x = j.at("previous_frame_pos")[0];
+    previous_frame_pos.y = j.at("previous_frame_pos")[1];
+    state_ = static_cast<BomberBill_State>(j.at("state").get<int>());
+    death_timer = j.at("death_timer");
 }

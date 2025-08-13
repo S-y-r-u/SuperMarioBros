@@ -387,3 +387,76 @@ void Player::Fade_Out(float dt)
     state = AnimationState::Fade_Out;
     animationSpeed = dt / getAnimationFrame().size();
 }
+
+
+json Player::to_json() const {
+    json j;
+    //character
+    j["position_x"] = position.x;
+    j["position_y"] = position.y;
+    j["velocity_x"] = velocity.x;
+    j["velocity_y"] = velocity.y;
+    j["isGround"] = isGround;
+    j["isFacingLeft"] = isFacingLeft;
+    j["speed"] = speed;
+    j["gravity"] = gravity;
+    //player
+    j["form"] = static_cast<int>(form);
+    j["state"] = static_cast<int>(state);
+    j["JumpForce"] = JumpForce;
+    j["friction"] = friction;
+    j["isTransforming"] = isTransforming;
+    j["targetForm"] = static_cast<int>(targetForm);
+    j["isInvincible"] = isInvincible;
+    j["invincibleTimer"] = invincibleTimer;
+    j["beforeStar"] = static_cast<int>(beforeStar);
+    j["isDead"] = isDead;
+    j["isActive"] = isActive;
+    j["deadTimer"] = deadTimer;
+    j["climb_velo_x"] = climb_velo.x;
+    j["climb_velo_y"] = climb_velo.y;
+    j["is_climbing"] = is_climbing;
+    j["fireCoolDown"] = fireCoolDown;
+    j["currentFrame"] = currentFrame;
+    j["frameTimer"] = frameTimer;
+    j["animationSpeed"] = animationSpeed;
+    j["animationSpeedClimb"] = animationSpeedClimb;
+    j["is_pose"] = is_pose;
+    j["is_fade_out"] = is_fade_out;
+    return j;
+}
+
+void Player::from_json(const json& j) {
+    //character
+    position.x = j.at("position_x").get<float>();
+    position.y = j.at("position_y").get<float>();
+    velocity.x = j.at("velocity_x").get<float>();
+    velocity.y = j.at("velocity_y").get<float>();
+    isGround = j.at("isGround").get<bool>();
+    isFacingLeft = j.at("isFacingLeft").get<bool>();
+    speed = j.at("speed").get<float>();
+    gravity = j.at("gravity").get<float>();
+    //player
+    form = static_cast<PlayerForm>(j.at("form").get<int>());
+    state = static_cast<AnimationState>(j.at("state").get<int>());
+    JumpForce = j.at("JumpForce").get<float>();
+    friction = j.at("friction").get<float>();
+    isTransforming = j.at("isTransforming").get<bool>();
+    targetForm = static_cast<PlayerForm>(j.at("targetForm").get<int>());
+    isInvincible = j.at("isInvincible").get<bool>();
+    invincibleTimer = j.at("invincibleTimer").get<float>();
+    beforeStar = static_cast<PlayerForm>(j.at("beforeStar").get<int>());
+    isDead = j.at("isDead").get<bool>();
+    isActive = j.at("isActive").get<bool>();
+    deadTimer = j.at("deadTimer").get<float>();
+    climb_velo.x = j.at("climb_velo_x").get<float>();
+    climb_velo.y = j.at("climb_velo_y").get<float>();
+    is_climbing = j.at("is_climbing").get<bool>();
+    fireCoolDown = j.at("fireCoolDown").get<float>();
+    currentFrame = j.at("currentFrame").get<int>();
+    frameTimer = j.at("frameTimer").get<float>();
+    animationSpeed = j.at("animationSpeed").get<float>();
+    animationSpeedClimb = j.at("animationSpeedClimb").get<float>();
+    is_pose = j.at("is_pose").get<bool>();
+    is_fade_out = j.at("is_fade_out").get<bool>();
+}

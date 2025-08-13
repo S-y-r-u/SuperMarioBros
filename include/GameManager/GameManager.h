@@ -51,6 +51,8 @@ public:
 
     PlayerInformation &GetPlayerInformation() const;
 
+    json to_json() const;
+    void from_json(const json& j);
 private:
     I_Stage *current_stage;
     I_Stage *intro_stage;

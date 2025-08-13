@@ -21,6 +21,7 @@ private:
     RecButton resume_button;
     RecButton restart_button;
     RecButton exit_button;
+    RecButton save_button;
     Texture2D pause_background;
     PauseManager& pause_manager;
 public:
