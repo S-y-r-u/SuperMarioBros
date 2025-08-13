@@ -2,6 +2,7 @@
 #include <raylib.h>
 #include <vector>
 #include "sprite.h"
+#include "Constants.h"
 
 class Animation
 {
@@ -27,4 +28,7 @@ public:
     void Set_Frames(const std::vector<Rectangle>& frames);
     void Set_Frame_Speed(float speed);
     void Set_Rec(const Rectangle& rec);
+
+    json to_json() const;
+    void from_json(const json& j);
 };

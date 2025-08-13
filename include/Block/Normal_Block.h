@@ -24,6 +24,8 @@ public:
     bool Get_Elapse() override;
     Rectangle Get_Draw_Rec() const override;
 
+    json to_json() const;
+    void from_json(const json& j);
 private:
     void Elapse_();
     void Change_State();

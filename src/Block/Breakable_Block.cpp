@@ -99,3 +99,36 @@ Rectangle Breakable_BLock::Get_Draw_Rec() const
         Tile_Size,
         Tile_Size};
 }
+
+
+// Serialize Breakable_BLock
+json Breakable_BLock::to_json() const {
+    json j;
+    j["is_delete"] = is_delete;
+    j["up_pos_left"] = {up_pos_left.x, up_pos_left.y};
+    j["down_pos_left"] = {down_pos_left.x, down_pos_left.y};
+    j["up_velocity"] = {up_velocity.x, up_velocity.y};
+    j["down_velocity"] = {down_velocity.x, down_velocity.y};
+    j["rotation"] = rotation;
+    j["before_pos"] = {before_pos.x, before_pos.y};
+    j["animation"] = animation_.to_json();
+    // Có thể lưu thêm animation nếu muốn
+    return j;
+}
+
+void Breakable_BLock::from_json(const json& j) {
+    is_delete = j.value("is_delete", false);
+    up_pos_left.x = j["up_pos_left"][0];
+    up_pos_left.y = j["up_pos_left"][1];
+    down_pos_left.x = j["down_pos_left"][0];
+    down_pos_left.y = j["down_pos_left"][1];
+    up_velocity.x = j["up_velocity"][0];
+    up_velocity.y = j["up_velocity"][1];
+    down_velocity.x = j["down_velocity"][0];
+    down_velocity.y = j["down_velocity"][1];
+    rotation = j.value("rotation", 0.0f);
+    before_pos.x = j["before_pos"][0];
+    before_pos.y = j["before_pos"][1];
+    animation_.from_json(j["animation"]);
+    // Có thể đọc thêm animation nếu muốn
+}

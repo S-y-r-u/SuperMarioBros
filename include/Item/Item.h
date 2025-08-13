@@ -39,4 +39,7 @@ public:
     virtual void Notify_Fall() {}
     virtual void Notify_On_Ground() {}
     virtual void Notify_Change_Direct() {}
+
+    virtual json to_json() const = 0;
+    virtual void from_json(const json& j) = 0;
 };

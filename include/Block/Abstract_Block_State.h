@@ -26,4 +26,7 @@ public:
     virtual bool Get_Is_Delete() const;
 
     virtual Rectangle Get_Draw_Rec() const = 0;
+
+    virtual json to_json() const = 0 ;
+    virtual void from_json(const json& j) = 0;
 };

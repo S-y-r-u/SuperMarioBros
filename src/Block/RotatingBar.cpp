@@ -1,3 +1,4 @@
+
 #include "Block/RotatingBar.h"
 
 RotatingBar::RotatingBar(Vector2 pivotPos)
@@ -83,4 +84,24 @@ Vector2 RotatingBar::GetEndPoint() const
     return {
         pivot.x + cosf(DEG2RAD * angle) * length,
         pivot.y + sinf(DEG2RAD * angle) * length};
+}
+
+// Serialize RotatingBar
+json RotatingBar::to_json() const {
+    json j;
+    j["pivot"] = {pivot.x, pivot.y};
+    j["length"] = length;
+    j["angle"] = angle;
+    j["speed"] = speed;
+    j["animation"] = animation_.to_json();
+    return j;
+}
+
+void RotatingBar::from_json(const json& j) {
+    pivot.x = j["pivot"][0];
+    pivot.y = j["pivot"][1];
+    length = j.value("length", 150.0f);
+    angle = j.value("angle", 0.0f);
+    speed = j.value("speed", 45.0f);
+    if (j.contains("animation")) animation_.from_json(j["animation"]);
 }

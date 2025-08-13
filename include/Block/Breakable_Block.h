@@ -30,6 +30,9 @@ public:
     bool Get_Is_Delete() const override;
     Rectangle Get_Draw_Rec() const override;
 
+        // Serialize/Deserialize
+    json to_json() const;
+    void from_json(const json& j);
 private:
     void Fall_();
     void Be_Delete();

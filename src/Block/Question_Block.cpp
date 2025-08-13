@@ -92,3 +92,23 @@ Rectangle Question_Block::Get_Draw_Rec() const
         animation_.Get_Current_Rec().width * scale_screen,
         animation_.Get_Current_Rec().height * scale_screen};
 }
+
+// Serialize Question_Block
+json Question_Block::to_json() const {
+    json j;
+    j["elapse"] = elapse_;
+    j["before_pos"] = {before_pos.x, before_pos.y};
+    j["velocity_y"] = velocity_y;
+    j["animation"] = animation_.to_json();
+    // Có thể lưu thêm animation nếu muốn
+    return j;
+}
+
+void Question_Block::from_json(const json& j) {
+    elapse_ = j.value("elapse", false);
+    before_pos.x = j["before_pos"][0];
+    before_pos.y = j["before_pos"][1];
+    velocity_y = j.value("velocity_y", 0.0f);
+    animation_.from_json(j["animation"]);
+    // Có thể đọc thêm animation nếu muốn
+}
