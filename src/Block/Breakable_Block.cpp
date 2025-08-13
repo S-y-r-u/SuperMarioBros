@@ -1,7 +1,7 @@
 #include "Block/Breakable_Block.h"
 
 Breakable_BLock::Breakable_BLock(Block &block)
-    : A_Block_State(&Item_Sprite::item_),
+    : A_Block_State(),
       m_block(block),
       is_delete(false),
       rotation(0.0f)

@@ -1,7 +1,7 @@
 #include "Block/Unbreakable_Block.h"
 
 Unbreakable_Block::Unbreakable_Block(Block &m_block)
-    : A_Block_State(&Item_Sprite::item_),
+    : A_Block_State(),
     m_block(m_block)
 {
     animation_ = Animation(&Item_Sprite::item_, Item_Sprite::Brown_Brick::type_1);

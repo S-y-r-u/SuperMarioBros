@@ -1,7 +1,7 @@
 #include "Block/Question_Block.h"
 
 Question_Block::Question_Block(Block &block)
-    : A_Block_State(&Item_Sprite::item_),
+    : A_Block_State(),
       m_block(block),
       velocity_y(0.0f),
       elapse_(false)

@@ -1,6 +1,9 @@
 #include "IntroMedium.h"
 
-Intro_Medium::Intro_Medium(PlayerInformation &info, Player_Mode mode) : player_info(info), player_mode(mode)
+Intro_Medium::Intro_Medium(PlayerInformation &info, Player_Mode mode)
+    : player_info(info),
+      player_mode(mode),
+      timer_(0.0f)
 {
     intro_medium = LoadTexture("../resources/map/Medium/Intro_Medium.png");
 }
@@ -42,5 +45,10 @@ void Intro_Medium::Draw()
 
 void Intro_Medium::Run()
 {
-    // Implement the run logic for the intro stage
+    timer_ += GetFrameTime();
+}
+
+bool Intro_Medium::Change_State()
+{
+    return timer_ >= End_Intro;
 }

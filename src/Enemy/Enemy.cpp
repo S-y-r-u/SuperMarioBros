@@ -1,7 +1,7 @@
 #include "Enemy/Enemy.h"
 
 Enemy::Enemy(Vector2 startPos, Vector2 velocity, float gravity)
-    : animation_(&Enemies_Sprite::enemies_),
+    : animation_(nullptr), // Khởi tạo animation với nullptr
       position_(startPos),
       velocity_(velocity), // Khởi tạo với vận tốc truyền vào
       gravity_(gravity),   // Khởi tạo với trọng lực truyền vào

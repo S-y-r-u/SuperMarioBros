@@ -1,7 +1,7 @@
 #include "Item/Item.h"
 
 Item::Item(Vector2 pos)
-    : animation_(&Item_Sprite::item_),
+    : animation_(nullptr),
       pos_(pos),
       appear_animation(1),
       is_delete(0) {}

@@ -1516,3 +1516,30 @@ namespace Intro
     Rectangle mario = {4, 272, 14, 14};
     Rectangle luigi = {20, 270, 15, 16};
 }
+
+namespace Outro_Animation
+{
+    SpriteSheet outro_;
+    namespace Mario
+    {
+        Rectangle o1 = {43, 32, 88, 75};
+        Rectangle o2 = {163, 30, 88, 75};
+        Rectangle o3 = {292, 31, 88, 74};
+        Rectangle o4 = {423, 32, 87, 74};
+        Rectangle o5 = {546, 32, 87, 74};
+        Rectangle o6 = {693, 31, 85, 74};
+        Rectangle o7 = {693, 31, 85, 74};
+        std::vector<Rectangle> outro_mario = {o1, o2, o3, o4, o5, o6, o7};
+    }
+    namespace Luigi
+    {
+        Rectangle o1 = {44, 144, 85, 77};
+        Rectangle o2 = {162, 142, 84, 77};
+        Rectangle o3 = {292, 143, 87, 77};
+        Rectangle o4 = {421, 142, 85, 77};
+        Rectangle o5 = {549, 144, 84, 77};
+        Rectangle o6 = {698, 142, 85, 77};
+        Rectangle o7 = {698, 142, 85, 77};
+        std::vector<Rectangle> outro_luigi = {o1, o2, o3, o4, o5, o6, o7};
+    }
+}

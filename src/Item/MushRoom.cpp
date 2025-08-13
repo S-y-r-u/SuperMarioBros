@@ -2,7 +2,13 @@
 #include <iostream>
 
 Mush_Room::Mush_Room(Vector2 pos, State_MushRoom state)
-    : Item(pos), state_(state), direct_(1), fall_(false), is_appear(false), jump_(true), before_pos_({pos.x, pos.y - Tile_Size})
+    : Item(pos),
+      state_(state),
+      direct_(1),
+      fall_(false),
+      is_appear(false),
+      jump_(true),
+      before_pos_({pos.x, pos.y - Tile_Size})
 {
     velocity_ = {0.0f, 0.0f};
     previous_frame_pos = pos_;
@@ -16,7 +22,7 @@ Mush_Room::Mush_Room(Vector2 pos, State_MushRoom state)
         animation_ = Animation(&Item_Sprite::item_, Item_Sprite::Mushroom::one_up_mushroom);
         break;
     case State_MushRoom::posion_:
-        animation_ = Animation(&Item_Sprite::item_, Item_Sprite::Mushroom::posion_mushroom) ;
+        animation_ = Animation(&Item_Sprite::item_, Item_Sprite::Mushroom::posion_mushroom);
         break;
     default:
         break;
@@ -81,18 +87,6 @@ void Mush_Room::Move_()
     velocity_.y = 0.0f;
 
     pos_.x += velocity_.x * GetFrameTime();
-
-    // Chặn biên màn hình
-    if (pos_.x >= 214 * 48.0f - animation_.Get_Current_Rec().width * scale_screen / 2.0f)
-    {
-        pos_.x = 214 * 48.0f - animation_.Get_Current_Rec().width * scale_screen / 2.0f;
-        direct_ = !direct_;
-    }
-    else if (pos_.x <= animation_.Get_Current_Rec().width * scale_screen / 2.0f)
-    {
-        pos_.x = animation_.Get_Current_Rec().width * scale_screen / 2.0f;
-        direct_ = !direct_;
-    }
 }
 
 void Mush_Room::Appear_()

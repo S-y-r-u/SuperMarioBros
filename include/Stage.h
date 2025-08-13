@@ -95,7 +95,7 @@ public:
 
     bool Need_Reset_Game() const;
     bool Game_Won() const;
-    bool Trans_Game() const;
+    bool Change_State() override;
 
     void DrawLayer();
 };

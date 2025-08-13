@@ -1,7 +1,7 @@
 #include "Block/Normal_Block.h"
 
 Normal_Block::Normal_Block(Block &block)
-    : A_Block_State(&Item_Sprite::item_),
+    : A_Block_State(),
       m_block(block),
       elapse_(false),
       change_state(false),

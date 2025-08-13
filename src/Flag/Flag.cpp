@@ -2,7 +2,7 @@
 #include "Constants.h"
 
 Flag::Flag(Vector2 pos)
-    : animation_(&Win_Animation::win_animation_),
+    : animation_(nullptr),
       pos_(pos),
       velocity_({0, 0}) {}
 

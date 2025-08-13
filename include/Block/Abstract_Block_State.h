@@ -14,7 +14,7 @@ protected:
     Animation animation_;
 
 public:
-    A_Block_State(SpriteSheet *sprite);
+    A_Block_State();
     virtual ~A_Block_State() = default;
 
     virtual void Draw_() = 0;

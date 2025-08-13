@@ -1,7 +1,7 @@
 #include "Block/Abstract_Block_State.h"
 
-A_Block_State::A_Block_State(SpriteSheet *sprite)
-    : animation_(sprite)
+A_Block_State::A_Block_State()
+    : animation_(nullptr)
 {}
 
 bool A_Block_State::Get_Is_Delete() const { return false; }

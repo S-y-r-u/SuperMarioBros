@@ -1544,3 +1544,30 @@ namespace Intro
     extern Rectangle mario;
     extern Rectangle luigi;
 }
+
+namespace Outro_Animation
+{
+    extern SpriteSheet outro_;
+    namespace Mario
+    {
+        extern Rectangle o1;
+        extern Rectangle o2;
+        extern Rectangle o3;
+        extern Rectangle o4;
+        extern Rectangle o5;
+        extern Rectangle o6;
+        extern Rectangle o7;
+        extern std::vector<Rectangle> outro_mario;
+    }
+    namespace Luigi
+    {
+        extern Rectangle o1;
+        extern Rectangle o2;
+        extern Rectangle o3;
+        extern Rectangle o4;
+        extern Rectangle o5;
+        extern Rectangle o6;
+        extern Rectangle o7;
+        extern std::vector<Rectangle> outro_luigi;
+    }
+}

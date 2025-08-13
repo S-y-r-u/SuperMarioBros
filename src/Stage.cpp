@@ -1200,7 +1200,7 @@ bool Stage::Game_Won() const
     return Is_Game_Won;
 }
 
-bool Stage::Trans_Game() const
+bool Stage::Change_State() 
 {
     return Is_Game_Won && timer_ >= cool_down_after_win;
 }

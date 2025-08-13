@@ -7,13 +7,15 @@ GameManager::GameManager()
       current_stage(nullptr),
       pause_manager(new PauseManager()),
       player_info(nullptr),
-      timer(0.0f) {}
+      outro_stage(nullptr) {}
 
 GameManager::~GameManager()
 {
     delete stage;
     delete pause_manager;
     delete intro_stage;
+    delete stage;
+    delete outro_stage;
     current_stage = nullptr;
     delete player_info;
 }
@@ -33,6 +35,11 @@ void GameManager::SetDifficulty(Difficulty diff)
     {
         delete stage;
         stage = nullptr;
+    }
+    if (outro_stage)
+    {
+        delete outro_stage;
+        outro_stage = nullptr;
     }
     if (player_info)
     {
@@ -80,6 +87,7 @@ void GameManager::SetDifficulty(Difficulty diff)
         stage = new EasyMap(player_mode, *player_info);
         current_stage = intro_stage;
     }
+    outro_stage = new Outro(player_mode);
 }
 
 // Reset game when player dies
@@ -97,6 +105,11 @@ void GameManager::ResetGame(Difficulty diff)
     {
         delete stage;
         stage = nullptr;
+    }
+    if (outro_stage)
+    {
+        delete outro_stage;
+        outro_stage = nullptr;
     }
 
     // Create a new stage based on the selected difficulty
@@ -154,6 +167,7 @@ void GameManager::ResetGame(Difficulty diff)
             break;
         }
     }
+    outro_stage = new Outro(player_mode);
 }
 
 void GameManager::TransGame()
@@ -203,14 +217,11 @@ int GameManager::Update()
 {
     if (current_stage == intro_stage)
     {
-        timer += GetFrameTime();
-        if (timer >= End_Intro)
-        {
-            current_stage = stage;
-            timer = 0.0f;
-        }
+        current_stage->Run();
+        if (current_stage->Change_State())
+            current_stage = stage; // Transition to the main stage after intro
     }
-    else
+    else if (current_stage == stage)
     // Lấy trạng thái pause
     {
         Stage *cur_stage = dynamic_cast<Stage *>(current_stage);
@@ -225,10 +236,12 @@ int GameManager::Update()
         if (pause_select == PauseSelect::Pause_Restart_Select && game_mode == Game_Mode::Play_Level)
         {
             SetDifficulty(difficulty);
+            return gameManagerState;
         }
         if (pause_select == PauseSelect::Pause_Restart_Select && game_mode == Game_Mode::Play_Through)
         {
             SetDifficulty(Difficulty::Easy);
+            return gameManagerState;
         }
 
         if (pause_manager->Get_Pause_State() == PauseState::Pause_None_State)
@@ -246,16 +259,25 @@ int GameManager::Update()
                 return gameOverState; // Trả về trạng thái Game Over nếu hết mạng
             // Trả về trạng thái Time Up nếu hết thời gian
             ResetGame(difficulty);
+            return gameManagerState;
         }
         if (player_info->GetTime() <= 0.0f && !cur_stage->Game_Won())
         {
             return timeUpState;
         }
-        if (cur_stage->Trans_Game() && difficulty != Difficulty::Hard && game_mode == Game_Mode::Play_Through)
+        if (cur_stage->Change_State() && difficulty != Difficulty::Hard && game_mode == Game_Mode::Play_Through)
         {
             TransGame();
         }
-        else if(cur_stage->Trans_Game())
+        else if (cur_stage->Change_State() && game_mode == Game_Mode::Play_Level)
+            current_stage = outro_stage; // Transition to outro stage after completing the level
+        else if (cur_stage->Change_State())
+            return menuState;
+    }
+    else if (current_stage == outro_stage)
+    {
+        current_stage->Run();
+        if (current_stage->Change_State())
             return menuState;
     }
     return gameManagerState; // Continue in game manager state
@@ -286,6 +308,7 @@ void GameManager::Load_Texture()
     Win_Animation::win_animation_.Load_("../resources/tiles/Tiles.png");
     BomberBill_Sprite::bomber_bill_.Load_("../resources/sprite/BomberBill.png");
     Intro::intro_.Load_("../resources/sprite/Intro.png");
+    Outro_Animation::outro_.Load_("../resources/sprite/Outro.png");
 }
 
 void GameManager::Unload_Texture()
@@ -299,6 +322,7 @@ void GameManager::Unload_Texture()
     Win_Animation::win_animation_.Unload_();
     BomberBill_Sprite::bomber_bill_.Unload_();
     Intro::intro_.Unload_();
+    Outro_Animation::outro_.Unload_();
 }
 
 void GameManager::SetPlayerMode(Player_Mode mode)

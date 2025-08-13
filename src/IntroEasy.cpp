@@ -1,6 +1,9 @@
 #include "IntroEasy.h"
 
-Intro_Easy::Intro_Easy(PlayerInformation &info, Player_Mode mode) : player_info(info), player_mode(mode)
+Intro_Easy::Intro_Easy(PlayerInformation &info, Player_Mode mode)
+    : player_info(info),
+      player_mode(mode),
+      timer_(0.0f)
 {
     intro_easy = LoadTexture("../resources/map/Easy/Intro_Easy.png");
 }
@@ -42,5 +45,10 @@ void Intro_Easy::Draw()
 
 void Intro_Easy::Run()
 {
-    // Implement the run logic for the intro stage
+    timer_ += GetFrameTime();
+}
+
+bool Intro_Easy::Change_State()
+{
+    return timer_ >= End_Intro;
 }
