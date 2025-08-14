@@ -43,6 +43,9 @@ class Player : public Character{
         float immunityTimer;
         bool isCrouching;
 
+        float acceleration;
+        float deceleration;
+
         virtual std::vector<Rectangle>& getAnimationFrame() const = 0;
 
     public:
@@ -66,12 +69,14 @@ class Player : public Character{
         void MoveRight() override;
         void MoveLeft() override;
         void StopMoving() override;
+        void AccelerateRight(float dt);
+        void AccelerateLeft(float dt);
         void Crouch();
         void StopCrouch();
         void Jump();
         void Cut_Jump();
 
-        void update(float dt) override;
+        void update(float dt, bool isAccelerating) override;
         void draw() override;
 
         void collectCoin();

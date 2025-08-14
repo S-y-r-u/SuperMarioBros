@@ -2,11 +2,11 @@
     "difficulty": 0,
     "game_mode": 0,
     "player_info": {
-        "coins": 1,
+        "coins": 3,
         "is_game_won": false,
-        "lives": 6,
-        "score": 1100,
-        "time": 363.39691162109375,
+        "lives": 4,
+        "score": 1200,
+        "time": 391.2799072265625,
         "up_score": false,
         "world": "EASY"
     },
@@ -3267,13 +3267,13 @@
                 "state_data": {
                     "animation": {
                         "current_rec": [
-                            18.0,
+                            35.0,
                             131.0,
                             16.0,
                             16.0
                         ],
-                        "elapsed_time": 0.15188619494438171,
-                        "frame_index": 1,
+                        "elapsed_time": 0.008333600126206875,
+                        "frame_index": 2,
                         "frame_speed": 0.1666666716337204,
                         "frames": [
                             [
@@ -3320,7 +3320,7 @@
                             16.0,
                             16.0
                         ],
-                        "elapsed_time": 0.017134200781583786,
+                        "elapsed_time": 0.04166939854621887,
                         "frame_index": 0,
                         "frame_speed": 0.10000000149011612,
                         "frames": [
@@ -3358,7 +3358,7 @@
                             16.0,
                             16.0
                         ],
-                        "elapsed_time": 0.017134200781583786,
+                        "elapsed_time": 0.04166939854621887,
                         "frame_index": 0,
                         "frame_speed": 0.10000000149011612,
                         "frames": [
@@ -3396,7 +3396,7 @@
                             16.0,
                             16.0
                         ],
-                        "elapsed_time": 0.017134200781583786,
+                        "elapsed_time": 0.04166939854621887,
                         "frame_index": 0,
                         "frame_speed": 0.10000000149011612,
                         "frames": [
@@ -3434,7 +3434,7 @@
                             16.0,
                             16.0
                         ],
-                        "elapsed_time": 0.017134200781583786,
+                        "elapsed_time": 0.04166939854621887,
                         "frame_index": 0,
                         "frame_speed": 0.10000000149011612,
                         "frames": [
@@ -3472,7 +3472,7 @@
                             16.0,
                             16.0
                         ],
-                        "elapsed_time": 0.017134200781583786,
+                        "elapsed_time": 0.04166939854621887,
                         "frame_index": 0,
                         "frame_speed": 0.10000000149011612,
                         "frames": [
@@ -3510,7 +3510,7 @@
                             16.0,
                             16.0
                         ],
-                        "elapsed_time": 0.017134200781583786,
+                        "elapsed_time": 0.04166939854621887,
                         "frame_index": 0,
                         "frame_speed": 0.10000000149011612,
                         "frames": [
@@ -3548,7 +3548,7 @@
                             16.0,
                             16.0
                         ],
-                        "elapsed_time": 0.017134200781583786,
+                        "elapsed_time": 0.04166939854621887,
                         "frame_index": 0,
                         "frame_speed": 0.10000000149011612,
                         "frames": [
@@ -3586,7 +3586,7 @@
                             16.0,
                             16.0
                         ],
-                        "elapsed_time": 0.017134200781583786,
+                        "elapsed_time": 0.04166939854621887,
                         "frame_index": 0,
                         "frame_speed": 0.10000000149011612,
                         "frames": [
@@ -3624,7 +3624,7 @@
                             16.0,
                             16.0
                         ],
-                        "elapsed_time": 0.017134200781583786,
+                        "elapsed_time": 0.04166939854621887,
                         "frame_index": 0,
                         "frame_speed": 0.10000000149011612,
                         "frames": [
@@ -3662,7 +3662,7 @@
                             16.0,
                             16.0
                         ],
-                        "elapsed_time": 0.017134200781583786,
+                        "elapsed_time": 0.04166939854621887,
                         "frame_index": 0,
                         "frame_speed": 0.10000000149011612,
                         "frames": [
@@ -3700,7 +3700,7 @@
                             16.0,
                             16.0
                         ],
-                        "elapsed_time": 0.017134200781583786,
+                        "elapsed_time": 0.04166939854621887,
                         "frame_index": 0,
                         "frame_speed": 0.10000000149011612,
                         "frames": [
@@ -3733,13 +3733,13 @@
                 "state_data": {
                     "animation": {
                         "current_rec": [
-                            18.0,
+                            35.0,
                             131.0,
                             16.0,
                             16.0
                         ],
-                        "elapsed_time": 0.15188619494438171,
-                        "frame_index": 1,
+                        "elapsed_time": 0.008333600126206875,
+                        "frame_index": 2,
                         "frame_speed": 0.1666666716337204,
                         "frames": [
                             [
@@ -3781,13 +3781,13 @@
                 "state_data": {
                     "animation": {
                         "current_rec": [
-                            18.0,
+                            35.0,
                             131.0,
                             16.0,
                             16.0
                         ],
-                        "elapsed_time": 0.15188619494438171,
-                        "frame_index": 1,
+                        "elapsed_time": 0.008333600126206875,
+                        "frame_index": 2,
                         "frame_speed": 0.1666666716337204,
                         "frames": [
                             [
@@ -3834,7 +3834,7 @@
                             16.0,
                             16.0
                         ],
-                        "elapsed_time": 0.017134200781583786,
+                        "elapsed_time": 0.04166939854621887,
                         "frame_index": 0,
                         "frame_speed": 0.10000000149011612,
                         "frames": [
@@ -3872,7 +3872,7 @@
                             16.0,
                             16.0
                         ],
-                        "elapsed_time": 0.017134200781583786,
+                        "elapsed_time": 0.04166939854621887,
                         "frame_index": 0,
                         "frame_speed": 0.10000000149011612,
                         "frames": [
@@ -3910,7 +3910,7 @@
                             16.0,
                             16.0
                         ],
-                        "elapsed_time": 0.017134200781583786,
+                        "elapsed_time": 0.04166939854621887,
                         "frame_index": 0,
                         "frame_speed": 0.10000000149011612,
                         "frames": [
@@ -3948,7 +3948,7 @@
                             16.0,
                             16.0
                         ],
-                        "elapsed_time": 0.017134200781583786,
+                        "elapsed_time": 0.04166939854621887,
                         "frame_index": 0,
                         "frame_speed": 0.10000000149011612,
                         "frames": [
@@ -3981,13 +3981,13 @@
                 "state_data": {
                     "animation": {
                         "current_rec": [
-                            18.0,
+                            35.0,
                             131.0,
                             16.0,
                             16.0
                         ],
-                        "elapsed_time": 0.15188619494438171,
-                        "frame_index": 1,
+                        "elapsed_time": 0.008333600126206875,
+                        "frame_index": 2,
                         "frame_speed": 0.1666666716337204,
                         "frames": [
                             [
@@ -4029,13 +4029,13 @@
                 "state_data": {
                     "animation": {
                         "current_rec": [
-                            18.0,
+                            35.0,
                             131.0,
                             16.0,
                             16.0
                         ],
-                        "elapsed_time": 0.15188619494438171,
-                        "frame_index": 1,
+                        "elapsed_time": 0.008333600126206875,
+                        "frame_index": 2,
                         "frame_speed": 0.1666666716337204,
                         "frames": [
                             [
@@ -4082,7 +4082,7 @@
                             16.0,
                             16.0
                         ],
-                        "elapsed_time": 0.017134200781583786,
+                        "elapsed_time": 0.04166939854621887,
                         "frame_index": 0,
                         "frame_speed": 0.10000000149011612,
                         "frames": [
@@ -4106,8 +4106,8 @@
                 "type_item": ""
             },
             {
-                "current_state": "unbreakable",
-                "item_count": 0,
+                "current_state": "question",
+                "item_count": 1,
                 "pos": [
                     792.0,
                     480.0
@@ -4115,23 +4115,41 @@
                 "state_data": {
                     "animation": {
                         "current_rec": [
-                            1.0,
-                            148.0,
+                            35.0,
+                            131.0,
                             16.0,
                             16.0
                         ],
-                        "elapsed_time": 0.0,
-                        "frame_index": 0,
-                        "frame_speed": 0.10000000149011612,
+                        "elapsed_time": 0.008333600126206875,
+                        "frame_index": 2,
+                        "frame_speed": 0.1666666716337204,
                         "frames": [
                             [
                                 1.0,
-                                148.0,
+                                131.0,
+                                16.0,
+                                16.0
+                            ],
+                            [
+                                18.0,
+                                131.0,
+                                16.0,
+                                16.0
+                            ],
+                            [
+                                35.0,
+                                131.0,
                                 16.0,
                                 16.0
                             ]
                         ]
-                    }
+                    },
+                    "before_pos": [
+                        792.0,
+                        480.0
+                    ],
+                    "elapse": false,
+                    "velocity_y": 0.0
                 },
                 "type_item": "hidden_coin"
             },
@@ -4150,7 +4168,7 @@
                             16.0,
                             16.0
                         ],
-                        "elapsed_time": 0.017134200781583786,
+                        "elapsed_time": 0.04166939854621887,
                         "frame_index": 0,
                         "frame_speed": 0.10000000149011612,
                         "frames": [
@@ -4174,8 +4192,8 @@
                 "type_item": ""
             },
             {
-                "current_state": "unbreakable",
-                "item_count": 0,
+                "current_state": "question",
+                "item_count": 1,
                 "pos": [
                     1032.0,
                     480.0
@@ -4183,23 +4201,41 @@
                 "state_data": {
                     "animation": {
                         "current_rec": [
-                            1.0,
-                            148.0,
+                            35.0,
+                            131.0,
                             16.0,
                             16.0
                         ],
-                        "elapsed_time": 0.0,
-                        "frame_index": 0,
-                        "frame_speed": 0.10000000149011612,
+                        "elapsed_time": 0.008333600126206875,
+                        "frame_index": 2,
+                        "frame_speed": 0.1666666716337204,
                         "frames": [
                             [
                                 1.0,
-                                148.0,
+                                131.0,
+                                16.0,
+                                16.0
+                            ],
+                            [
+                                18.0,
+                                131.0,
+                                16.0,
+                                16.0
+                            ],
+                            [
+                                35.0,
+                                131.0,
                                 16.0,
                                 16.0
                             ]
                         ]
-                    }
+                    },
+                    "before_pos": [
+                        1032.0,
+                        480.0
+                    ],
+                    "elapse": false,
+                    "velocity_y": 0.0
                 },
                 "type_item": "super_mushroom"
             },
@@ -4218,7 +4254,7 @@
                             16.0,
                             16.0
                         ],
-                        "elapsed_time": 0.017134200781583786,
+                        "elapsed_time": 0.04166939854621887,
                         "frame_index": 0,
                         "frame_speed": 0.10000000149011612,
                         "frames": [
@@ -4251,13 +4287,13 @@
                 "state_data": {
                     "animation": {
                         "current_rec": [
-                            18.0,
+                            35.0,
                             131.0,
                             16.0,
                             16.0
                         ],
-                        "elapsed_time": 0.15188619494438171,
-                        "frame_index": 1,
+                        "elapsed_time": 0.008333600126206875,
+                        "frame_index": 2,
                         "frame_speed": 0.1666666716337204,
                         "frames": [
                             [
@@ -4293,6 +4329,44 @@
                 "current_state": "normal",
                 "item_count": 0,
                 "pos": [
+                    1176.0,
+                    480.0
+                ],
+                "state_data": {
+                    "animation": {
+                        "current_rec": [
+                            18.0,
+                            148.0,
+                            16.0,
+                            16.0
+                        ],
+                        "elapsed_time": 0.04166939854621887,
+                        "frame_index": 0,
+                        "frame_speed": 0.10000000149011612,
+                        "frames": [
+                            [
+                                18.0,
+                                148.0,
+                                16.0,
+                                16.0
+                            ]
+                        ]
+                    },
+                    "before_pos": [
+                        1176.0,
+                        480.0
+                    ],
+                    "change_state": false,
+                    "elapse": false,
+                    "is_break": true,
+                    "velocity_y": 0.0
+                },
+                "type_item": ""
+            },
+            {
+                "current_state": "normal",
+                "item_count": 0,
+                "pos": [
                     3720.0,
                     480.0
                 ],
@@ -4304,7 +4378,7 @@
                             16.0,
                             16.0
                         ],
-                        "elapsed_time": 0.017134200781583786,
+                        "elapsed_time": 0.04166939854621887,
                         "frame_index": 0,
                         "frame_speed": 0.10000000149011612,
                         "frames": [
@@ -4337,13 +4411,13 @@
                 "state_data": {
                     "animation": {
                         "current_rec": [
-                            18.0,
+                            35.0,
                             131.0,
                             16.0,
                             16.0
                         ],
-                        "elapsed_time": 0.15188619494438171,
-                        "frame_index": 1,
+                        "elapsed_time": 0.008333600126206875,
+                        "frame_index": 2,
                         "frame_speed": 0.1666666716337204,
                         "frames": [
                             [
@@ -4390,7 +4464,7 @@
                             16.0,
                             16.0
                         ],
-                        "elapsed_time": 0.017134200781583786,
+                        "elapsed_time": 0.04166939854621887,
                         "frame_index": 0,
                         "frame_speed": 0.10000000149011612,
                         "frames": [
@@ -4428,7 +4502,7 @@
                             16.0,
                             16.0
                         ],
-                        "elapsed_time": 0.017134200781583786,
+                        "elapsed_time": 0.04166939854621887,
                         "frame_index": 0,
                         "frame_speed": 0.10000000149011612,
                         "frames": [
@@ -4466,7 +4540,7 @@
                             16.0,
                             16.0
                         ],
-                        "elapsed_time": 0.017134200781583786,
+                        "elapsed_time": 0.04166939854621887,
                         "frame_index": 0,
                         "frame_speed": 0.10000000149011612,
                         "frames": [
@@ -4504,7 +4578,7 @@
                             16.0,
                             16.0
                         ],
-                        "elapsed_time": 0.017134200781583786,
+                        "elapsed_time": 0.04166939854621887,
                         "frame_index": 0,
                         "frame_speed": 0.10000000149011612,
                         "frames": [
@@ -4537,13 +4611,13 @@
                 "state_data": {
                     "animation": {
                         "current_rec": [
-                            18.0,
+                            35.0,
                             131.0,
                             16.0,
                             16.0
                         ],
-                        "elapsed_time": 0.15188619494438171,
-                        "frame_index": 1,
+                        "elapsed_time": 0.008333600126206875,
+                        "frame_index": 2,
                         "frame_speed": 0.1666666716337204,
                         "frames": [
                             [
@@ -4585,13 +4659,13 @@
                 "state_data": {
                     "animation": {
                         "current_rec": [
-                            18.0,
+                            35.0,
                             131.0,
                             16.0,
                             16.0
                         ],
-                        "elapsed_time": 0.15188619494438171,
-                        "frame_index": 1,
+                        "elapsed_time": 0.008333600126206875,
+                        "frame_index": 2,
                         "frame_speed": 0.1666666716337204,
                         "frames": [
                             [
@@ -4633,13 +4707,13 @@
                 "state_data": {
                     "animation": {
                         "current_rec": [
-                            18.0,
+                            35.0,
                             131.0,
                             16.0,
                             16.0
                         ],
-                        "elapsed_time": 0.15188619494438171,
-                        "frame_index": 1,
+                        "elapsed_time": 0.008333600126206875,
+                        "frame_index": 2,
                         "frame_speed": 0.1666666716337204,
                         "frames": [
                             [
@@ -4686,7 +4760,7 @@
                             16.0,
                             16.0
                         ],
-                        "elapsed_time": 0.017134200781583786,
+                        "elapsed_time": 0.04166939854621887,
                         "frame_index": 0,
                         "frame_speed": 0.10000000149011612,
                         "frames": [
@@ -4724,7 +4798,7 @@
                             16.0,
                             16.0
                         ],
-                        "elapsed_time": 0.017134200781583786,
+                        "elapsed_time": 0.04166939854621887,
                         "frame_index": 0,
                         "frame_speed": 0.10000000149011612,
                         "frames": [
@@ -4762,7 +4836,7 @@
                             16.0,
                             16.0
                         ],
-                        "elapsed_time": 0.017134200781583786,
+                        "elapsed_time": 0.04166939854621887,
                         "frame_index": 0,
                         "frame_speed": 0.10000000149011612,
                         "frames": [
@@ -4800,7 +4874,7 @@
                             16.0,
                             16.0
                         ],
-                        "elapsed_time": 0.017134200781583786,
+                        "elapsed_time": 0.04166939854621887,
                         "frame_index": 0,
                         "frame_speed": 0.10000000149011612,
                         "frames": [
@@ -4838,7 +4912,7 @@
                             16.0,
                             16.0
                         ],
-                        "elapsed_time": 0.017134200781583786,
+                        "elapsed_time": 0.04166939854621887,
                         "frame_index": 0,
                         "frame_speed": 0.10000000149011612,
                         "frames": [
@@ -4871,13 +4945,13 @@
                 "state_data": {
                     "animation": {
                         "current_rec": [
-                            18.0,
+                            35.0,
                             131.0,
                             16.0,
                             16.0
                         ],
-                        "elapsed_time": 0.15188619494438171,
-                        "frame_index": 1,
+                        "elapsed_time": 0.008333600126206875,
+                        "frame_index": 2,
                         "frame_speed": 0.1666666716337204,
                         "frames": [
                             [
@@ -4924,7 +4998,7 @@
                             16.0,
                             16.0
                         ],
-                        "elapsed_time": 0.017134200781583786,
+                        "elapsed_time": 0.04166939854621887,
                         "frame_index": 0,
                         "frame_speed": 0.10000000149011612,
                         "frames": [
@@ -4951,7 +5025,7 @@
         "camera": [
             0.0,
             0.0,
-            618.105224609375,
+            0.0,
             0.0,
             0.0,
             1.0
@@ -4964,6 +5038,28 @@
         ],
         "enemies": [
             {
+                "first_appear": true,
+                "gravity": 0.0,
+                "is_active": true,
+                "is_dead": false,
+                "is_ground": true,
+                "position": [
+                    752.91064453125,
+                    624.0
+                ],
+                "previous_frame_pos": [
+                    753.53564453125,
+                    624.0
+                ],
+                "state": 0,
+                "stomped_timer": 0.0,
+                "type": 0,
+                "velocity": [
+                    -75.0,
+                    0.0
+                ]
+            },
+            {
                 "above_pos": [
                     1390.0,
                     532.0
@@ -4973,17 +5069,17 @@
                     608.0
                 ],
                 "delta_time": 0.0,
-                "first_appear": true,
+                "first_appear": false,
                 "gravity": 0.0,
                 "is_active": true,
                 "is_dead": false,
                 "is_ground": true,
                 "position": [
                     1390.0,
-                    555.733642578125
+                    608.0
                 ],
-                "state": 2,
-                "state_timer": 0.3872334063053131,
+                "state": 0,
+                "state_timer": 0.0,
                 "type": 4,
                 "velocity": [
                     0.0,
@@ -4992,25 +5088,25 @@
             },
             {
                 "death_timer": 0.0,
-                "first_appear": true,
+                "first_appear": false,
                 "gravity": 0.0,
                 "initial_x": 1800.0,
                 "is_active": true,
                 "is_dead": false,
                 "is_ground": false,
-                "moving_right": false,
+                "moving_right": true,
                 "position": [
-                    1505.7578125,
+                    1800.0,
                     470.0
                 ],
                 "previous_frame_pos": [
-                    1508.33740234375,
+                    1800.0,
                     470.0
                 ],
                 "state": 0,
                 "type": 5,
                 "velocity": [
-                    -300.0,
+                    300.0,
                     0.0
                 ]
             },
@@ -5169,6 +5265,30 @@
                 ]
             },
             {
+                "before_pos": [
+                    4900.0,
+                    580.0
+                ],
+                "first_appear": false,
+                "gravity": 600.0,
+                "is_active": true,
+                "is_dead": false,
+                "is_ground": false,
+                "position": [
+                    4900.0,
+                    580.0
+                ],
+                "state": {
+                    "flying_timer": 4.361248016357422,
+                    "name": "flying"
+                },
+                "type": 1,
+                "velocity": [
+                    -90.0,
+                    2376.74609375
+                ]
+            },
+            {
                 "first_appear": false,
                 "gravity": 0.0,
                 "is_active": true,
@@ -5254,6 +5374,30 @@
                 "velocity": [
                     -75.0,
                     0.0
+                ]
+            },
+            {
+                "before_pos": [
+                    6900.0,
+                    580.0
+                ],
+                "first_appear": false,
+                "gravity": 600.0,
+                "is_active": true,
+                "is_dead": false,
+                "is_ground": false,
+                "position": [
+                    6900.0,
+                    580.0
+                ],
+                "state": {
+                    "flying_timer": 4.361248016357422,
+                    "name": "flying"
+                },
+                "type": 1,
+                "velocity": [
+                    -90.0,
+                    2376.74609375
                 ]
             },
             {
@@ -5317,26 +5461,26 @@
             "climb_velo_y": 0.0,
             "currentFrame": 0,
             "deadTimer": 0.0,
-            "fireCoolDown": -0.008333399891853333,
-            "form": 1,
-            "frameTimer": 0.017134200781583786,
-            "friction": 0.8999999761581421,
+            "fireCoolDown": -0.008333600126206875,
+            "form": 0,
+            "frameTimer": 0.008333600126206875,
+            "friction": 0.9300000071525574,
             "gravity": 1000.0,
             "invincibleTimer": 0.0,
             "isActive": true,
             "isDead": false,
-            "isFacingLeft": true,
+            "isFacingLeft": false,
             "isGround": true,
             "isInvincible": false,
             "isTransforming": false,
-            "is_climbing": false,
+            "is_climbing": true,
             "is_fade_out": false,
             "is_pose": false,
-            "position_x": 1194.669921875,
+            "position_x": 576.2617797851563,
             "position_y": 624.0,
             "speed": 300.0,
             "state": 0,
-            "targetForm": 1,
+            "targetForm": 0,
             "velocity_x": 0.0,
             "velocity_y": 0.0
         },

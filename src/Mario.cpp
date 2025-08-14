@@ -7,6 +7,9 @@ Mario ::Mario(Vector2 startPos) : Player(startPos)
     gravity = 1000.0f;
     JumpForce = -630.0f;
     friction = 0.93f;
+
+    acceleration = 450.0f;
+    deceleration = 500.0f;
 }
 
 Mario ::~Mario() {}
