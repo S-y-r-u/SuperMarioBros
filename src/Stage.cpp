@@ -1252,6 +1252,10 @@ json Stage::to_json() const {
     for (const auto& block : blocks) {
         j["blocks"].push_back(block->to_json());
     }
+    //store fireball
+    for (const auto& fireball : fireballs) {
+        j["fireballs"].push_back(fireball->to_json());
+    }
     return j;
 }
 
@@ -1335,5 +1339,17 @@ void Stage::from_json(const json& j) {
             blocks.push_back(block);
         }
     }
+
+    //fireballs
+    for (auto fb : fireballs) delete fb;
+    fireballs.clear();
+    if (j.contains("fireballs")) {
+        for (auto fireball_j : j.at("fireballs")) {
+            FireBall* fireball = new FireBall({0, 0}, true);
+            fireball->from_json(fireball_j);
+            fireballs.push_back(fireball);
+        }
+    }
     // Khởi tạo lại các resource/phức tạp nếu cần
+    std::cout << "Deserialized Stage from JSON" << std::endl;
 }

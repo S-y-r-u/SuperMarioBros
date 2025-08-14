@@ -32,4 +32,7 @@ class FireBall{
         void update(float dt, const Camera2D& camera);    
         void explode();
         void draw();
+
+        json to_json() const;
+        void from_json(const json& j);
 };

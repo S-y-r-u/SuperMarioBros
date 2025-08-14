@@ -3,7 +3,8 @@
 Goomba::Goomba(Vector2 pos)
     : Enemy(pos, Vector2{-75.0f, 0.0f}, 0.0f),
       state_(Goomba_State::normal),
-      stomped_timer(0.0f)
+      stomped_timer(0.0f),
+      previous_frame_pos(pos)
 {
     animation_ = Animation(&Enemies_Sprite::enemies_, Enemies_Sprite::Goomba_Brown::Normal::normal_, 1 / 6.0f);
 }

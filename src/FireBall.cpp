@@ -116,3 +116,29 @@ void FireBall :: explode(){
         frameTimer = 0.0f;
     }  
 }
+
+json FireBall :: to_json() const {
+    json j;
+    j["position"] = {position.x, position.y};
+    j["velocity"] = {velocity.x, velocity.y};
+    j["isActive"] = isActive;
+    j["state"] = static_cast<int>(state); // Convert enum to int
+    j["isGround"] = isGround;
+    j["currentFrame"] = currentFrame;
+    j["frameTimer"] = frameTimer;
+    j["animationSpeed"] = animationSpeed;
+    return j;
+}
+
+void FireBall :: from_json(const json& j) {
+    position.x = j["position"][0];
+    position.y = j["position"][1];
+    velocity.x = j["velocity"][0];
+    velocity.y = j["velocity"][1];
+    isActive = j["isActive"];
+    state = static_cast<FireBallState>(j["state"]);
+    isGround = j["isGround"];
+    currentFrame = j["currentFrame"];
+    frameTimer = j["frameTimer"];
+    animationSpeed = j["animationSpeed"];
+}
