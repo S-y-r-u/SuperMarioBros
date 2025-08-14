@@ -112,19 +112,15 @@ json Block::to_json() const {
     j["item_count"] = item_count_;
     j["type_item"] = type_item_;
     // Lưu state hiện tại
-    if (current_state_ == normal_state_) {
-        j["current_state"] = "normal";
-        j["state_data"] = static_cast<Normal_Block*>(normal_state_)->to_json();
-    } else if (current_state_ == question_state_) {
-        j["current_state"] = "question";
-        j["state_data"] = static_cast<Question_Block*>(question_state_)->to_json();
-    } else if (current_state_ == break_state_) {
-        j["current_state"] = "breakable";
-        j["state_data"] = static_cast<Breakable_BLock*>(break_state_)->to_json();
-    } else if (current_state_ == unbreakable_state_) {
-        j["current_state"] = "unbreakable";
-        j["state_data"] = static_cast<Unbreakable_Block*>(unbreakable_state_)->to_json();
-    }
+    if (current_state_ == normal_state_) j["current_state"] = "normal";
+    else if (current_state_ == question_state_) j["current_state"] = "question";
+    else if (current_state_ == break_state_) j["current_state"] = "breakable";
+    else if (current_state_ == unbreakable_state_) j["current_state"] = "unbreakable";
+    // Luôn lưu tất cả các state
+    j["normal_state"] = static_cast<Normal_Block*>(normal_state_)->to_json();
+    j["question_state"] = static_cast<Question_Block*>(question_state_)->to_json();
+    j["breakable_state"] = static_cast<Breakable_BLock*>(break_state_)->to_json();
+    j["unbreakable_state"] = static_cast<Unbreakable_Block*>(unbreakable_state_)->to_json();
     return j;
 }
 
@@ -134,17 +130,17 @@ void Block::from_json(const json& j) {
     item_count_ = j["item_count"];
     type_item_ = j["type_item"];
     std::string state = j.value("current_state", "normal");
-    if (state == "normal" && normal_state_) {
-        current_state_ = normal_state_;
-        static_cast<Normal_Block*>(normal_state_)->from_json(j["state_data"]);
-    } else if (state == "question" && question_state_) {
-        current_state_ = question_state_;
-        static_cast<Question_Block*>(question_state_)->from_json(j["state_data"]);
-    } else if (state == "breakable" && break_state_) {
-        current_state_ = break_state_;
-        static_cast<Breakable_BLock*>(break_state_)->from_json(j["state_data"]);
-    } else if (state == "unbreakable" && unbreakable_state_) {
-        current_state_ = unbreakable_state_;
-        static_cast<Unbreakable_Block*>(unbreakable_state_)->from_json(j["state_data"]);
-    }
+    if (j.contains("normal_state") && normal_state_)
+        static_cast<Normal_Block*>(normal_state_)->from_json(j["normal_state"]);
+    if (j.contains("question_state") && question_state_)
+        static_cast<Question_Block*>(question_state_)->from_json(j["question_state"]);
+    if (j.contains("breakable_state") && break_state_)
+        static_cast<Breakable_BLock*>(break_state_)->from_json(j["breakable_state"]);
+    if (j.contains("unbreakable_state") && unbreakable_state_)
+        static_cast<Unbreakable_Block*>(unbreakable_state_)->from_json(j["unbreakable_state"]);
+    // Đặt lại state hiện tại
+    if (state == "normal" && normal_state_) current_state_ = normal_state_;
+    else if (state == "question" && question_state_) current_state_ = question_state_;
+    else if (state == "breakable" && break_state_) current_state_ = break_state_;
+    else if (state == "unbreakable" && unbreakable_state_) current_state_ = unbreakable_state_;
 }
