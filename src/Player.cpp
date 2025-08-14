@@ -37,6 +37,9 @@ Player ::Player(Vector2 startPos) : Character(startPos)
     isImmune = false;
     immunityTimer = 0.0f;
     isCrouching = false;
+
+    acceleration = 900.0f;
+    deceleration = 600.0f;
 }
 
 Player ::~Player() {}
@@ -81,6 +84,34 @@ void Player ::StopMoving()
     velocity.x = 0.0f;
 }
 
+void Player :: AccelerateRight(float dt){
+    if(velocity.x < 0){
+        velocity.x += deceleration * dt;
+    }
+    else{
+        velocity.x += acceleration * dt;
+    }
+
+    if(velocity.x > speed){
+        velocity.x = speed;
+    }
+    isFacingLeft = false;
+}
+
+void Player :: AccelerateLeft(float dt){
+    if(velocity.x > 0){
+        velocity.x -= deceleration * dt;
+    }
+    else{
+        velocity.x -= acceleration * dt;
+    }
+
+    if(velocity.x < -speed){
+        velocity.x = -speed;
+    }
+    isFacingLeft = true;
+}
+
 void Player ::Crouch(){
     bool canCrouch = (form == PlayerForm :: Super || form == PlayerForm :: Fire || form == PlayerForm :: Invincible_Super_And_Fire);
     if(!canCrouch || !isGround || velocity.x != 0.0f)  return;
@@ -116,7 +147,7 @@ void Player ::Cut_Jump()
     }
 }
 
-void Player ::update(float dt)
+void Player ::update(float dt, bool isAccelerating)
 {
     if (state == AnimationState::Climb && is_climbing)
     {
@@ -195,25 +226,30 @@ void Player ::update(float dt)
 
     velocity.y += gravity * dt;
 
-    if(!isCrouching){
-        if (isGround && velocity.x != 0.0f)
-        {
-            velocity.x *= pow(friction, dt * 60);
-            if (abs(velocity.x) < 1.0f)
-                velocity.x = 0.0f;
+    if (isGround){
+        if (isCrouching) velocity.x = 0.0f;
+        else{
+            if(!isAccelerating){
+                velocity.x *= pow(friction, dt * 60);
+                if (abs(velocity.x) < 5.0f) velocity.x = 0.0f;
+            }
+            if (velocity.x > speed) velocity.x = speed;
+            if (velocity.x < -speed) velocity.x = -speed;
         }
-        position.x += velocity.x * dt;
     }
+    position.x += velocity.x * dt;
     position.y += velocity.y * dt;
 
     if (isGround)
     {
-        
         if (!is_fade_out && !is_pose)
         {
-            if(isCrouching)
+            bool isSkidding = (isAccelerating && (velocity.x > 20.0f && isFacingLeft) || (velocity.x < -20.0f && !isFacingLeft));
+            if (isSkidding)
+                state = AnimationState::Slide;
+            else if(isCrouching)
                 state = AnimationState :: Crouch;
-            else if (velocity.x != 0.0f)
+            else if (abs(velocity.x) > 1.0f)
                 state = AnimationState ::Walk;
             else
                 state = AnimationState ::Stance;

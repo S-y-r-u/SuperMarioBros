@@ -24,6 +24,6 @@ class Character{
         virtual void MoveRight() = 0;
         virtual void MoveLeft() = 0;  
         virtual void StopMoving() = 0;
-        virtual void update(float dt) = 0;
+        virtual void update(float dt, bool isAccelerating) = 0;
         virtual void draw() = 0;
 };

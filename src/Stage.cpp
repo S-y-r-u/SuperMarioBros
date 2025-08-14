@@ -111,16 +111,25 @@ void Stage::Player_Update()
             player->Crouch();
         if (IsKeyReleased(KEY_S))
             player->StopCrouch();
-        if (Keyboard.empty() && !IsKeyDown(KEY_S))
-            player->StopMoving();
-        else if (Keyboard.back() == KEY_A)
-            player->MoveLeft();
-        else
-            player->MoveRight();
+        // if (Keyboard.empty() && !IsKeyDown(KEY_S))
+        //     player->StopMoving();
+        // else if (Keyboard.back() == KEY_A)
+        //     player->MoveLeft();
+        // else
+        //     player->MoveRight();
+    }
+
+    bool isAccelerating = !Keyboard.empty();
+    if (isAccelerating && (!Is_Game_Won || player->Get_isDead())) {
+        if (Keyboard.back() == KEY_A) {
+            player->AccelerateLeft(GetFrameTime());
+        } else if (Keyboard.back() == KEY_D) {
+            player->AccelerateRight(GetFrameTime());
+        }
     }
 
     player->updateCoolDown(GetFrameTime());
-    player->update(GetFrameTime());
+    player->update(GetFrameTime(), isAccelerating);
     information.Update(GetFrameTime());
 
     Score_Manager &score_manager = Score_Manager::GetInstance();
