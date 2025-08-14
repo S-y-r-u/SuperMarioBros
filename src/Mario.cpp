@@ -6,7 +6,7 @@ Mario ::Mario(Vector2 startPos) : Player(startPos)
     speed = 300.0f;
     gravity = 1000.0f;
     JumpForce = -630.0f;
-    friction = 0.9f;
+    friction = 0.93f;
 }
 
 Mario ::~Mario() {}
@@ -21,6 +21,11 @@ std::vector<Rectangle> &Mario ::getAnimationFrame() const
     if (isTransforming && state == AnimationState::Small_To_Super)
     {
         return Mario_Sprite::Small::Small_To_Super::small_to_super;
+    }
+
+    if(state == AnimationState :: Hit){
+        if(form == PlayerForm :: Super) return Mario_Sprite::Super::Hit::hit_;
+        return Mario_Sprite::Fire::Hit::hit_;
     }
 
     if (state == AnimationState ::Die)
@@ -97,8 +102,6 @@ std::vector<Rectangle> &Mario ::getAnimationFrame() const
             return Mario_Sprite::Super::Enter_Pipe::enter_pipe;
         case AnimationState ::Fade_Out:
             return Mario_Sprite::Super::Fade_Out::fade_out;
-        case AnimationState ::Hit:
-            return Mario_Sprite::Super::Hit::hit_;
         case AnimationState ::Stance_To_Fire:
             return Mario_Sprite::Super::Stance_To_Fire::stance_to_fire;
         case AnimationState::Pose:
@@ -153,8 +156,6 @@ std::vector<Rectangle> &Mario ::getAnimationFrame() const
             return Mario_Sprite::Fire::Enter_Pipe::enter_pipe;
         case AnimationState ::Fade_Out:
             return Mario_Sprite::Fire::Fade_Out::fade_out;
-        case AnimationState ::Hit:
-            return Mario_Sprite::Fire::Hit::hit_;
         case AnimationState ::Pose:
             return Mario_Sprite::Fire::Pose::pose;
         default:
