@@ -1493,6 +1493,11 @@ namespace Enemies_Sprite
 
         extern Rectangle be_fired_or_hit;
     }
+    namespace Podoboo
+    {
+        extern Rectangle p2;
+        extern std::vector<Rectangle> normal_;
+    }
 }
 
 namespace BomberBill_Sprite
@@ -1508,6 +1513,36 @@ namespace BomberBill_Sprite
     extern Rectangle n7;
     extern Rectangle n8;
     extern std::vector<Rectangle> bomber_bill_normal;
+}
+
+namespace Bowser_Sprite
+{
+    extern SpriteSheet bowser_ ;
+
+    namespace normal_
+    {
+        extern Rectangle n2;
+        extern std::vector<Rectangle> normal_;
+    }
+
+    namespace fire_
+    {
+        extern Rectangle f1;
+        extern Rectangle f2;
+        extern std::vector<Rectangle> fire_;
+    }
+
+    namespace dying_
+    {
+        extern Rectangle d1;
+        extern std::vector<Rectangle> dying_;
+    }
+
+    namespace fire_laser_
+    {
+        extern Rectangle f1;
+        extern std::vector<Rectangle> fire_laser_;
+    }
 }
 
 namespace Win_Animation

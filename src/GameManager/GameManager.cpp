@@ -358,6 +358,7 @@ void GameManager::Load_Texture()
     Intro::intro_.Load_("../resources/sprite/Intro.png");
     Outro_Animation::outro_.Load_("../resources/sprite/Outro.png");
     SavePrince::save_prince_.Load_("../resources/sprite/SavePrince.png");
+    Bowser_Sprite::bowser_.Load_("../resources/sprite/Bowser.png");
 }
 
 void GameManager::Unload_Texture()
@@ -373,6 +374,7 @@ void GameManager::Unload_Texture()
     Intro::intro_.Unload_();
     Outro_Animation::outro_.Unload_();
     SavePrince::save_prince_.Unload_();
+    Bowser_Sprite::bowser_.Unload_();
 }
 
 void GameManager::SetPlayerMode(Player_Mode mode)

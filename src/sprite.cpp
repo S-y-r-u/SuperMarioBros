@@ -1467,6 +1467,11 @@ namespace Enemies_Sprite
         }
         Rectangle be_fired_or_hit = {213, 150, 16, 16};
     }
+    namespace Podoboo
+    {
+        Rectangle p1 = {289, 186, 14, 16};
+        std::vector<Rectangle> normal_ = {p1};
+    }
 }
 
 namespace BomberBill_Sprite
@@ -1483,6 +1488,31 @@ namespace BomberBill_Sprite
     std::vector<Rectangle> bomber_bill_normal = {n1, n2, n3, n4, n5, n6, n7, n8};
 }
 
+namespace Bowser_Sprite
+{
+    SpriteSheet bowser_;
+    namespace normal_{
+        Rectangle n1 = {49, 21, 34, 41};
+        std::vector<Rectangle> normal_ = {n1};
+    }
+    namespace fire_
+    {
+        Rectangle f1 = {50, 68, 35, 41};
+        Rectangle f2 = {88, 68, 35, 41};
+        std::vector<Rectangle> fire_ = {f1, f2};
+    }
+    namespace dying_
+    {
+        Rectangle d1 = {125, 21, 33, 41};
+        std::vector<Rectangle> dying_ = {d1};
+    }
+
+    namespace fire_laser_
+    {
+        Rectangle f1 = {6, 38, 24, 13};
+        std::vector<Rectangle> fire_laser_ = {f1};
+    }
+}
 namespace Win_Animation
 {
     SpriteSheet win_animation_;

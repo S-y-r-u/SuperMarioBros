@@ -50,9 +50,9 @@ public:
 
     void Notify_Change_Direct();
 
-    virtual json to_json() const {} ;
-    virtual void from_json(const json& j){} ;
-    
+    virtual json to_json() const = 0;
+    virtual void from_json(const json& j) = 0;
+
     virtual void Notify_Be_Stomped() {}
     virtual void Notify_Be_Fired_Or_Hit() {}
     virtual void Notify_Be_Kicked(int direction) {}

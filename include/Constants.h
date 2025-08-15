@@ -46,12 +46,14 @@ namespace Physics
 
 enum class EnemyType
 {
-    Goomba,
-    KoopaTroopaWalking,
-    KoopaTroopaFlying,
-    Latiku,
-    PiranhaPlant,
-    BomberBill,
-    Spiny
+    Goomba = 0,
+    KoopaTroopaWalking = 1,
+    KoopaTroopaFlying = 2,
+    Latiku = 3,
+    PiranhaPlant = 4,
+    BomberBill = 5,
+    Bowser = 6,
+    Spiny = 7,
+    LaserFire = 8,
+    Podoboo = 9
 };
-

@@ -33,9 +33,27 @@ void Spawn_Enemy::Spawn_BomberBill(Vector2 pos, std::unordered_map<Enemy *, std:
     enemy_map[bomber] = std::vector<Enemy *>();
 }
 
+void Spawn_Enemy::Spawn_Bowser(Vector2 pos, std::unordered_map<Enemy *, std::vector<Enemy *>>& enemy_map, std::vector<Enemy *>& enemies, Player* player, Camera2D& camera){
+    Bowser *bowser = new Bowser(pos, player,enemies);
+    enemies.push_back(bowser);
+    enemy_map[bowser] = std::vector<Enemy *>();
+}
+
+void Spawn_Enemy::Spawn_LaserFire(Vector2 pos,  std::vector<Enemy *>& enemies ,Player* player)
+{
+    LaserFire *laser = new LaserFire(pos, player->getPosition());
+    enemies.push_back(laser);
+}
+
+void Spawn_Enemy::Spawn_Podoboo(Vector2 pos,  std::vector<Enemy *>& enemies )
+{
+    Podoboo *podoboo= new Podoboo(pos);
+    enemies.push_back(podoboo);
+}
 
 void Spawn_Enemy::SpawnEnemies(EnemyType type, Vector2 spawn_position , Player* player , std::unordered_map<Enemy *, std::vector<Enemy *>>& enemy_map, std::vector<Enemy *>& enemies, Camera2D& camera)
-{
+{   
+    std::cout << "[Spawn_Enemy] Spawning enemy type: " << static_cast<int>(type) << " at position: (" << spawn_position.x << ", " << spawn_position.y << ")\n";
     if (type == EnemyType::Goomba)
     {
         Spawn_Goomba(spawn_position, enemy_map, enemies);
@@ -59,5 +77,17 @@ void Spawn_Enemy::SpawnEnemies(EnemyType type, Vector2 spawn_position , Player* 
     else if (type == EnemyType::BomberBill)
     {
         Spawn_BomberBill(spawn_position, enemy_map, enemies);
+    }
+    else if (type == EnemyType::Bowser)
+    {
+        Spawn_Bowser(spawn_position, enemy_map, enemies, player, camera);
+    }
+    else if (type == EnemyType::LaserFire)
+    {
+        Spawn_LaserFire(spawn_position, enemies, player);
+    }
+    else if (type == EnemyType::Podoboo)
+    {
+        Spawn_Podoboo(spawn_position, enemies);
     }
 }

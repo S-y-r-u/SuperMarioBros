@@ -891,7 +891,7 @@ void Stage::Check_Enemy_Vs_Enemy()
         for (int j = i + 1; j < enemies.size(); j++)
         {
             Enemy *enemy2 = enemies[j];
-            if (enemy1 == enemy2 || !enemy2->Get_Is_Active() || enemy2->Get_Is_Dead())
+            if (enemy1 == enemy2 || !enemy2->Get_Is_Active() || enemy2->Get_Is_Dead() || !enemy2->Need_Check_Map())
                 continue;
 
             Rectangle rec_enemy2 = enemy2->Get_Draw_Rec();
@@ -1106,6 +1106,12 @@ void Stage::LoadEnemiesFromFile(const std::string &filename)
         case 5:
             type = EnemyType::BomberBill;
             break;
+        case 6:
+            type = EnemyType::Bowser;
+            break;
+        case 9:
+            type = EnemyType::Podoboo;
+            break;
         default:
             continue; // Bỏ qua nếu type không hợp lệ
         }
@@ -1260,6 +1266,13 @@ json Stage::to_json() const
             type = static_cast<int>(EnemyType::BomberBill);
         else if (dynamic_cast<Spiny *>(enemy))
             type = static_cast<int>(EnemyType::Spiny);
+        else if (dynamic_cast<Bowser *>(enemy))
+            type = static_cast<int>(EnemyType::Bowser);
+        else if (dynamic_cast<LaserFire *>(enemy))
+            type = static_cast<int>(EnemyType::LaserFire);
+        else if (dynamic_cast<Podoboo *>(enemy))
+            type = static_cast<int>(EnemyType::Podoboo);
+
         json enemy_json = enemy->to_json();
         // Đặt type lên đầu object
         json result_json;
@@ -1336,7 +1349,6 @@ void Stage::from_json(const json &j)
             }
         }
     }
-
     // Xóa các item cũ nếu có
     for (auto it : items)
         delete it;
