@@ -1,26 +1,24 @@
 #include "IntroEasy.h"
 
 Intro_Easy::Intro_Easy(PlayerInformation &info, Player_Mode mode)
-    : player_info(info),
-      player_mode(mode),
-      timer_(0.0f)
+    : Intro_Animation(info, mode)
 {
-    intro_easy = LoadTexture("../resources/map/Easy/Intro_Easy.png");
+    intro_ = LoadTexture("../resources/map/Easy/Intro_Easy.png");
 }
 
 Intro_Easy::~Intro_Easy()
 {
-    UnloadTexture(intro_easy);
+    UnloadTexture(intro_);
 }
 
 void Intro_Easy::Draw()
 {
     ClearBackground(BLACK);
     player_info.Draw();
-    Rectangle src_texture = {0, 0, intro_easy.width, intro_easy.height};
+    Rectangle src_texture = {0, 0, intro_.width, intro_.height};
     float scale = 3.0f;
-    Rectangle dest_texture = {(Screen_w - intro_easy.width * scale) / 2.0f, Screen_h * 2 / 3 - intro_easy.height * scale / 2.0f, intro_easy.width * scale, intro_easy.height * scale};
-    DrawTexturePro(intro_easy, src_texture, dest_texture, {0, 0}, 0.0f, WHITE);
+    Rectangle dest_texture = {(Screen_w - intro_.width * scale) / 2.0f, Screen_h * 2 / 3 - intro_.height * scale / 2.0f, intro_.width * scale, intro_.height * scale};
+    DrawTexturePro(intro_, src_texture, dest_texture, {0, 0}, 0.0f, WHITE);
 
     Vector2 x = {(Screen_w - (8 * scale + 1.0f)) / 2.0f, dest_texture.y - 70.0f};
     Font_Sprite::DrawText("X", x.x, x.y, WHITE, scale);

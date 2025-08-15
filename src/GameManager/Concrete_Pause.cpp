@@ -25,10 +25,10 @@ int Non_Pause::Update_()
 
 Pause_Menu::Pause_Menu(PauseManager &pm)
     : pause_manager(pm),
-      resume_button("Resume", (Screen_w - 200) / 2, 290, 200, 50),
-      restart_button("Restart", (Screen_w - 200) / 2, 390, 200, 50),
-      exit_button("Exit", (Screen_w - 200) / 2, 490, 200, 50),
-      save_button("Save", (Screen_w - 200) / 2, 590, 200, 50)
+      resume_button("Resume", (Screen_w - 200) / 2, 270, 200, 50),
+      restart_button("Restart", (Screen_w - 200) / 2, 360, 200, 50),
+      exit_button("Exit", (Screen_w - 200) / 2, 450, 200, 50),
+      save_button("Save", (Screen_w - 200) / 2, 540, 200, 50)
 {
     pause_background = LoadTexture("Menu/Pause_Menu.png");
 }
@@ -40,7 +40,8 @@ Pause_Menu::~Pause_Menu()
 
 void Pause_Menu::Draw_()
 {
-    Rectangle destRect = {(Screen_w - (float)pause_background.width * 0.6f) / 2.0f, (Screen_h - (float)pause_background.height * 0.6f) / 2.0f, (float)pause_background.width * 0.6f, (float)pause_background.height * 0.6f};
+    float scale = 0.7f;
+    Rectangle destRect = {(Screen_w - (float)pause_background.width * scale) / 2.0f, (Screen_h - (float)pause_background.height * scale) / 2.0f, (float)pause_background.width * scale, (float)pause_background.height * scale};
     DrawTexturePro(pause_background, {0, 0, (float)pause_background.width, (float)pause_background.height}, destRect, {0, 0}, 0.0f, WHITE);
     resume_button.Draw();
     restart_button.Draw();

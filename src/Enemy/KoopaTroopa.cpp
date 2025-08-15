@@ -18,6 +18,7 @@ KoopaTroopa::KoopaTroopa(Vector2 pos, bool is_flying)
       previous_state(nullptr),
       before_pos_(pos)
 {
+    animation_ = Animation(&Enemies_Sprite::enemies_, Enemies_Sprite::Troopa_Green::Normal::normal_, 1 / 6.0f);
     if (is_flying)
     {
         SetState(new KoopaFlyingState());
@@ -79,31 +80,23 @@ void KoopaTroopa::Draw() const
                    0.0f, WHITE);
 }
 
-void KoopaTroopa::Notify_Be_Stomped(PlayerInformation &info)
+void KoopaTroopa::Notify_Be_Stomped()
 {
     if (!Get_Is_Active() || Get_Is_Dead())
         return;
     if (current_state_)
     {
-        current_state_->OnStomped(this, info);
-        info.UpdateScore(current_state_->Get_Score());
-        Rectangle dest_rec = Get_Draw_Rec();
-        Score_Manager &score_manager = Score_Manager::GetInstance();
-        score_manager.AddScore({dest_rec.x, dest_rec.y}, current_state_->Get_Score());
+        current_state_->OnStomped(this);
     }
 }
 
-void KoopaTroopa::Notify_Be_Fired_Or_Hit(PlayerInformation &info)
+void KoopaTroopa::Notify_Be_Fired_Or_Hit()
 {
     if (!Get_Is_Active() || Get_Is_Dead())
         return;
     if (current_state_)
     {
         current_state_->OnFired(this);
-        info.UpdateScore(current_state_->Get_Score());
-        Rectangle dest_rec = Get_Draw_Rec();
-        Score_Manager &score_manager = Score_Manager::GetInstance();
-        score_manager.AddScore({dest_rec.x, dest_rec.y}, current_state_->Get_Score());
     }
 }
 
@@ -114,11 +107,11 @@ void KoopaTroopa::Set_Pos(Vector2 pos)
     position_ = pos;
 }
 
-void KoopaTroopa::Notify_Be_Kicked(int direction, PlayerInformation &info)
+void KoopaTroopa::Notify_Be_Kicked(int direction)
 {
     // direction: 1 for right, -1 for left
     if (current_state_ && Can_Be_Kicked())
-        current_state_->OnKicked(this, direction, info);
+        current_state_->OnKicked(this, direction);
 }
 
 bool KoopaTroopa::Can_Be_Kicked() const
@@ -132,14 +125,9 @@ void KoopaTroopa::Notify_On_Ground()
     is_ground = true;
 }
 
-bool KoopaTroopa::Kill_Other_Enemies() const
+bool KoopaTroopa::Kill_Enemy()
 {
-    return (dynamic_cast<KoopaShellMovingState *>(current_state_) != nullptr);
-}
-
-void KoopaTroopa::Collision_With_Other_Enemy(Vector2 velo, Vector2 pos)
-{
-    Notify_Change_Direct();
+    return dynamic_cast<KoopaShellMovingState *>(current_state_) != nullptr;
 }
 json KoopaTroopa::to_json() const {
     json j;

@@ -1571,3 +1571,35 @@ namespace Outro_Animation
         extern std::vector<Rectangle> outro_luigi;
     }
 }
+
+namespace SavePrince
+{
+    extern SpriteSheet save_prince_;
+    namespace Kidnap
+    {
+        extern Rectangle k1;
+        extern Rectangle k2;
+        extern Rectangle k3;
+        extern Rectangle k4;
+        extern Rectangle k5;
+        extern Rectangle k6;
+        extern Rectangle k7;
+        extern Rectangle k8;
+        extern Rectangle k9;
+        extern Rectangle k10;
+        extern Rectangle k11;
+        extern Rectangle k12;
+        extern std::vector<Rectangle> kidnap_;
+    }
+
+    namespace Prince
+    {
+        extern Rectangle p1;
+        extern Rectangle p2;
+        extern Rectangle p3;
+        extern Rectangle p4;
+        extern Rectangle p5;
+        extern Rectangle p6;
+        extern std::vector<Rectangle> prince_;
+    }
+}

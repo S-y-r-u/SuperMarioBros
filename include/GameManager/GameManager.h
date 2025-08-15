@@ -9,7 +9,10 @@
 #include "I_Stage.h"
 #include "IntroEasy.h"
 #include "IntroMedium.h"
+#include "IntroHard.h"
 #include "Outro.h"
+#include "Mario.h"
+#include "Luigi.h"
 
 class Stage; // Forward declaration
 
@@ -62,6 +65,8 @@ private:
     PauseManager *pause_manager;
     // Thông tin người chơi
     PlayerInformation *player_info;
+    PlayerInformation *prev_player_info;
+    Player *player;
     Difficulty difficulty;
 
     Player_Mode player_mode = Player_Mode::MARIO_PLAYER;

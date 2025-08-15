@@ -29,7 +29,6 @@ private:
 
     Player *player;                    // Con trỏ tới player để kiểm tra khoảng cách
     const float safe_distance = 300.0f; // Khoảng cách an toàn từ player
-    const int Score_PiranhaPlant = 100;
 
 public:
     PiranhaPlant(Vector2 pos, Player *player_ptr);
@@ -38,14 +37,11 @@ public:
     void Update(float dt) override;
     void Set_Pos(Vector2 pos) override;
 
-    void Notify_Fall(float dt) override;
-    void Notify_On_Ground() override;
-    void Notify_Be_Stomped(PlayerInformation& info) override;
-    void Notify_Be_Fired_Or_Hit(PlayerInformation& info) override;
+    void Notify_Be_Fired_Or_Hit() override;
 
     bool Can_Be_Stomped() const override;
     bool Can_Be_Fired_Or_Hit() const override;
-    bool Need_Check_Ground_Block() const override { return false; } // Không cần kiểm tra block dưới vì chỉ nhô lên/rút xuống
+    bool Need_Check_Map() const override { return false; } 
 
     json to_json() const override;
     void from_json(const json& j) override;

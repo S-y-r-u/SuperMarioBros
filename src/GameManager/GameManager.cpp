@@ -7,7 +7,9 @@ GameManager::GameManager()
       current_stage(nullptr),
       pause_manager(new PauseManager()),
       player_info(nullptr),
-      outro_stage(nullptr) {}
+      outro_stage(nullptr),
+      player(nullptr),
+      prev_player_info(nullptr) {}
 
 GameManager::~GameManager()
 {
@@ -18,12 +20,15 @@ GameManager::~GameManager()
     delete outro_stage;
     current_stage = nullptr;
     delete player_info;
+    delete prev_player_info;
+    delete player;
 }
 
 void GameManager::SetDifficulty(Difficulty diff)
 {
     // Vào Game từ menu, cần khởi tạo stage và player_info
     difficulty = diff;
+    SoundManager::GetInstance().PlayMusic("playingMusic", true);
 
     // Delete the old stage if it exists
     if (intro_stage)
@@ -46,6 +51,16 @@ void GameManager::SetDifficulty(Difficulty diff)
         delete player_info;
         player_info = nullptr;
     }
+    if (prev_player_info)
+    {
+        delete prev_player_info;
+        prev_player_info = nullptr;
+    }
+    if (player)
+    {
+        delete player;
+        player = nullptr;
+    }
 
     // Vào Game từ chọn map
     if (game_mode == Game_Mode::Play_Level)
@@ -53,25 +68,34 @@ void GameManager::SetDifficulty(Difficulty diff)
         switch (difficulty)
         {
         case Difficulty::Easy:
+            if (player_mode == Player_Mode::MARIO_PLAYER)
+                player = new Mario({400, 200});
+            else if (player_mode == Player_Mode::LUIGI_PLAYER)
+                player = new Luigi({400, 200});
             player_info = new PlayerInformation(400, 3);
             player_info->SetWorld("EASY");
             intro_stage = new Intro_Easy(*player_info, player_mode);
-            stage = new EasyMap(player_mode, *player_info); // Replace with your actual Easy stage class
-            current_stage = intro_stage;
+            stage = new EasyMap(*player_info, *player); // Replace with your actual Easy stage class
             break;
         case Difficulty::Medium:
+            if (player_mode == Player_Mode::MARIO_PLAYER)
+                player = new Mario({144, 624});
+            else if (player_mode == Player_Mode::LUIGI_PLAYER)
+                player = new Luigi({144, 624});
             player_info = new PlayerInformation(400, 3);
             player_info->SetWorld("MEDIUM");
             intro_stage = new Intro_Medium(*player_info, player_mode);
-            stage = new MediumMap(player_mode, *player_info); // Replace with your actual Medium stage class
-            current_stage = intro_stage;
+            stage = new MediumMap(*player_info, *player); // Replace with your actual Medium stage class
             break;
         case Difficulty::Hard:
+            if (player_mode == Player_Mode::MARIO_PLAYER)
+                player = new Mario({48, 336});
+            else if (player_mode == Player_Mode::LUIGI_PLAYER)
+                player = new Luigi({48, 336});
             player_info = new PlayerInformation(400, 3);
             player_info->SetWorld("HARD");
-            intro_stage = new Intro_Easy(*player_info, player_mode);
-            stage = new HardMap(player_mode, *player_info); // Replace with your actual Hard stage class
-            current_stage = intro_stage;
+            intro_stage = new Intro_Hard(*player_info, player_mode);
+            stage = new HardMap(*player_info, *player); // Replace with your actual Hard stage class
             break;
         default:
             stage = nullptr;
@@ -81,13 +105,17 @@ void GameManager::SetDifficulty(Difficulty diff)
     // Vào Game từ Play
     if (game_mode == Game_Mode::Play_Through)
     {
+        if (player_mode == Player_Mode::MARIO_PLAYER)
+            player = new Mario({400, 200});
+        else if (player_mode == Player_Mode::LUIGI_PLAYER)
+            player = new Luigi({400, 200});
         player_info = new PlayerInformation(400, 6);
         player_info->SetWorld("EASY");
         intro_stage = new Intro_Easy(*player_info, player_mode);
-        stage = new EasyMap(player_mode, *player_info);
-        current_stage = intro_stage;
+        stage = new EasyMap(*player_info, *player);
     }
-    outro_stage = new Outro(player_mode);
+    outro_stage = new Outro_Manager(player_mode);
+    current_stage = intro_stage;
 }
 
 // Reset game when player dies
@@ -111,63 +139,66 @@ void GameManager::ResetGame(Difficulty diff)
         delete outro_stage;
         outro_stage = nullptr;
     }
+    if (player)
+    {
+        delete player;
+        player = nullptr;
+    }
 
     // Create a new stage based on the selected difficulty
     if (game_mode == Game_Mode::Play_Level)
     {
-        player_info->ResetScore();
-        player_info->ResetCoin();
+        player_info->ResetScore(0);
+        player_info->ResetCoin(0);
         player_info->ResetTime();
-        switch (difficulty)
+    }
+    else if (game_mode == Game_Mode::Play_Through)
+    {
+        if (prev_player_info)
         {
-        case Difficulty::Easy:
-            intro_stage = new Intro_Easy(*player_info, player_mode);
-            stage = new EasyMap(player_mode, *player_info); // Replace with your actual Easy stage class
-            current_stage = intro_stage;
-            break;
-        case Difficulty::Medium:
-            intro_stage = new Intro_Medium(*player_info, player_mode);
-            stage = new MediumMap(player_mode, *player_info); // Replace with your actual Medium stage class
-            current_stage = intro_stage;
-            break;
-        case Difficulty::Hard:
-            intro_stage = new Intro_Easy(*player_info, player_mode);
-            stage = new HardMap(player_mode, *player_info); // Replace with your actual Hard stage class
-            current_stage = intro_stage;
-            break;
-        default:
-            stage = nullptr;
-            break;
+            player_info->ResetScore(prev_player_info->GetScore());
+            player_info->ResetCoin(prev_player_info->GetCoins());
         }
+        else
+        {
+            player_info->ResetScore(0);
+            player_info->ResetCoin(0);
+        }
+        player_info->ResetTime();
     }
 
-    // Reset game for Play_Through mode
-    if (game_mode == Game_Mode::Play_Through)
+    switch (difficulty)
     {
-        player_info->ResetTime();
-        switch (difficulty)
-        {
-        case Difficulty::Easy:
-            intro_stage = new Intro_Easy(*player_info, player_mode);
-            stage = new EasyMap(player_mode, *player_info); // Replace with your actual Easy stage class
-            current_stage = intro_stage;
-            break;
-        case Difficulty::Medium:
-            intro_stage = new Intro_Medium(*player_info, player_mode);
-            stage = new MediumMap(player_mode, *player_info); // Replace with your actual Medium stage class
-            current_stage = intro_stage;
-            break;
-        case Difficulty::Hard:
-            intro_stage = new Intro_Easy(*player_info, player_mode);
-            stage = new HardMap(player_mode, *player_info); // Replace with your actual Hard stage class
-            current_stage = intro_stage;
-            break;
-        default:
-            stage = nullptr;
-            break;
-        }
+    case Difficulty::Easy:
+        if (player_mode == Player_Mode::MARIO_PLAYER)
+            player = new Mario({400, 200});
+        else if (player_mode == Player_Mode::LUIGI_PLAYER)
+            player = new Luigi({400, 200});
+        intro_stage = new Intro_Easy(*player_info, player_mode);
+        stage = new EasyMap(*player_info, *player); // Replace with your actual Easy stage class
+        break;
+    case Difficulty::Medium:
+        if (player_mode == Player_Mode::MARIO_PLAYER)
+            player = new Mario({144, 624});
+        else if (player_mode == Player_Mode::LUIGI_PLAYER)
+            player = new Luigi({144, 624});
+        intro_stage = new Intro_Medium(*player_info, player_mode);
+        stage = new MediumMap(*player_info, *player); // Replace with your actual Medium stage class
+        break;
+    case Difficulty::Hard:
+        if (player_mode == Player_Mode::MARIO_PLAYER)
+            player = new Mario({48, 336});
+        else if (player_mode == Player_Mode::LUIGI_PLAYER)
+            player = new Luigi({48, 336});
+        intro_stage = new Intro_Hard(*player_info, player_mode);
+        stage = new HardMap(*player_info, *player); // Replace with your actual Hard stage class
+        break;
+    default:
+        stage = nullptr;
+        break;
     }
-    outro_stage = new Outro(player_mode);
+    outro_stage = new Outro_Manager(player_mode);
+    current_stage = intro_stage;
 }
 
 void GameManager::TransGame()
@@ -175,10 +206,12 @@ void GameManager::TransGame()
     switch (difficulty)
     {
     case Difficulty::Easy:
+        prev_player_info = new PlayerInformation(*player_info);
         player_info->SetWorld("MEDIUM");
         difficulty = Difficulty::Medium;
         break;
     case Difficulty::Medium:
+        prev_player_info = new PlayerInformation(*player_info);
         player_info->SetWorld("HARD");
         difficulty = Difficulty::Hard;
         break;
@@ -197,25 +230,30 @@ void GameManager::TransGame()
         delete stage;
         stage = nullptr;
     }
+
     player_info->ResetTime();
+
     switch (difficulty)
     {
     case Difficulty::Medium:
         intro_stage = new Intro_Medium(*player_info, player_mode);
-        stage = new MediumMap(player_mode, *player_info); // Replace with your actual Medium stage class
-        current_stage = intro_stage;
+        player->Set_Pos({144, 624}); 
+        player->Set_Disappear(false);
+        stage = new MediumMap(*player_info, *player); // Replace with your actual Medium stage class
         break;
     case Difficulty::Hard:
-        intro_stage = new Intro_Easy(*player_info, player_mode);
-        stage = new HardMap(player_mode, *player_info); // Replace with your actual Hard stage class
-        current_stage = intro_stage;
+        intro_stage = new Intro_Hard(*player_info, player_mode);
+        player->Set_Pos({48, 336});
+        player->Set_Disappear(false);
+        stage = new HardMap(*player_info, *player); // Replace with your actual Hard stage class
         break;
     }
+    current_stage = intro_stage;
 }
 
 int GameManager::Update()
 {
-    
+
     if (current_stage == intro_stage)
     {
         current_stage->Run();
@@ -233,10 +271,12 @@ int GameManager::Update()
         {
             return menuState;
         }
-        if (pause_select == PauseSelect::Pause_Save_Select){
+        if (pause_select == PauseSelect::Pause_Save_Select)
+        {
             json save_data = to_json();
             std::ofstream f("save.json");
-            if (f.is_open()) {
+            if (f.is_open())
+            {
                 f << save_data.dump(4);
                 f.close();
             }
@@ -281,8 +321,6 @@ int GameManager::Update()
         }
         else if (cur_stage->Change_State() && game_mode == Game_Mode::Play_Level)
             current_stage = outro_stage; // Transition to outro stage after completing the level
-        else if (cur_stage->Change_State())
-            return menuState;
     }
     else if (current_stage == outro_stage)
     {
@@ -319,6 +357,7 @@ void GameManager::Load_Texture()
     BomberBill_Sprite::bomber_bill_.Load_("../resources/sprite/BomberBill.png");
     Intro::intro_.Load_("../resources/sprite/Intro.png");
     Outro_Animation::outro_.Load_("../resources/sprite/Outro.png");
+    SavePrince::save_prince_.Load_("../resources/sprite/SavePrince.png");
 }
 
 void GameManager::Unload_Texture()
@@ -333,6 +372,7 @@ void GameManager::Unload_Texture()
     BomberBill_Sprite::bomber_bill_.Unload_();
     Intro::intro_.Unload_();
     Outro_Animation::outro_.Unload_();
+    SavePrince::save_prince_.Unload_();
 }
 
 void GameManager::SetPlayerMode(Player_Mode mode)
@@ -360,47 +400,88 @@ PlayerInformation &GameManager::GetPlayerInformation() const
     return *player_info;
 }
 
-json GameManager::to_json() const {
+json GameManager::to_json() const
+{
     json j;
     j["difficulty"] = static_cast<int>(difficulty);
 
-
     j["player_mode"] = static_cast<int>(player_mode);
     j["game_mode"] = static_cast<int>(game_mode);
-    if (player_info) {
+    if (player_info)
+    {
         j["player_info"] = player_info->to_json();
     }
-    if (stage) {
+    if (prev_player_info)
+    {
+        j["prev_player_info"] = prev_player_info->to_json();
+    }
+    if (player)
+    {
+        j["player"] = player->to_json();
+    }
+    if (stage)
+    {
         j["stage"] = stage->to_json();
     }
     // Có thể lưu thêm thông tin khác nếu cần
     return j;
 }
 
-void GameManager::from_json(const json& j) {
+void GameManager::from_json(const json &j)
+{
     difficulty = static_cast<Difficulty>(j["difficulty"].get<int>());
     player_mode = static_cast<Player_Mode>(j.at("player_mode").get<int>());
     game_mode = static_cast<Game_Mode>(j.at("game_mode").get<int>());
-    if (j.contains("player_info")) {
-        if (player_info) delete player_info;
-        player_info = new PlayerInformation(200,5);
+    if (j.contains("player_info"))
+    {
+        if (player_info)
+            delete player_info;
+        player_info = new PlayerInformation(200, 5);
         player_info->from_json(j.at("player_info"));
     }
-    if (j.contains("stage") ) {
-        if (stage) delete stage;
-        switch (difficulty) {
-            case Difficulty::Easy:
-                stage = new EasyMap(player_mode,*player_info);
-                break;
-            case Difficulty::Medium:
-                stage = new MediumMap(player_mode,*player_info);
-                break;
-            case Difficulty::Hard:
-                stage = new HardMap(player_mode,*player_info);
-                break;
+    if (j.contains("prev_player_info"))
+    {
+        if (prev_player_info)
+            delete prev_player_info;
+        prev_player_info = new PlayerInformation(200, 5);
+        prev_player_info->from_json(j.at("prev_player_info"));
+    }
+    if (j.contains("player"))
+    {
+        if (player)
+            delete player;
+        if (player_mode == Player_Mode::MARIO_PLAYER)
+        {
+            player = new Mario({100, 100});
+        }
+        else if (player_mode == Player_Mode::LUIGI_PLAYER)
+        {
+            player = new Luigi({100, 100});
+        }
+        else
+        {
+            player = new Mario({100, 100});
+        }
+        player->from_json(j.at("player"));
+    }
+    if (j.contains("stage"))
+    {
+        if (stage)
+            delete stage;
+        switch (difficulty)
+        {
+        case Difficulty::Easy:
+            stage = new EasyMap(*player_info, *player);
+            break;
+        case Difficulty::Medium:
+            stage = new MediumMap(*player_info, *player);
+            break;
+        case Difficulty::Hard:
+            stage = new HardMap(*player_info, *player);
+            break;
         }
         stage->from_json(j.at("stage"));
     }
-    current_stage = stage ;
-    std::cerr<< "Resources reinitialized." << std::endl;
+    current_stage = stage;
+    std::cerr << "Resources reinitialized." << std::endl;
 }

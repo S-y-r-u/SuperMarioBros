@@ -27,9 +27,11 @@ public:
     void DecreaseLives();
     int GetLives() const;
     float GetTime() const;
+    int GetScore() const;
+    int GetCoins() const;
     void ResetTime();
-    void ResetCoin();
-    void ResetScore();
+    void ResetCoin(const int &coin);
+    void ResetScore(const int &score);
     void Update(const float &dt);
     void Draw() const;
     void Game_Won();

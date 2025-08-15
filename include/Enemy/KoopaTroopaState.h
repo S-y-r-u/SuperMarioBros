@@ -9,30 +9,24 @@ public:
 
     virtual void Enter(KoopaTroopa *koopa) {}
     virtual void Update(KoopaTroopa *koopa, float dt) = 0;
-    virtual void OnStomped(KoopaTroopa *koopa, PlayerInformation &info) {}
+    virtual void OnStomped(KoopaTroopa *koopa) {}
     virtual void OnFired(KoopaTroopa *koopa);
-    virtual void OnKicked(KoopaTroopa *koopa , int direction , PlayerInformation &info) {}
-    virtual int Get_Score() const = 0;
+    virtual void OnKicked(KoopaTroopa *koopa, int direction) {}
 };
 
 // ------ WALKING ------
 class KoopaWalkingState : public KoopaState
 {
-private:
-    const int Score_Walking = 100;
-
 public:
     void Enter(KoopaTroopa *koopa) override;
     void Update(KoopaTroopa *koopa, float dt) override;
-    void OnStomped(KoopaTroopa *koopa, PlayerInformation &info) override;
-    int Get_Score() const override { return Score_Walking; }
+    void OnStomped(KoopaTroopa *koopa) override;
 };
 
 // ------ SHELL IDLE ------
 class KoopaShellIdleState : public KoopaState
 {
 private:
-    const int Score_Shell = 100;
     const float InChange_Frame_Time = 1.0f; // seconds
     float immobile_timer = 0.0f;
     float timer;
@@ -40,39 +34,28 @@ private:
 public:
     void Enter(KoopaTroopa *koopa) override;
     void Update(KoopaTroopa *koopa, float dt) override;
-    void OnStomped(KoopaTroopa *koopa, PlayerInformation &info) override; // kick to move
-    void OnKicked(KoopaTroopa *koopa , int direction , PlayerInformation &info) override;
-    int Get_Score() const override { return Score_Shell; }
     float GetTimer() const { return timer; }
     void SetTimer(float t) { timer = t; }
+    void OnStomped(KoopaTroopa *koopa) override; // kick to move
+    void OnKicked(KoopaTroopa *koopa, int direction) override;
 };
 
 // ------ SHELL MOVING ------
 class KoopaShellMovingState : public KoopaState
 {
 private:
-    const int Score_Kicked = 100;
-
 public:
     void Enter(KoopaTroopa *koopa) override;
     void Update(KoopaTroopa *koopa, float dt) override;
-    void OnStomped(KoopaTroopa *koopa, PlayerInformation &info) override; // stop movement
-    int Get_Score() const override { return Score_Kicked; }
+    void OnStomped(KoopaTroopa *koopa) override; // stop movement
 };
 
 // ------ DYING ------
 class KoopaDyingState : public KoopaState
 {
-private:
-    const int Score_Dying_Walking = 200;
-    const int Score_Dying_Flying = 300;
-    const int Score_Dying_Shell = 100; 
-    int score_;
-
 public:
     void Enter(KoopaTroopa *koopa) override;
     void Update(KoopaTroopa *koopa, float dt) override;
-    int Get_Score() const override { return score_; }
 };
 
 // ------ FLYING ------
@@ -86,8 +69,7 @@ private:
 public:
     void Enter(KoopaTroopa *koopa) override;
     void Update(KoopaTroopa *koopa, float dt) override;
-    void OnStomped(KoopaTroopa *koopa , PlayerInformation &info) override;
-    int Get_Score() const override { return 0; }
     float GetFlyingTimer() const { return fly_timer; }
     void SetFlyingTimer(float timer) { fly_timer = timer; }
+    void OnStomped(KoopaTroopa *koopa) override;
 };

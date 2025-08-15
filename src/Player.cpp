@@ -33,6 +33,7 @@ Player ::Player(Vector2 startPos) : Character(startPos)
 
     is_pose = false;
     is_fade_out = false;
+    disappear = false;
 
     isImmune = false;
     immunityTimer = 0.0f;
@@ -47,20 +48,21 @@ Player ::~Player() {}
 Rectangle Player ::get_draw_rec()
 {
     if (form == PlayerForm ::Small ||
-         form == PlayerForm ::Invincible)
+        form == PlayerForm ::Invincible)
     {
-        return {position.x - 12 * scale_screen / 2.0f , position.y - 15 * scale_screen, 12 * scale_screen, 15 * scale_screen};
+        return {position.x - 12 * scale_screen / 2.0f, position.y - 15 * scale_screen, 12 * scale_screen, 15 * scale_screen};
     }
     else
     {
-        if (isCrouching) {
+        if (isCrouching)
+        {
             float crouchHeight = 22 * scale_screen;
             return {position.x - 14 * scale_screen / 2.0f, position.y - crouchHeight, 14 * scale_screen, crouchHeight};
-        } 
-        else return {position.x - 14 * scale_screen / 2.0f , position.y - 30 * scale_screen, 14 * scale_screen, 30 * scale_screen};
+        }
+        else
+            return {position.x - 14 * scale_screen / 2.0f, position.y - 30 * scale_screen, 14 * scale_screen, 30 * scale_screen};
     }
 }
-
 
 void Player ::Set_isGround(bool value)
 {
@@ -84,41 +86,52 @@ void Player ::StopMoving()
     velocity.x = 0.0f;
 }
 
-void Player :: AccelerateRight(float dt){
-    if(velocity.x < 0){
+void Player ::AccelerateRight(float dt)
+{
+    if (velocity.x < 0)
+    {
         velocity.x += deceleration * dt;
     }
-    else{
+    else
+    {
         velocity.x += acceleration * dt;
     }
 
-    if(velocity.x > speed){
+    if (velocity.x > speed)
+    {
         velocity.x = speed;
     }
     isFacingLeft = false;
 }
 
-void Player :: AccelerateLeft(float dt){
-    if(velocity.x > 0){
+void Player ::AccelerateLeft(float dt)
+{
+    if (velocity.x > 0)
+    {
         velocity.x -= deceleration * dt;
     }
-    else{
+    else
+    {
         velocity.x -= acceleration * dt;
     }
 
-    if(velocity.x < -speed){
+    if (velocity.x < -speed)
+    {
         velocity.x = -speed;
     }
     isFacingLeft = true;
 }
 
-void Player ::Crouch(){
-    bool canCrouch = (form == PlayerForm :: Super || form == PlayerForm :: Fire || form == PlayerForm :: Invincible_Super_And_Fire);
-    if(!canCrouch || !isGround || velocity.x != 0.0f)  return;
+void Player ::Crouch()
+{
+    bool canCrouch = (form == PlayerForm ::Super || form == PlayerForm ::Fire || form == PlayerForm ::Invincible_Super_And_Fire);
+    if (!canCrouch || !isGround || velocity.x != 0.0f)
+        return;
     isCrouching = true;
 }
 
-void Player ::StopCrouch(){
+void Player ::StopCrouch()
+{
     isCrouching = false;
 }
 
@@ -164,9 +177,11 @@ void Player ::update(float dt, bool isAccelerating)
         return;
     }
 
-    if(isImmune){
+    if (isImmune)
+    {
         immunityTimer -= dt;
-        if(immunityTimer <= 0.0f){
+        if (immunityTimer <= 0.0f)
+        {
             isImmune = false;
         }
     }
@@ -226,15 +241,22 @@ void Player ::update(float dt, bool isAccelerating)
 
     velocity.y += gravity * dt;
 
-    if (isGround){
-        if (isCrouching) velocity.x = 0.0f;
-        else{
-            if(!isAccelerating){
+    if (isGround)
+    {
+        if (isCrouching)
+            velocity.x = 0.0f;
+        else
+        {
+            if (!isAccelerating)
+            {
                 velocity.x *= pow(friction, dt * 60);
-                if (abs(velocity.x) < 5.0f) velocity.x = 0.0f;
+                if (abs(velocity.x) < 5.0f)
+                    velocity.x = 0.0f;
             }
-            if (velocity.x > speed) velocity.x = speed;
-            if (velocity.x < -speed) velocity.x = -speed;
+            if (velocity.x > speed)
+                velocity.x = speed;
+            if (velocity.x < -speed)
+                velocity.x = -speed;
         }
     }
     position.x += velocity.x * dt;
@@ -247,8 +269,8 @@ void Player ::update(float dt, bool isAccelerating)
             bool isSkidding = (isAccelerating && (velocity.x > 20.0f && isFacingLeft) || (velocity.x < -20.0f && !isFacingLeft));
             if (isSkidding)
                 state = AnimationState::Slide;
-            else if(isCrouching)
-                state = AnimationState :: Crouch;
+            else if (isCrouching)
+                state = AnimationState ::Crouch;
             else if (abs(velocity.x) > 1.0f)
                 state = AnimationState ::Walk;
             else
@@ -262,11 +284,22 @@ void Player ::update(float dt, bool isAccelerating)
     }
 
     if (currentFrame >= getAnimationFrame().size())
+    {
         currentFrame = 0;
+    }
     frameTimer += dt;
     if (frameTimer >= animationSpeed)
     {
         frameTimer = 0.0f;
+        if (currentFrame + 1 >= getAnimationFrame().size())
+        {
+            if (state == AnimationState::Fade_Out)
+            {
+                state = AnimationState::Stance;
+                is_pose = false;
+                is_fade_out = false;
+            }
+        }
         currentFrame = (currentFrame + 1) % getAnimationFrame().size();
     }
 }
@@ -289,12 +322,14 @@ void Player ::draw()
         source.width *= (-1);
     }
 
-    Rectangle dest = {position.x - frame[currentFrame].width * scale_screen / 2.0f , position.y - frame[currentFrame].height * scale_screen, frame[currentFrame].width * scale_screen, frame[currentFrame].height * scale_screen};
-    
-    if(isImmune && (int)(GetTime() * 10) % 2 != 0){
+    Rectangle dest = {position.x - frame[currentFrame].width * scale_screen / 2.0f, position.y - frame[currentFrame].height * scale_screen, frame[currentFrame].width * scale_screen, frame[currentFrame].height * scale_screen};
+
+    if (isImmune && (int)(GetTime() * 10) % 2 != 0)
+    {
         // khong ve
     }
-    else DrawTexturePro(texture->sprite, source, dest, {0, 0}, 0.0f, WHITE);
+    else
+        DrawTexturePro(texture->sprite, source, dest, {0, 0}, 0.0f, WHITE);
 }
 
 void Player ::collectCoin()
@@ -457,13 +492,16 @@ void Player::Fade_Out(float dt)
     animationSpeed = dt / getAnimationFrame().size();
 }
 
-void Player :: TakeDamage(){
-    if(isInvincible || isTransforming || isDead || isImmune) return;
+void Player ::TakeDamage()
+{
+    if (isInvincible || isTransforming || isDead || isImmune)
+        return;
 
-    if(form == PlayerForm :: Super || form == PlayerForm :: Fire){
+    if (form == PlayerForm ::Super || form == PlayerForm ::Fire)
+    {
         isTransforming = true;
-        state = AnimationState :: Hit;
-        targetForm = PlayerForm :: Small;
+        state = AnimationState ::Hit;
+        targetForm = PlayerForm ::Small;
         isImmune = true;
         immunityTimer = 2.5f;
 
@@ -471,15 +509,20 @@ void Player :: TakeDamage(){
         currentFrame = 0;
         frameTimer = 0.0f;
     }
-    else if(form == PlayerForm :: Small){
+    else if (form == PlayerForm ::Small)
+    {
         Die();
     }
 }
 
+bool Player::Get_Disappear() { return disappear; }
 
-json Player::to_json() const {
+void Player::Set_Disappear(bool value) { disappear = value; }
+
+json Player::to_json() const
+{
     json j;
-    //character
+    // character
     j["position_x"] = position.x;
     j["position_y"] = position.y;
     j["velocity_x"] = velocity.x;
@@ -488,7 +531,7 @@ json Player::to_json() const {
     j["isFacingLeft"] = isFacingLeft;
     j["speed"] = speed;
     j["gravity"] = gravity;
-    //player
+    // player
     j["form"] = static_cast<int>(form);
     j["state"] = static_cast<int>(state);
     j["JumpForce"] = JumpForce;
@@ -514,8 +557,9 @@ json Player::to_json() const {
     return j;
 }
 
-void Player::from_json(const json& j) {
-    //character
+void Player::from_json(const json &j)
+{
+    // character
     position.x = j.at("position_x").get<float>();
     position.y = j.at("position_y").get<float>();
     velocity.x = j.at("velocity_x").get<float>();
@@ -524,7 +568,7 @@ void Player::from_json(const json& j) {
     isFacingLeft = j.at("isFacingLeft").get<bool>();
     speed = j.at("speed").get<float>();
     gravity = j.at("gravity").get<float>();
-    //player
+    // player
     form = static_cast<PlayerForm>(j.at("form").get<int>());
     state = static_cast<AnimationState>(j.at("state").get<int>());
     JumpForce = j.at("JumpForce").get<float>();

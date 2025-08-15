@@ -27,7 +27,6 @@ private:
     bool pos_state;
     float base_y;
     const float Push_Velocity = 200.0f;
-    const int Score_Latiku = 1000;
     const float dis_to_finish = 2 * Screen_w;
 
     Player *player;
@@ -41,15 +40,12 @@ public:
     void Update(float dt) override;
     void Draw() const override;
 
-    void Notify_Fall(float dt) override {}
-    void Notify_On_Ground() override {}
-    void Notify_Be_Stomped(PlayerInformation &info) override {}
-    void Notify_Be_Fired_Or_Hit(PlayerInformation &info) override;
+    void Notify_Be_Fired_Or_Hit() override;
 
     bool Can_Be_Stomped() const override;
     bool Can_Be_Fired_Or_Hit() const override;
-    bool Need_Check_Ground_Block() const;
-    bool Need_Check_Collision_With_Other_Enemy() const override;
+
+    bool Need_Check_Map() const override;
 
     json to_json() const override;
     void from_json(const json& j) override;

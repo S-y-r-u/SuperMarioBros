@@ -2,10 +2,12 @@
 #include "algorithm"
 #include "Enemy/KoopaTroopaState.h"
 
-Stage::Stage(PlayerInformation &info)
+Stage::Stage(PlayerInformation &info, Player &player)
     : information(info),
+      player(player),
       Reset_Game(false),
-      Is_Game_Won(false) {}
+      Is_Game_Won(false),
+      win_animation(nullptr) {}
 
 Stage::~Stage()
 {
@@ -28,18 +30,9 @@ Stage::~Stage()
         delete fireball;
     fireballs.clear();
 
-    if (player)
-    {
-        delete player;
-        player = nullptr;
-    }
-
-    delete flag_pole;
-    delete flag_castle;
     delete win_animation;
 
-    Score_Manager &score_manager = Score_Manager::GetInstance();
-    score_manager.ClearScores();
+    Score_Manager::GetInstance().ClearScores();
 
     Keyboard.clear();
 
@@ -48,7 +41,7 @@ Stage::~Stage()
 }
 
 void Stage::Run()
-{   
+{
     if (!Is_Game_Won)
     {
         Is_Game_Won = win_animation->Check_Win_Animation();
@@ -57,18 +50,15 @@ void Stage::Run()
             Keyboard.clear();
         }
     }
-    else
-    {
-        win_animation->Update(GetFrameTime());
-    }
+    win_animation->Update(GetFrameTime());
 
     Player_Update();
-    if (!player->Get_isTransforming())
+    if (!player.Get_isTransforming())
     {
         Non_Player_Update();
     }
 
-    if (!player->Get_isActive() && !Reset_Game)
+    if (!player.Get_isActive() && !Reset_Game)
         Cool_Down_After_Die(GetFrameTime());
     if (win_animation->End_Animation())
         Cool_Down_After_Win(GetFrameTime());
@@ -91,7 +81,7 @@ void Stage::Cool_Down_After_Win(float dt)
 
 void Stage::Player_Update()
 {
-    if (!Is_Game_Won || player->Get_isDead())
+    if (!Is_Game_Won || player.Get_isDead() || !player.Get_isActive())
     {
         if (IsKeyPressed(KEY_A))
             Keyboard.emplace_back(KEY_A);
@@ -102,42 +92,45 @@ void Stage::Player_Update()
         if (IsKeyReleased(KEY_D))
             Keyboard.erase(std::remove(Keyboard.begin(), Keyboard.end(), KEY_D), Keyboard.end());
         if (IsKeyPressed(KEY_W))
-            player->Jump();
+            player.Jump();
         else if (IsKeyReleased(KEY_W))
-            player->Cut_Jump();
+            player.Cut_Jump();
         if (IsKeyPressed(KEY_SPACE))
-            player->Shoot(fireballs);
+            player.Shoot(fireballs);
         if (IsKeyDown(KEY_S))
-            player->Crouch();
+            player.Crouch();
         if (IsKeyReleased(KEY_S))
-            player->StopCrouch();
+            player.StopCrouch();
         // if (Keyboard.empty() && !IsKeyDown(KEY_S))
-        //     player->StopMoving();
+        //     player.StopMoving();
         // else if (Keyboard.back() == KEY_A)
-        //     player->MoveLeft();
+        //     player.MoveLeft();
         // else
-        //     player->MoveRight();
+        //     player.MoveRight();
     }
 
     bool isAccelerating = !Keyboard.empty();
-    if (isAccelerating && (!Is_Game_Won || player->Get_isDead())) {
-        if (Keyboard.back() == KEY_A) {
-            player->AccelerateLeft(GetFrameTime());
-        } else if (Keyboard.back() == KEY_D) {
-            player->AccelerateRight(GetFrameTime());
+    if (isAccelerating && (!Is_Game_Won || player.Get_isDead()))
+    {
+        if (Keyboard.back() == KEY_A)
+        {
+            player.AccelerateLeft(GetFrameTime());
+        }
+        else if (Keyboard.back() == KEY_D)
+        {
+            player.AccelerateRight(GetFrameTime());
         }
     }
 
-    player->updateCoolDown(GetFrameTime());
-    player->update(GetFrameTime(), isAccelerating);
+    player.updateCoolDown(GetFrameTime());
+    player.update(GetFrameTime(), isAccelerating);
     information.Update(GetFrameTime());
 
-    Score_Manager &score_manager = Score_Manager::GetInstance();
-    score_manager.Update();
+    Score_Manager::GetInstance().Update();
 
-    if (!player->Get_isDead())
+    if (!player.Get_isDead())
     {
-        player->Set_isGround(false);
+        player.Set_isGround(false);
         Check_Player_Vs_Ground();
         Check_Player_Vs_Enemy();
         Check_Block_Vs_Block();
@@ -152,21 +145,18 @@ void Stage::Player_Update()
         top_left.y,
         bottom_right.x - top_left.x,
         bottom_right.y - top_left.y};
-    if (player->getPosition().x - player->get_draw_rec().width / 2.0f <= screen_rect_world.x)
+    if (player.getPosition().x - player.get_draw_rec().width / 2.0f <= screen_rect_world.x)
     {
-        player->Set_Pos({screen_rect_world.x + player->get_draw_rec().width / 2.0f, player->getPosition().y});
-        player->Set_Velocity({0, player->get_Velocity().y});
+        player.Set_Pos({screen_rect_world.x + player.get_draw_rec().width / 2.0f, player.getPosition().y});
+        player.Set_Velocity({0, player.get_Velocity().y});
     }
 }
 
 void Stage::Non_Player_Update()
 {
-    camera.target.x = std::max(camera.target.x, player->getPosition().x - Screen_w / 2.0f);
+    camera.target.x = std::max(camera.target.x, player.getPosition().x - Screen_w / 2.0f);
     if (camera.target.x >= MapTexture.width * scale_screen - Screen_w)
         camera.target.x = MapTexture.width * scale_screen - Screen_w;
-
-    flag_pole->Update(GetFrameTime());
-    flag_castle->Update(GetFrameTime());
 
     Check_Item_Vs_Ground();
     Check_Item_Vs_Block();
@@ -177,11 +167,11 @@ void Stage::Non_Player_Update()
 
     for (Item *item : items)
     {
-        Rectangle player_rec = player->get_draw_rec();
+        Rectangle player_rec = player.get_draw_rec();
         Rectangle rec_item = item->Get_Draw_Rec();
         if (CheckCollisionRecs(player_rec, rec_item) && !item->Is_Appear_Animation())
         {
-            item->Activate_(*player, information);
+            item->Activate_(player, information);
         }
     }
 
@@ -236,8 +226,19 @@ void Stage::Non_Player_Update()
         }
         if (i < enemies.size() && !enemies[i]->Get_Is_Active())
         {
-            enemy_map.erase(enemies[i]);
-            delete enemies[i];
+            Enemy *to_delete = enemies[i];
+
+            for (auto &pair : enemy_map)
+            {
+                auto &vec = pair.second;
+                vec.erase(
+                    std::remove(vec.begin(), vec.end(), to_delete),
+                    vec.end());
+            }
+
+            enemy_map.erase(to_delete);
+
+            delete to_delete;
             enemies.erase(enemies.begin() + i);
         }
         else
@@ -286,9 +287,8 @@ void Stage::Draw()
             piranha->Draw();
         }
     }
-    
-    flag_pole->Draw();
-    flag_castle->Draw();
+
+    win_animation->Draw();
 
     DrawTexturePro(MapTexture, source, dest, {0, 0}, 0, WHITE);
 
@@ -319,8 +319,8 @@ void Stage::Draw()
 
     score_manager.Draw();
 
-    if (!win_animation->Player_Disappear())
-        player->draw();
+    if (!player.Get_Disappear())
+        player.draw();
 
     EndMode2D();
 
@@ -330,11 +330,11 @@ void Stage::Draw()
 void Stage::Check_Player_Vs_Block()
 {
     // Lấy pos center-bottom ở frame trước và hiện tại
-    Vector2 currCenterBottom = player->getPosition();
-    Vector2 velocity = player->get_Velocity();
+    Vector2 currCenterBottom = player.getPosition();
+    Vector2 velocity = player.get_Velocity();
 
     // Lấy kích thước player
-    Rectangle currRec = player->get_draw_rec();
+    Rectangle currRec = player.get_draw_rec();
     float pw = currRec.width;
     float ph = currRec.height;
 
@@ -347,9 +347,9 @@ void Stage::Check_Player_Vs_Block()
 
     for (Block *block : blocks)
     {
-        if (block->Kill_Player(*player))
+        if (block->Kill_Player(player))
         {
-            player->Die();
+            player.Die();
             return;
         }
         Rectangle rec_map = block->Get_Draw_Rec();
@@ -370,8 +370,8 @@ void Stage::Check_Player_Vs_Block()
                 if (!block->Surrounded_Block[2])
                 {
                     // Từ trái sang
-                    player->Set_Pos({rec_map.x - pw / 2.0f - 0.1f, player->getPosition().y});
-                    player->Set_Velocity({0, player->get_Velocity().y});
+                    player.Set_Pos({rec_map.x - pw / 2.0f - 0.1f, player.getPosition().y});
+                    player.Set_Velocity({0, player.get_Velocity().y});
                 }
             }
             else
@@ -379,8 +379,8 @@ void Stage::Check_Player_Vs_Block()
                 if (!block->Surrounded_Block[3])
                 {
                     // Từ phải sang
-                    player->Set_Pos({rec_map.x + rec_map.width + pw / 2.0f + 0.1f, player->getPosition().y});
-                    player->Set_Velocity({0, player->get_Velocity().y});
+                    player.Set_Pos({rec_map.x + rec_map.width + pw / 2.0f + 0.1f, player.getPosition().y});
+                    player.Set_Velocity({0, player.get_Velocity().y});
                 }
             }
         }
@@ -390,28 +390,28 @@ void Stage::Check_Player_Vs_Block()
             if (currRec.y <= rec_map.y && !block->Surrounded_Block[0] && velocity.y >= 0)
             {
                 // Từ trên xuống
-                player->Set_Pos({player->getPosition().x, rec_map.y});
-                player->Set_Velocity({player->get_Velocity().x, 0.f});
-                player->Set_isGround(true);
+                player.Set_Pos({player.getPosition().x, rec_map.y});
+                player.Set_Velocity({player.get_Velocity().x, 0.f});
+                player.Set_isGround(true);
             }
             else if (currRec.y + currRec.height > rec_map.y + rec_map.height && !block->Surrounded_Block[1] && velocity.y < 0)
             {
                 // Từ dưới lên
-                player->Set_Pos({player->getPosition().x, rec_map.y + rec_map.height + ph});
-                player->Set_Velocity({player->get_Velocity().x, 0.f});
-                if (player->getPosition().x > rec_map.x + rec_map.width &&
+                player.Set_Pos({player.getPosition().x, rec_map.y + rec_map.height + ph});
+                player.Set_Velocity({player.get_Velocity().x, 0.f});
+                if (player.getPosition().x > rec_map.x + rec_map.width &&
                     !block->Surrounded_Block[3])
                 {
-                    block->On_Hit(items, *player, information);
+                    block->On_Hit(items, player, information);
                 }
-                else if (player->getPosition().x < rec_map.x &&
+                else if (player.getPosition().x < rec_map.x &&
                          !block->Surrounded_Block[2])
                 {
-                    block->On_Hit(items, *player, information);
+                    block->On_Hit(items, player, information);
                 }
-                else if (player->getPosition().x <= rec_map.x + rec_map.width && player->getPosition().x >= rec_map.x)
+                else if (player.getPosition().x <= rec_map.x + rec_map.width && player.getPosition().x >= rec_map.x)
                 {
-                    block->On_Hit(items, *player, information);
+                    block->On_Hit(items, player, information);
                 }
             }
         }
@@ -421,11 +421,11 @@ void Stage::Check_Player_Vs_Block()
 void Stage::Check_Player_Vs_Ground()
 {
     // Vị trí center-bottom của frame trước và hiện tại
-    Vector2 currCenterBottom = player->getPosition();
-    Vector2 velocity = player->get_Velocity();
+    Vector2 currCenterBottom = player.getPosition();
+    Vector2 velocity = player.get_Velocity();
 
     // Lấy kích thước player
-    Rectangle currDrawRec = player->get_draw_rec();
+    Rectangle currDrawRec = player.get_draw_rec();
     float pw = currDrawRec.width;
     float ph = currDrawRec.height;
 
@@ -456,7 +456,7 @@ void Stage::Check_Player_Vs_Ground()
 
             if (id == 2)
             {
-                player->Die();
+                player.Die();
             }
             else
             {
@@ -472,8 +472,8 @@ void Stage::Check_Player_Vs_Ground()
                         // Từ trái sang
                         if (Map[i][j - 1] == 0)
                         {
-                            player->Set_Pos({rec_map.x - pw / 2.0f, player->getPosition().y});
-                            player->Set_Velocity({0, player->get_Velocity().y});
+                            player.Set_Pos({rec_map.x - pw / 2.0f, player.getPosition().y});
+                            player.Set_Velocity({0, player.get_Velocity().y});
                         }
                     }
                     else
@@ -481,26 +481,26 @@ void Stage::Check_Player_Vs_Ground()
                         // Từ phải sang
                         if (Map[i][j + 1] == 0)
                         {
-                            player->Set_Pos({rec_map.x + rec_map.width + pw / 2.0f, player->getPosition().y});
-                            player->Set_Velocity({0, player->get_Velocity().y});
+                            player.Set_Pos({rec_map.x + rec_map.width + pw / 2.0f, player.getPosition().y});
+                            player.Set_Velocity({0, player.get_Velocity().y});
                         }
                     }
                 }
                 else
                 {
                     // Va chạm dọc
-                    if (currRec.y <= rec_map.y && Map[i - 1][j] == 0 && player->get_Velocity().y >= 0)
+                    if (currRec.y <= rec_map.y && Map[i - 1][j] == 0 && player.get_Velocity().y >= 0)
                     {
                         // Từ trên xuống
-                        player->Set_Pos({player->getPosition().x, rec_map.y});
-                        player->Set_Velocity({player->get_Velocity().x, 0});
-                        player->Set_isGround(true);
+                        player.Set_Pos({player.getPosition().x, rec_map.y});
+                        player.Set_Velocity({player.get_Velocity().x, 0});
+                        player.Set_isGround(true);
                     }
-                    else if (currRec.y + currRec.height > rec_map.y + rec_map.height && Map[i + 1][j] == 0 && player->get_Velocity().y < 0)
+                    else if (currRec.y + currRec.height > rec_map.y + rec_map.height && Map[i + 1][j] == 0 && player.get_Velocity().y < 0)
                     {
                         // Từ dưới lên
-                        player->Set_Pos({player->getPosition().x, rec_map.y + rec_map.height + ph});
-                        player->Set_Velocity({player->get_Velocity().x, 0});
+                        player.Set_Pos({player.getPosition().x, rec_map.y + rec_map.height + ph});
+                        player.Set_Velocity({player.get_Velocity().x, 0});
                     }
                 }
             }
@@ -510,7 +510,7 @@ void Stage::Check_Player_Vs_Ground()
 
 void Stage::Check_Player_Vs_Enemy()
 {
-    Rectangle playerRec = player->get_draw_rec();
+    Rectangle playerRec = player.get_draw_rec();
 
     for (Enemy *enemy : enemies)
     {
@@ -522,10 +522,13 @@ void Stage::Check_Player_Vs_Enemy()
         if (!CheckCollisionRecs(playerRec, enemyRec))
             continue;
 
-        if (player->Get_isInvincible())
+        if (player.Get_isInvincible())
         {
-            enemy->Notify_Be_Fired_Or_Hit(information);
+            enemy->Notify_Be_Fired_Or_Hit();
             SoundManager::GetInstance().PlaySoundEffect("stomp");
+            information.UpdateScore(enemy->Get_Score());
+            Score_Manager::GetInstance().AddScore({enemy->Get_Draw_Rec().x, enemy->Get_Draw_Rec().y}, enemy->Get_Score());
+
             continue;
         }
 
@@ -546,12 +549,14 @@ void Stage::Check_Player_Vs_Enemy()
                 // Xử lý va chạm từ bên trái
                 if (enemy->Can_Be_Kicked())
                 {
-                    enemy->Notify_Be_Kicked(1, information);
+                    enemy->Notify_Be_Kicked(1);
                     SoundManager::GetInstance().PlaySoundEffect("kick");
+                    information.UpdateScore(enemy->Get_Score());
+                    Score_Manager::GetInstance().AddScore({enemy->Get_Draw_Rec().x, enemy->Get_Draw_Rec().y}, enemy->Get_Score());
                 }
                 else
                 {
-                    player->TakeDamage();
+                    player.TakeDamage();
                 }
             }
             else
@@ -561,11 +566,13 @@ void Stage::Check_Player_Vs_Enemy()
                 if (enemy->Can_Be_Kicked())
                 {
                     SoundManager::GetInstance().PlaySoundEffect("kick");
-                    enemy->Notify_Be_Kicked(-1, information);
+                    enemy->Notify_Be_Kicked(-1);
+                    information.UpdateScore(enemy->Get_Score());
+                    Score_Manager::GetInstance().AddScore({enemy->Get_Draw_Rec().x, enemy->Get_Draw_Rec().y}, enemy->Get_Score());
                 }
                 else
                 {
-                    player->TakeDamage();
+                    player.TakeDamage();
                 }
             }
         }
@@ -576,26 +583,30 @@ void Stage::Check_Player_Vs_Enemy()
             {
                 if (enemy->Can_Be_Kicked())
                 {
-                    player->Set_Velocity({player->get_Velocity().x, fmax(-player->get_Velocity().y, -300.0f)});
-                    player->Set_Pos({player->getPosition().x, player->getPosition().y - 30.0f});
+                    player.Set_Velocity({player.get_Velocity().x, fmax(-player.get_Velocity().y, -300.0f)});
+                    player.Set_Pos({player.getPosition().x, player.getPosition().y - 30.0f});
                     SoundManager::GetInstance().PlaySoundEffect("kick");
-                    enemy->Notify_Be_Kicked(-1, information);
+                    enemy->Notify_Be_Kicked(-1);
+                    information.UpdateScore(enemy->Get_Score());
+                    Score_Manager::GetInstance().AddScore({enemy->Get_Draw_Rec().x, enemy->Get_Draw_Rec().y}, enemy->Get_Score());
                 }
                 // Player ở phía trên enemy - nhảy lên đầu enemy
                 else if (enemy->Can_Be_Stomped())
                 {
-                    player->Set_Velocity({player->get_Velocity().x, fmax(-player->get_Velocity().y, -300.0f)});
-                    enemy->Notify_Be_Stomped(information);
+                    player.Set_Velocity({player.get_Velocity().x, fmax(-player.get_Velocity().y, -300.0f)});
+                    enemy->Notify_Be_Stomped();
                     SoundManager::GetInstance().PlaySoundEffect("stomp");
+                    information.UpdateScore(enemy->Get_Score());
+                    Score_Manager::GetInstance().AddScore({enemy->Get_Draw_Rec().x, enemy->Get_Draw_Rec().y}, enemy->Get_Score());
                 }
                 else
                 {
-                    player->TakeDamage();
+                    player.TakeDamage();
                 }
             }
             else
             {
-                player->TakeDamage();
+                player.TakeDamage();
                 // Player ở phía dưới enemy
             }
         }
@@ -742,7 +753,7 @@ void Stage::Check_Enemy_Vs_Block()
 {
     for (Enemy *enemy : enemies)
     {
-        if (!enemy->Get_Is_Active() || enemy->Get_Is_Dead() || !enemy->Need_Check_Ground_Block())
+        if (!enemy->Get_Is_Active() || enemy->Get_Is_Dead() || !enemy->Need_Check_Map())
             continue;
 
         Rectangle rec_enemy = enemy->Get_Draw_Rec();
@@ -803,7 +814,9 @@ void Stage::Check_Enemy_Vs_Block()
                 }
                 else
                 {
-                    enemy->Notify_Be_Fired_Or_Hit(information);
+                    enemy->Notify_Be_Fired_Or_Hit();
+                    information.UpdateScore(enemy->Get_Score());
+                    Score_Manager::GetInstance().AddScore({enemy->Get_Draw_Rec().x, enemy->Get_Draw_Rec().y}, enemy->Get_Score());
                     break;
                 }
             }
@@ -815,7 +828,7 @@ void Stage::Check_Enemy_Vs_Ground()
 {
     for (Enemy *enemy : enemies)
     {
-        if (!enemy || !enemy->Get_Is_Active() || enemy->Get_Is_Dead() || !enemy->Need_Check_Ground_Block())
+        if (!enemy || !enemy->Get_Is_Active() || enemy->Get_Is_Dead() || !enemy->Need_Check_Map())
             continue;
 
         Rectangle rec_enemy = enemy->Get_Draw_Rec();
@@ -871,15 +884,16 @@ void Stage::Check_Enemy_Vs_Enemy()
     for (int i = 0; i < enemies.size(); i++)
     {
         Enemy *enemy1 = enemies[i];
-        if (!enemy1 || !enemy1->Get_Is_Active() || enemy1->Get_Is_Dead() || !enemy1->Need_Check_Collision_With_Other_Enemy())
+        if (!enemy1 || !enemy1->Get_Is_Active() || enemy1->Get_Is_Dead() || !enemy1->Need_Check_Map())
             continue;
         Rectangle rec_enemy1 = enemy1->Get_Draw_Rec();
 
         for (int j = i + 1; j < enemies.size(); j++)
         {
             Enemy *enemy2 = enemies[j];
-            if (enemy1 == enemy2 || !enemy2->Get_Is_Active() || enemy2->Get_Is_Dead() || !enemy2->Need_Check_Collision_With_Other_Enemy())
+            if (enemy1 == enemy2 || !enemy2->Get_Is_Active() || enemy2->Get_Is_Dead())
                 continue;
+
             Rectangle rec_enemy2 = enemy2->Get_Draw_Rec();
 
             if (!CheckCollisionRecs(rec_enemy1, rec_enemy2))
@@ -895,27 +909,17 @@ void Stage::Check_Enemy_Vs_Enemy()
             auto &v2 = enemy_map[enemy2];
             if (std::find(v2.begin(), v2.end(), enemy1) != v2.end())
                 continue;
-            if (enemy1->Kill_Other_Enemies())
-            {
-                enemy2->Notify_Be_Fired_Or_Hit(information);
-            }
-            else if (enemy2->Kill_Other_Enemies())
-            {
-                enemy1->Notify_Be_Fired_Or_Hit(information);
-            }
 
-            else
+            enemy1->Collision_With_Other_Enemy(enemy2);
+            enemy2->Collision_With_Other_Enemy(enemy1);
+            if (enemy1->Get_Is_Dead())
             {
-                Vector2 velo1 = enemy1->Get_Velocity();
-                Vector2 velo2 = enemy2->Get_Velocity();
-                Vector2 pos1 = enemy1->Get_Pos();
-                Vector2 pos2 = enemy2->Get_Pos();
-                enemy1->Collision_With_Other_Enemy(velo2, pos2);
-                enemy2->Collision_With_Other_Enemy(velo1, pos1);
-                enemy_map[enemy1].push_back(enemy2);
-                enemy_map[enemy2].push_back(enemy1);
-                break;
+                information.UpdateScore(enemy1->Get_Score());
+                Score_Manager::GetInstance().AddScore({enemy1->Get_Draw_Rec().x, enemy1->Get_Draw_Rec().y}, enemy1->Get_Score());
             }
+            enemy_map[enemy1].push_back(enemy2);
+            enemy_map[enemy2].push_back(enemy1);
+            break;
         }
     }
 }
@@ -1042,7 +1046,12 @@ void Stage::Check_FireBall_Vs_World()
             if (CheckCollisionRecs(rec_fireball, enemy->Get_Draw_Rec()))
             {
                 fireball->explode();
-                enemy->Notify_Be_Fired_Or_Hit(information);
+                enemy->Notify_Be_Fired_Or_Hit();
+                if (enemy->Can_Be_Fired_Or_Hit())
+                {
+                    information.UpdateScore(enemy->Get_Score());
+                    Score_Manager::GetInstance().AddScore({enemy->Get_Draw_Rec().x, enemy->Get_Draw_Rec().y}, enemy->Get_Score());
+                }
                 goto next_fireball;
             }
         }
@@ -1102,7 +1111,7 @@ void Stage::LoadEnemiesFromFile(const std::string &filename)
         }
 
         // Spawn enemy
-        Spawn_Enemy::SpawnEnemies(type, position, player, enemy_map, enemies, camera);
+        Spawn_Enemy::SpawnEnemies(type, position, &player, enemy_map, enemies, camera);
     }
 
     file.close();
@@ -1216,13 +1225,13 @@ bool Stage::Game_Won() const
     return Is_Game_Won;
 }
 
-bool Stage::Change_State() 
+bool Stage::Change_State()
 {
     return Is_Game_Won && timer_ >= cool_down_after_win;
 }
 
-
-json Stage::to_json() const {
+json Stage::to_json() const
+{
     json j;
     j["source"] = {source.x, source.y, source.width, source.height};
     j["dest"] = {dest.x, dest.y, dest.width, dest.height};
@@ -1231,48 +1240,56 @@ json Stage::to_json() const {
     j["timer_"] = timer_;
     j["Reset_Game"] = Reset_Game;
     j["Is_Game_Won"] = Is_Game_Won;
-    if (player) {
-        j["player"] = player->to_json();
-    }
     j["camera"] = {
         camera.offset.x, camera.offset.y,
         camera.target.x, camera.target.y,
         camera.rotation,
-        camera.zoom
-    };
-    for (const auto& enemy : enemies) {
+        camera.zoom};
+    for (const auto &enemy : enemies)
+    {
         int type = -1;
-        if (dynamic_cast<Goomba*>(enemy)) type = static_cast<int>(EnemyType::Goomba);
-        else if (dynamic_cast<KoopaTroopa*>(enemy)) type = static_cast<int>(EnemyType::KoopaTroopaWalking);
-        else if (dynamic_cast<Latiku*>(enemy)) type = static_cast<int>(EnemyType::Latiku);
-        else if (dynamic_cast<PiranhaPlant*>(enemy)) type = static_cast<int>(EnemyType::PiranhaPlant);
-        else if (dynamic_cast<BomberBill*>(enemy)) type = static_cast<int>(EnemyType::BomberBill);
-        else if (dynamic_cast<Spiny*>(enemy)) type = static_cast<int>(EnemyType::Spiny);
+        if (dynamic_cast<Goomba *>(enemy))
+            type = static_cast<int>(EnemyType::Goomba);
+        else if (dynamic_cast<KoopaTroopa *>(enemy))
+            type = static_cast<int>(EnemyType::KoopaTroopaWalking);
+        else if (dynamic_cast<Latiku *>(enemy))
+            type = static_cast<int>(EnemyType::Latiku);
+        else if (dynamic_cast<PiranhaPlant *>(enemy))
+            type = static_cast<int>(EnemyType::PiranhaPlant);
+        else if (dynamic_cast<BomberBill *>(enemy))
+            type = static_cast<int>(EnemyType::BomberBill);
+        else if (dynamic_cast<Spiny *>(enemy))
+            type = static_cast<int>(EnemyType::Spiny);
         json enemy_json = enemy->to_json();
         // Đặt type lên đầu object
         json result_json;
         result_json["type"] = type;
-        for (auto it = enemy_json.begin(); it != enemy_json.end(); ++it) {
+        for (auto it = enemy_json.begin(); it != enemy_json.end(); ++it)
+        {
             result_json[it.key()] = it.value();
         }
         j["enemies"].push_back(result_json);
     }
     // Lưu danh sách items
-    for (const auto& item : items) {
+    for (const auto &item : items)
+    {
         j["items"].push_back(item->to_json());
     }
     // Lưu thông tin về các block
-    for (const auto& block : blocks) {
+    for (const auto &block : blocks)
+    {
         j["blocks"].push_back(block->to_json());
     }
-    //store fireball
-    for (const auto& fireball : fireballs) {
+    // store fireball
+    for (const auto &fireball : fireballs)
+    {
         j["fireballs"].push_back(fireball->to_json());
     }
     return j;
 }
 
-void Stage::from_json(const json& j) {
+void Stage::from_json(const json &j)
+{
     auto src = j.at("source");
     source = {src[0], src[1], src[2], src[3]};
     auto dst = j.at("dest");
@@ -1282,44 +1299,37 @@ void Stage::from_json(const json& j) {
     timer_ = j.at("timer_").get<float>();
     Reset_Game = j.at("Reset_Game").get<bool>();
     Is_Game_Won = j.at("Is_Game_Won").get<bool>();
-    if (j.contains("player")) {
-        if (player) delete player;
-        if (player_mode == Player_Mode::MARIO_PLAYER) {
-            player = new Mario({100,100});
-        }
-        else if (player_mode == Player_Mode::LUIGI_PLAYER) {
-            player = new Luigi({100,100});
-        }
-        else {
-            player = new Mario({100,100});
-        }
-        player->from_json(j.at("player"));
-    }
-    if (j.contains("camera")) {
+
+    if (j.contains("camera"))
+    {
         auto cam = j.at("camera");
         camera.offset = {cam[0], cam[1]};
         camera.target = {cam[2], cam[3]};
         camera.rotation = cam[4];
         camera.zoom = cam[5];
     }
-    
-    if (win_animation) delete win_animation;
-    win_animation = new Win_Animation_Manager(*player, *flag_pole, *flag_castle, information);
+
+    win_animation->Set_Player_Animation(&player);
 
     // Xóa các enemy cũ nếu có
-    for (auto e : enemies) delete e;
-    const_cast<std::vector<Enemy*>&>(enemies).clear();
-    const_cast<std::unordered_map<Enemy*, std::vector<Enemy*>>&>(enemy_map).clear();
-    if (j.contains("enemies")) {
-        for (const auto& enemy_j : j.at("enemies")) {
+    for (auto e : enemies)
+        delete e;
+    const_cast<std::vector<Enemy *> &>(enemies).clear();
+    const_cast<std::unordered_map<Enemy *, std::vector<Enemy *>> &>(enemy_map).clear();
+    if (j.contains("enemies"))
+    {
+        for (const auto &enemy_j : j.at("enemies"))
+        {
             int type = enemy_j.value("type", -1);
-            Vector2 pos = {0,0};
-            if (enemy_j.contains("position")) {
+            Vector2 pos = {0, 0};
+            if (enemy_j.contains("position"))
+            {
                 auto p = enemy_j["position"];
                 pos = {p[0], p[1]};
             }
-            Spawn_Enemy::SpawnEnemies(static_cast<EnemyType>(type), pos, player, const_cast<std::unordered_map<Enemy*, std::vector<Enemy*>>&>(enemy_map), const_cast<std::vector<Enemy*>&>(enemies), camera);
-            if (!enemies.empty()) {
+            Spawn_Enemy::SpawnEnemies(static_cast<EnemyType>(type), pos, &player, const_cast<std::unordered_map<Enemy *, std::vector<Enemy *>> &>(enemy_map), const_cast<std::vector<Enemy *> &>(enemies), camera);
+            if (!enemies.empty())
+            {
                 json enemy_data = enemy_j;
                 enemy_data.erase("type");
                 enemies.back()->from_json(enemy_data);
@@ -1328,37 +1338,47 @@ void Stage::from_json(const json& j) {
     }
 
     // Xóa các item cũ nếu có
-    for (auto it : items) delete it;
+    for (auto it : items)
+        delete it;
     items.clear();
-    if (j.contains("items")) {
-        for (const auto& item_j : j.at("items")) {
+    if (j.contains("items"))
+    {
+        for (const auto &item_j : j.at("items"))
+        {
             std::string type = item_j.value("type", "");
             size_t old_size = items.size();
-            Spawn_Item::Item_Spawn(type, items, {0,0}, *player, information , 1);
-            if (items.size() > old_size) {
-                Item* item = items.back();
+            Spawn_Item::Item_Spawn(type, items, {0, 0}, player, information, 1);
+            if (items.size() > old_size)
+            {
+                Item *item = items.back();
                 item->from_json(item_j);
             }
         }
     }
 
-    //should to delete
-    for (auto bl : blocks) delete bl;
+    // should to delete
+    for (auto bl : blocks)
+        delete bl;
     blocks.clear();
-    if (j.contains("blocks")) {
-        for (const auto& block_j : j.at("blocks")) {
-            Block* block = new Block({0, 0}, 0, "", "");
+    if (j.contains("blocks"))
+    {
+        for (const auto &block_j : j.at("blocks"))
+        {
+            Block *block = new Block({0, 0}, 0, "", "");
             block->from_json(block_j);
             blocks.push_back(block);
         }
     }
 
-    //fireballs
-    for (auto fb : fireballs) delete fb;
+    // fireballs
+    for (auto fb : fireballs)
+        delete fb;
     fireballs.clear();
-    if (j.contains("fireballs")) {
-        for (auto fireball_j : j.at("fireballs")) {
-            FireBall* fireball = new FireBall({0, 0}, true);
+    if (j.contains("fireballs"))
+    {
+        for (auto fireball_j : j.at("fireballs"))
+        {
+            FireBall *fireball = new FireBall({0, 0}, true);
             fireball->from_json(fireball_j);
             fireballs.push_back(fireball);
         }

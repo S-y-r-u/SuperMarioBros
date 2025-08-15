@@ -5,6 +5,7 @@ Spiny::Spiny(Vector2 pos, Vector2 velo)
       state_(Spiny_State::egg),
       is_jump(false)
 {
+    score = 100;
     animation_ = Animation(&Enemies_Sprite::enemies_, Enemies_Sprite::Spiny::Egg::egg_, 1 / 10.0f);
 }
 
@@ -81,16 +82,12 @@ void Spiny::Notify_Jump()
     }
 }
 
-void Spiny::Notify_Be_Fired_Or_Hit(PlayerInformation &info)
+void Spiny::Notify_Be_Fired_Or_Hit()
 {
     if (state_ == Spiny_State::normal)
     {
-        info.UpdateScore(Score_Spiny);
         state_ = Spiny_State::be_fired_or_hit;
         animation_.Set_Rec(Enemies_Sprite::Spiny::be_fired_or_hit);
-        Rectangle dest_rec = Get_Draw_Rec();
-        Score_Manager &score_manager = Score_Manager::GetInstance();
-        score_manager.AddScore({dest_rec.x, dest_rec.y}, Score_Spiny);
         is_dead = true;
         is_ground = false;
         velocity_.y = -Push_Velocity;
@@ -122,36 +119,16 @@ void Spiny::Move_(float dt)
     position_.x += velocity_.x * dt;
 }
 
-void Spiny::Collision_With_Other_Enemy(Vector2 velo, Vector2 pos)
+void Spiny::Collision_With_Other_Enemy(Enemy *other)
 {
+    Enemy::Collision_With_Other_Enemy(other);
     if (state_ == Spiny_State::egg)
     {
-        if (velocity_.x * velo.x < 0)
-            Notify_Change_Direct();
-        else if (position_.x < pos.x && velocity_.x > 0)
-            Notify_Change_Direct();
-        else if (position_.x > pos.x && velocity_.x < 0)
-            Notify_Change_Direct();
         Notify_Jump();
     }
     else if ((!is_ground && !prev_ground) || is_jump)
     {
-        if (velocity_.x * velo.x < 0)
-            Notify_Change_Direct();
-        else if (position_.x < pos.x && velocity_.x > 0)
-            Notify_Change_Direct();
-        else if (position_.x > pos.x && velocity_.x < 0)
-            Notify_Change_Direct();
         Notify_Jump();
-    }
-    else
-    {
-        if (velocity_.x * velo.x < 0)
-            Notify_Change_Direct();
-        else if (position_.x < pos.x && velocity_.x > 0)
-            Notify_Change_Direct();
-        else if (position_.x > pos.x && velocity_.x < 0)
-            Notify_Change_Direct();
     }
 }
 

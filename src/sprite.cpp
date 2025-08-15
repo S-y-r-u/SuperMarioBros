@@ -1543,3 +1543,34 @@ namespace Outro_Animation
         std::vector<Rectangle> outro_luigi = {o1, o2, o3, o4, o5, o6, o7};
     }
 }
+
+namespace SavePrince
+{
+    SpriteSheet save_prince_;
+    namespace Kidnap
+    {
+        Rectangle k1 = {2, 4, 24, 29};
+        Rectangle k2 = {28, 4, 22, 29};
+        Rectangle k3 = {52, 11, 24, 22};
+        Rectangle k4 = {2, 4, 24, 29};
+        Rectangle k5 = {28, 4, 22, 29};
+        Rectangle k6 = {52, 11, 24, 22};
+        Rectangle k7 = {2, 4, 24, 29};
+        Rectangle k8 = {28, 4, 22, 29};
+        Rectangle k9 = {52, 11, 24, 22};
+        Rectangle k10 = {104, 9, 24, 24};
+        Rectangle k11 = {78, 17, 24, 16};
+        Rectangle k12 = {130, 22, 24, 10};
+        std::vector<Rectangle> kidnap_ = {k1, k2, k3, k4, k5, k6, k7, k8, k9, k10, k11, k12};
+    }
+    namespace Prince
+    {
+        Rectangle p1 = {186, 70, 16, 27};
+        Rectangle p2 = {272, 73, 14, 24};
+        Rectangle p3 = {114, 65, 15, 32};
+        Rectangle p4 = {132, 65, 16, 32};
+        Rectangle p5 = {150, 66, 16, 31};
+        Rectangle p6 = {132, 65, 16, 32};
+        std::vector<Rectangle> prince_ = {p1, p2, p3, p4, p5, p6};
+    }
+}

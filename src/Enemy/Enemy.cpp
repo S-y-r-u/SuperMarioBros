@@ -5,9 +5,10 @@ Enemy::Enemy(Vector2 startPos, Vector2 velocity, float gravity)
       position_(startPos),
       velocity_(velocity), // Khởi tạo với vận tốc truyền vào
       gravity_(gravity),   // Khởi tạo với trọng lực truyền vào
-      is_ground(false), // Ban đầu không chạm đất
+      is_ground(false),    // Ban đầu không chạm đất
       is_active(1),
-      is_dead(0) {};
+      is_dead(0),
+      score(0) {};
 
 Enemy::~Enemy() {}
 
@@ -31,6 +32,8 @@ bool Enemy::Get_Is_Active() { return is_active; }
 
 bool Enemy::Get_Is_Dead() { return is_dead; }
 
+int Enemy::Get_Score() { return score; }
+
 void Enemy::Notify_Change_Direct()
 {
     // Mediator thông báo cần đổi hướng di chuyển
@@ -41,28 +44,28 @@ bool Enemy::Can_Be_Kicked() const { return false; }
 
 bool Enemy::Can_Jump() const { return false; }
 
-bool Enemy::Need_Check_Ground_Block() const { return true; }
+bool Enemy::Need_Check_Map() const { return true; }
 
-bool Enemy::Kill_Other_Enemies() const { return false; }
-
-void Enemy::Collision_With_Other_Enemy(Vector2 velo, Vector2 pos)
+void Enemy::Collision_With_Other_Enemy(Enemy *other)
 {
-    if (velocity_.x * velo.x < 0)
-        Notify_Change_Direct();
-    else if(position_.x < pos.x && velocity_.x > 0) 
-        Notify_Change_Direct();
-    else if(position_.x > pos.x && velocity_.x < 0)
-        Notify_Change_Direct();
-}
-
-bool Enemy::Need_Check_Collision_With_Other_Enemy() const
-{
-    return true; // Mặc định là cần kiểm tra va chạm với các enemy khác
+    if (this->Kill_Enemy())
+        other->Notify_Be_Fired_Or_Hit();
+    else
+    {
+        if (velocity_.x * other->Get_Velocity().x < 0)
+            Notify_Change_Direct();
+        else if (position_.x < other->Get_Pos().x && velocity_.x > 0)
+            Notify_Change_Direct();
+        else if (position_.x > other->Get_Pos().x && velocity_.x < 0)
+            Notify_Change_Direct();
+    }
 }
 
 void Enemy::Set_Velocity(Vector2 velocity)
 {
     if (!is_active || is_dead)
         return;
-    velocity_ = velocity; 
+    velocity_ = velocity;
 }
+
+bool Enemy::Kill_Enemy() { return false; }

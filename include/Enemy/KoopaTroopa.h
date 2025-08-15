@@ -29,9 +29,11 @@ public:
     void SetState(KoopaState *new_state);
 
     void Notify_Fall(float dt) override;
-    void Notify_Be_Stomped(PlayerInformation& info) override;
-    void Notify_Be_Fired_Or_Hit(PlayerInformation& info) override;
-    void Notify_Be_Kicked(int direction, PlayerInformation& info) override;
+
+    void Notify_Be_Stomped() override;
+    void Notify_Be_Fired_Or_Hit() override;
+    void Notify_Be_Kicked(int direction) override;
+
     void Notify_On_Ground() override;
     void Set_Pos(Vector2 pos) override;
     Vector2 Get_Previous_Pos() const override { return before_pos_; }
@@ -39,9 +41,9 @@ public:
     bool Can_Be_Stomped() const override { return true; }
     bool Can_Be_Fired_Or_Hit() const override { return true; }
     bool Can_Be_Kicked() const override;
-    bool Kill_Other_Enemies() const override;
-    void Collision_With_Other_Enemy(Vector2 velo, Vector2 pos) override;
 
     json to_json() const override ;
     void from_json(const json& j) override;
+
+    bool Kill_Enemy() override;
 };

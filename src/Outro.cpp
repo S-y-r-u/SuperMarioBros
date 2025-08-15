@@ -24,7 +24,7 @@ void main()
 }
 )";
 
-Outro::Outro(Player_Mode mode)
+Outro_Manager::Outro_Manager(Player_Mode mode)
     : animation(nullptr),
       radius(0.0f),
       player_mode(mode)
@@ -39,12 +39,12 @@ Outro::Outro(Player_Mode mode)
         animation = Animation(&Outro_Animation::outro_, Outro_Animation::Luigi::outro_luigi, 0.5f);
 }
 
-Outro::~Outro()
+Outro_Manager::~Outro_Manager()
 {
     UnloadShader(shader_);
 }
 
-void Outro::Run()
+void Outro_Manager::Run()
 {
     float dt = GetFrameTime();
 
@@ -73,7 +73,7 @@ void Outro::Run()
     animation.Update(dt);
 }
 
-void Outro::Draw()
+void Outro_Manager::Draw()
 {
     Rectangle src = animation.Get_Current_Rec();
     SpriteSheet &sprite = animation.Get_Sprite();
@@ -111,7 +111,7 @@ void Outro::Draw()
     EndShaderMode();
 }
 
-bool Outro::Change_State()
+bool Outro_Manager::Change_State()
 {
     return (animation.Get_Frame_Index() == animation.Get_Frame_Count() - 1) && (radius <= 0.0f);
 }

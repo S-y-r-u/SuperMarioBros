@@ -6,6 +6,7 @@ Goomba::Goomba(Vector2 pos)
       stomped_timer(0.0f),
       previous_frame_pos(pos)
 {
+    score = 100;
     animation_ = Animation(&Enemies_Sprite::enemies_, Enemies_Sprite::Goomba_Brown::Normal::normal_, 1 / 6.0f);
 }
 
@@ -32,7 +33,9 @@ void Goomba::Update(float dt)
     if (state_ == Goomba_State::normal)
         Move_(dt);
 
+    if(state_ == Goomba_State::be_stomped)
     Be_Stomped();
+
     Animate_();
 
     if (position_.y - animation_.Get_Current_Rec().height >= Screen_h)
@@ -62,32 +65,25 @@ void Goomba::Notify_On_Ground()
     }
 }
 
-void Goomba::Notify_Be_Stomped(PlayerInformation &info)
+void Goomba::Notify_Be_Stomped()
 {
-    if (state_ == Goomba_State::normal)
+    if (state_ == Goomba_State::normal) 
     {
-        info.UpdateScore(Score_Goomba);
         state_ = Goomba_State::be_stomped;
         animation_.Set_Rec(Enemies_Sprite::Goomba_Brown::be_stomped);
-        Rectangle dest_rec = Get_Draw_Rec();
-        Score_Manager &score_manager = Score_Manager::GetInstance();
-        score_manager.AddScore({dest_rec.x, dest_rec.y}, Score_Goomba);
         is_dead = true;
         velocity_.y = 0.0f;
     }
 }
 
-void Goomba::Notify_Be_Fired_Or_Hit(PlayerInformation &info)
+void Goomba::Notify_Be_Fired_Or_Hit()
 {
     if (state_ == Goomba_State::normal)
     {
-        info.UpdateScore(Score_Goomba);
         state_ = Goomba_State::be_fired_or_hit;
         animation_.Set_Rec(Enemies_Sprite::Goomba_Brown::be_fired_or_hit);
         velocity_.y = -Push_Velocity; // Nhảy lên
         Rectangle dest_rec = Get_Draw_Rec();
-        Score_Manager &score_manager = Score_Manager::GetInstance();
-        score_manager.AddScore({dest_rec.x, dest_rec.y}, Score_Goomba);
         is_dead = true;
         is_ground = false;
     }

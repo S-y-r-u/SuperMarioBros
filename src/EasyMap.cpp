@@ -1,8 +1,7 @@
 #include "EasyMap.h"
 
-EasyMap::EasyMap(Player_Mode mode, PlayerInformation &info) : Stage(info)
+EasyMap::EasyMap(PlayerInformation &info, Player &player) : Stage(info, player)
 {
-    player_mode = mode;
     MapTexture = LoadTexture("map/Easy/Easy.png");
     LoadMapFromFile("map/Easy/Easy.txt");
     LoadBlockFromFile("map/Easy/Block_Easy.txt");
@@ -10,18 +9,12 @@ EasyMap::EasyMap(Player_Mode mode, PlayerInformation &info) : Stage(info)
     Layer[1] = LoadTexture("map/Easy/Second_Layer.png");
     source = {0, 0, static_cast<float>(MapTexture.width), static_cast<float>(MapTexture.height)};
     dest = {0, 0, static_cast<float>(MapTexture.width * scale_screen), static_cast<float>(MapTexture.height * scale_screen)};
-    if (player_mode == Player_Mode::MARIO_PLAYER)
-        player = new Mario({400, 200});
-    else if (player_mode == Player_Mode::LUIGI_PLAYER)
-        player = new Luigi({400, 200});
     LoadEnemiesFromFile("map/Easy/Enemy_Easy.txt");
     camera.target = {0, 0};
     camera.offset = {0, 0};
     camera.rotation = 0;
     camera.zoom = 1;
-    flag_pole = new Flag_Pole({9530, 144});
-    flag_castle = new Flag_Castle({9818, 384});
-    win_animation = new Win_Animation_Manager(*player, *flag_pole, *flag_castle, information);
+    win_animation = new Win_Animation_Climb_Flag(&player, {9530, 144}, {9818, 384}, information);
 }
 
 EasyMap::~EasyMap()

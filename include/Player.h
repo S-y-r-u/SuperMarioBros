@@ -46,6 +46,8 @@ class Player : public Character{
         float acceleration;
         float deceleration;
 
+        bool disappear;
+
         virtual std::vector<Rectangle>& getAnimationFrame() const = 0;
 
     public:
@@ -94,7 +96,10 @@ class Player : public Character{
 
         void Pose(float dt);
         void Fade_Out(float dt);
-        
+
+        bool Get_Disappear();
+        void Set_Disappear(bool value);
+
         void TakeDamage();
 
         json to_json() const;

@@ -12,6 +12,7 @@ PiranhaPlant::PiranhaPlant(Vector2 pos, Player *player_ptr)
       delta_time(0.0f),
       state_timer(0.0f)
 {
+    score = 100;
     animation_ = Animation(&Enemies_Sprite::enemies_, Enemies_Sprite::Piranha_Plant_Green::plant_, 0.25f);
     position_ = base_pos;                       // Bắt đầu ở dưới ống
     is_ground = true;                           // Luôn "trên mặt đất" vì gắn với ống
@@ -54,20 +55,11 @@ bool PiranhaPlant::Can_Be_Stomped() const { return false; }
 // PiranhaPlant có thể bị tấn công bằng fireball
 bool PiranhaPlant::Can_Be_Fired_Or_Hit() const { return true; }
 
-// PiranhaPlant không bị ảnh hưởng bởi trọng lực thông thường
-void PiranhaPlant::Notify_Fall(float dt) { /* Không làm gì */ }
-void PiranhaPlant::Notify_On_Ground() { /* Không làm gì */ }
-void PiranhaPlant::Notify_Be_Stomped(PlayerInformation &info) { /* Không thể bị stomp */ }
-
 // Thông báo bị tấn công
-void PiranhaPlant::Notify_Be_Fired_Or_Hit(PlayerInformation &info)
+void PiranhaPlant::Notify_Be_Fired_Or_Hit()
 {
     if (state_ != PiranhaPlant_State::be_fired_or_hit)
     {
-        info.UpdateScore(Score_PiranhaPlant);
-        Score_Manager &score_manager = Score_Manager::GetInstance();
-        Rectangle dest_rec = Get_Draw_Rec();
-        score_manager.AddScore({dest_rec.x, dest_rec.y}, Score_PiranhaPlant);
         state_ = PiranhaPlant_State::be_fired_or_hit;
         delta_time = 0.0f;
         is_dead = 1;
@@ -211,7 +203,6 @@ json PiranhaPlant::to_json() const {
     j["above_pos"] = { above_pos.x, above_pos.y };
     j["delta_time"] = delta_time;
     j["state_timer"] = state_timer;
-
     return j;
 }
 

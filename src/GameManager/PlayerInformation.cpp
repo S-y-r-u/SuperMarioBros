@@ -117,14 +117,14 @@ void PlayerInformation::ResetTime()
     time = 400.0f;
 }
 
-void PlayerInformation::ResetCoin()
+void PlayerInformation::ResetCoin(const int &coin)
 {
-    coins = 0;
+    coins = coin;
 }
 
-void PlayerInformation::ResetScore()
+void PlayerInformation::ResetScore(const int &score)
 {
-    score = 0;
+    this->score = score;
 }
 
 float PlayerInformation::GetTime() const
@@ -149,8 +149,8 @@ void PlayerInformation::Set_Time_To_0()
     is_game_won = true;
 }
 
-
-json PlayerInformation::to_json() const {
+json PlayerInformation::to_json() const
+{
     nlohmann::json j;
     j["score"] = score;
     j["coins"] = coins;
@@ -162,7 +162,8 @@ json PlayerInformation::to_json() const {
     return j;
 }
 
-void PlayerInformation::from_json(const nlohmann::json &j) {
+void PlayerInformation::from_json(const nlohmann::json &j)
+{
     score = j.at("score").get<int>();
     coins = j.at("coins").get<int>();
     world = j.at("world").get<std::string>();
@@ -170,4 +171,14 @@ void PlayerInformation::from_json(const nlohmann::json &j) {
     lives = j.at("lives").get<int>();
     is_game_won = j.at("is_game_won").get<bool>();
     up_score = j.at("up_score").get<bool>();
+}
+
+int PlayerInformation::GetScore() const
+{
+    return score;
+}
+
+int PlayerInformation::GetCoins() const
+{
+    return coins;
 }

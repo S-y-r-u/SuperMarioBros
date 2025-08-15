@@ -5,19 +5,13 @@
 #include "Luigi.h"
 #include "Item/Item.h"
 #include "Item/MushRoom.h"
-#include "Item/Star.h"
 #include "Item/Spawn_Item.h"
 #include "Block/Block.h"
 #include "Enemy/Enemy.h"
-#include "Enemy/Goomba.h"
-#include "Enemy/Latiku.h"
-#include "Enemy/PiranhaPlant.h"
-#include "Enemy/KoopaTroopa.h"
-#include "Enemy/BomberBill.h"
 #include "Enemy/Spawn_Enemy.h"
 #include "GameManager/PlayerInformation.h"
 #include "GameManager/DrawScore.h"
-#include "GameManager/Win_Animation.h"
+#include "GameManager/I_Win_Animation.h"
 #include "GameManager/I_Stage.h"
 #include <vector>
 #include <algorithm>
@@ -32,11 +26,11 @@ protected:
     Rectangle dest;
     Texture MapTexture;
     std::vector<std::vector<int>> Map;
-    Texture Layer[2];
+    Texture Layer[2] = {0};
     
-    Player *player;
+    Player &player;
     PlayerInformation &information;
-    Win_Animation_Manager *win_animation;
+    I_Win_Animation_Manager *win_animation;
     
     Camera2D camera = {0};
     std::vector<KeyboardKey> Keyboard;
@@ -49,19 +43,16 @@ protected:
     
     Player_Mode player_mode;
     
-    Flag_Pole *flag_pole;
-    Flag_Castle *flag_castle;
-    
     // Thời gian chờ khi nhân vật chết
-    const float cool_down_after_die = 2.0f;
-    const float cool_down_after_win = 2.0f;
+    const float cool_down_after_die = 1.5f;
+    const float cool_down_after_win = 1.5f;
     float timer_ = 0.0f;
     
     bool Reset_Game;
     bool Is_Game_Won;
 
 public:
-    Stage(PlayerInformation &info);
+    Stage(PlayerInformation &info, Player &player);
     virtual ~Stage();
     void Run() override;
     void Draw() override;
@@ -98,6 +89,7 @@ public:
     bool Change_State() override;
 
     void DrawLayer();
+    
     json to_json() const;
     void from_json(const json& j);
 };

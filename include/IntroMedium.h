@@ -1,16 +1,9 @@
-#include "GameManager/I_Stage.h"
-#include "GameManager/PlayerInformation.h"
+#include "Intro.h"
 
-class Intro_Medium : public I_Stage
+class Intro_Medium : public Intro_Animation
 {
-private:
-    Texture2D intro_medium;
-    PlayerInformation& player_info;
-    Player_Mode player_mode;
-    float timer_;
-    const float End_Intro = 2.0f;
 public:
-    Intro_Medium(PlayerInformation& info, Player_Mode mode);
+    Intro_Medium(PlayerInformation &info, Player_Mode mode);
     virtual ~Intro_Medium();
     void Draw() override;
     void Run() override;

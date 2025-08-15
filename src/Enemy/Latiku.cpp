@@ -15,6 +15,7 @@ Latiku::Latiku(Vector2 pos, Player *player, std::vector<Enemy *> *enemies, std::
       pos_to_player(hover_radius),
       enemy_map(enemy_map)
 {
+    score = 1000;
     animation_ = Animation(&Enemies_Sprite::enemies_, Enemies_Sprite::Latiku::fly_);
 }
 
@@ -71,14 +72,10 @@ void Latiku::Draw() const
 }
 
 // Lakitu bị trúng đạn (fireball, v.v.)
-void Latiku::Notify_Be_Fired_Or_Hit(PlayerInformation &info)
+void Latiku::Notify_Be_Fired_Or_Hit()
 {
     if (state_ != Latiku_State::be_fired_or_hit)
     {
-        info.UpdateScore(Score_Latiku);
-        Score_Manager &score_manager = Score_Manager::GetInstance();
-        Rectangle dest_rec = Get_Draw_Rec();
-        score_manager.AddScore({dest_rec.x, dest_rec.y}, Score_Latiku);
         state_ = Latiku_State::be_fired_or_hit;
         animation_.Set_Rec(Enemies_Sprite::Latiku::be_fired);
         velocity_.y = -Push_Velocity; // Bật lên rồi rơi xuống
@@ -90,7 +87,7 @@ bool Latiku::Can_Be_Stomped() const { return false; }
 
 bool Latiku::Can_Be_Fired_Or_Hit() const { return true; }
 
-bool Latiku::Need_Check_Ground_Block() const { return false; }
+bool Latiku::Need_Check_Map() const { return false; }
 
 // Cập nhật chuyển động và hành vi bay của Lakitu
 void Latiku::Animate_(float dt)
@@ -164,11 +161,6 @@ void Latiku::Spawn_Spiny()
     state_ = Latiku_State::fly;
     timer_ = 0;
     animation_.Set_Rec(Enemies_Sprite::Latiku::fly_);
-}
-
-bool Latiku::Need_Check_Collision_With_Other_Enemy() const
-{
-    return false;
 }
 
 void Latiku::Disappear_(float dt)

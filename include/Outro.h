@@ -4,11 +4,11 @@
 #include "Constants.h"
 #include <raylib.h>
 
-class Outro : public I_Stage
+class Outro_Manager : public I_Stage
 {
 public:
-    Outro(Player_Mode mode);
-    ~Outro();
+    Outro_Manager(Player_Mode mode);
+    ~Outro_Manager();
 
     void Draw() override;
     void Run() override;

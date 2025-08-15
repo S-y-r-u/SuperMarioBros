@@ -17,8 +17,7 @@ private:
     bool is_jump;
     bool prev_ground;
     const float Push_Velocity = 200.0f; 
-    const float Jump_Velocity = 400.0f;
-    const int Score_Spiny = 100; 
+    const float Jump_Velocity = 400.0f; 
 
 public:
     Spiny(Vector2 pos, Vector2 velo);
@@ -30,15 +29,15 @@ public:
     void Notify_Fall(float dt) override;
     void Notify_On_Ground() override;
     void Notify_Jump() override;
-    void Notify_Be_Stomped(PlayerInformation& info) override {}
-    void Notify_Be_Fired_Or_Hit(PlayerInformation& info) override;
+    void Notify_Be_Fired_Or_Hit() override;
 
     void Set_Pos(Vector2 pos) override;
 
     bool Can_Be_Stomped() const override;
     bool Can_Be_Fired_Or_Hit() const override;
     bool Can_Jump() const override;
-    void Collision_With_Other_Enemy(Vector2 velo, Vector2 pos) override;
+
+    void Collision_With_Other_Enemy(Enemy *other) override;
 
     json to_json() const override;
     void from_json(const json& j) override;
