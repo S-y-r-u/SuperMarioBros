@@ -1112,6 +1112,9 @@ void Stage::LoadEnemiesFromFile(const std::string &filename)
         case 9:
             type = EnemyType::Podoboo;
             break;
+        case 10:
+            type = EnemyType::Cheep_Cheep;
+            break;
         default:
             continue; // Bỏ qua nếu type không hợp lệ
         }
@@ -1272,7 +1275,8 @@ json Stage::to_json() const
             type = static_cast<int>(EnemyType::LaserFire);
         else if (dynamic_cast<Podoboo *>(enemy))
             type = static_cast<int>(EnemyType::Podoboo);
-
+        else if (dynamic_cast<CheepCheep *>(enemy))
+            type = static_cast<int>(EnemyType::Cheep_Cheep);
         json enemy_json = enemy->to_json();
         // Đặt type lên đầu object
         json result_json;

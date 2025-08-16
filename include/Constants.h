@@ -55,5 +55,6 @@ enum class EnemyType
     Bowser = 6,
     Spiny = 7,
     LaserFire = 8,
-    Podoboo = 9
+    Podoboo = 9,
+    Cheep_Cheep = 10
 };

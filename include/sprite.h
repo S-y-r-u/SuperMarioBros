@@ -1498,8 +1498,23 @@ namespace Enemies_Sprite
         extern Rectangle p2;
         extern std::vector<Rectangle> normal_;
     }
-}
+    
+    namespace Cheep_Cheep{
+        namespace normal_
+        {
+            extern Rectangle n1;
+            extern Rectangle n2;
+            extern std::vector<Rectangle> normal_;
+        }
 
+        namespace dying_
+        {
+            extern Rectangle s1;
+            extern std::vector<Rectangle> dying_;
+        }
+
+    }
+}
 namespace BomberBill_Sprite
 {
     extern SpriteSheet bomber_bill_;

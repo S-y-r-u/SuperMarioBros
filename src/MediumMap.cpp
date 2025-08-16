@@ -6,7 +6,7 @@ MediumMap::MediumMap(PlayerInformation &info, Player &player) : Stage(info, play
     LoadMapFromFile("map/Medium/Medium.txt");
     Layer[0] = LoadTexture("map/Medium/First_Layer.png");
     Layer[1] = LoadTexture("map/Medium/Second_Layer.png");
-    // LoadEnemiesFromFile("map/Medium/Enemy_Medium.txt");
+    LoadEnemiesFromFile("map/Medium/Enemy_Medium.txt");
     source = {0, 0, static_cast<float>(MapTexture.width), static_cast<float>(MapTexture.height)};
     dest = {0, 0, static_cast<float>(MapTexture.width * scale_screen), static_cast<float>(MapTexture.height * scale_screen)};
     camera.target = {0, 0};

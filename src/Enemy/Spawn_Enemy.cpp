@@ -51,9 +51,14 @@ void Spawn_Enemy::Spawn_Podoboo(Vector2 pos,  std::vector<Enemy *>& enemies )
     enemies.push_back(podoboo);
 }
 
+void Spawn_Enemy::Spawn_CheepCheep(Vector2 pos, std::vector<Enemy *>& enemies, Player* player)
+{
+    CheepCheep *cheepcheep = new CheepCheep(pos, player);
+    enemies.push_back(cheepcheep);
+}
+
 void Spawn_Enemy::SpawnEnemies(EnemyType type, Vector2 spawn_position , Player* player , std::unordered_map<Enemy *, std::vector<Enemy *>>& enemy_map, std::vector<Enemy *>& enemies, Camera2D& camera)
 {   
-    std::cout << "[Spawn_Enemy] Spawning enemy type: " << static_cast<int>(type) << " at position: (" << spawn_position.x << ", " << spawn_position.y << ")\n";
     if (type == EnemyType::Goomba)
     {
         Spawn_Goomba(spawn_position, enemy_map, enemies);
@@ -89,5 +94,9 @@ void Spawn_Enemy::SpawnEnemies(EnemyType type, Vector2 spawn_position , Player* 
     else if (type == EnemyType::Podoboo)
     {
         Spawn_Podoboo(spawn_position, enemies);
+    }
+    else if (type == EnemyType::Cheep_Cheep)
+    {
+        Spawn_CheepCheep(spawn_position, enemies, player);
     }
 }

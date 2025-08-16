@@ -1472,6 +1472,20 @@ namespace Enemies_Sprite
         Rectangle p1 = {289, 186, 14, 16};
         std::vector<Rectangle> normal_ = {p1};
     }
+    namespace Cheep_Cheep
+    {
+        namespace normal_
+        {
+            Rectangle n1 = {99, 174, 16, 16};
+            Rectangle n2 = {118, 174, 16, 16};
+            std::vector<Rectangle> normal_ = {n1, n2};
+        }
+        namespace dying_
+        {
+            Rectangle d1 = {99, 212, 16, 16};
+            std::vector<Rectangle> dying_ = {d1};
+        }
+    }
 }
 
 namespace BomberBill_Sprite
