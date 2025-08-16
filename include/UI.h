@@ -13,6 +13,7 @@
 #include "GameManager/GameOver.h"
 #include "GameManager/TimeUp.h"
 #include "Menu/ContinueState.h"
+#include "Menu/InfoButton.h"
 
 class UI {
 public:
