@@ -28,7 +28,7 @@ void InfoButton::Draw(){
     Font_Sprite::DrawText(InfoText1, 335, 300, WHITE, 2.5f);
     Font_Sprite::DrawText(InfoText2, 335, 350, WHITE, 2.5f);
     Font_Sprite::DrawText(InfoText3, 335, 400, WHITE, 2.5f);
-    Font_Sprite::DrawText(InfoText4, 33, 450, WHITE, 2.5f);
+    Font_Sprite::DrawText(InfoText4, 335, 450, WHITE, 2.5f);
 }
 
 int InfoButton::Update(){
