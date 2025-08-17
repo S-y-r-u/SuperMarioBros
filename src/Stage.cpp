@@ -81,7 +81,7 @@ void Stage::Cool_Down_After_Win(float dt)
 
 void Stage::Player_Update()
 {
-    if (!Is_Game_Won || player.Get_isDead() || !player.Get_isActive())
+    if (!Is_Game_Won && !player.Get_isDead() && player.Get_isActive())
     {
         if (IsKeyPressed(KEY_A))
             Keyboard.emplace_back(KEY_A);
@@ -108,6 +108,8 @@ void Stage::Player_Update()
         // else
         //     player.MoveRight();
     }
+    else
+        player.StopMoving();
 
     bool isAccelerating = !Keyboard.empty();
     if (isAccelerating && (!Is_Game_Won || player.Get_isDead()))

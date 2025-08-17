@@ -1505,7 +1505,8 @@ namespace BomberBill_Sprite
 namespace Bowser_Sprite
 {
     SpriteSheet bowser_;
-    namespace normal_{
+    namespace normal_
+    {
         Rectangle n1 = {49, 21, 34, 41};
         std::vector<Rectangle> normal_ = {n1};
     }
@@ -1617,4 +1618,9 @@ namespace SavePrince
         Rectangle p6 = {132, 65, 16, 32};
         std::vector<Rectangle> prince_ = {p1, p2, p3, p4, p5, p6};
     }
+}
+
+namespace Platform
+{
+    Rectangle vertical_ = {83, 206, 24, 8};
 }

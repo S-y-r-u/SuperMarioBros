@@ -52,7 +52,7 @@ int Menu::Update() {
         return settingState;
     }
     if (infoButton.Update()) {
-        // return infoState;
+        return InfoState;
     }
     if (continueButton.Update()) {
         return ProgramState::continueState;

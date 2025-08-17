@@ -22,7 +22,8 @@ enum ProgramState
     gameManagerState = 4,
     gameOverState = 5,
     timeUpState = 6,
-    continueState = 7
+    continueState = 7,
+    InfoState = 8
 };
 
 enum class Player_Mode

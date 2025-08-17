@@ -27,6 +27,7 @@ void UI::Process()
     GameOver *gameOver = new GameOver();
     TimeUp *timeUp = new TimeUp();
     ContinueState *continueState = new ContinueState();
+    InfoButton *infoButton = new InfoButton();
 
     Program_state = menuState;
     int previousState = menuState; // Track previous state để quản lý music
@@ -118,7 +119,10 @@ void UI::Process()
         else if (Program_state == ProgramState::timeUpState)
         {
             Program_state = timeUp->Update();
-        }   
+        }
+        else if(Program_state == ProgramState :: InfoState){
+            Program_state = infoButton->Update();
+        }
         // Draw
         BeginDrawing();
         ClearBackground(RAYWHITE);
@@ -150,6 +154,9 @@ void UI::Process()
         else if (Program_state == ProgramState::timeUpState)
         {
             timeUp->Draw();
+        }
+        else if(Program_state == ProgramState::InfoState){
+            infoButton->Draw();
         }
 
         EndDrawing();
