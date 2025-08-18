@@ -5,6 +5,7 @@ HardMap::HardMap(PlayerInformation &info, Player &player) : Stage(info, player)
     MapTexture = LoadTexture("map/Hard/Hard.png");
     LoadMapFromFile("map/Hard/Hard.txt");
     Layer[0] = LoadTexture("map/Hard/First_Layer.png");
+    LoadEnemiesFromFile("map/Hard/Enemy_Hard.txt");
     source = {0, 0, static_cast<float>(MapTexture.width), static_cast<float>(MapTexture.height)};
     dest = {0, 0, static_cast<float>(MapTexture.width * scale_screen), static_cast<float>(MapTexture.height * scale_screen)};
 

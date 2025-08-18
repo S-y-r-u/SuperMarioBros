@@ -19,7 +19,7 @@ private:
     Latiku_State state_;
 
     float timer_;
-    const float throw_interval = 2.0f;
+    const float throw_interval = 1.6f;
     const float throw_duration = 0.25f;
     const float hover_radius = 200.0f;
     const float hover_speed = 3.0f;

@@ -3,7 +3,7 @@
 
 class Podoboo : public Enemy {
 public:
-    Podoboo(Vector2 pos, float speed = 200.0f);
+    Podoboo(Vector2 pos, float speed = 400.0f);
     void Update(float dt) override;
     void Draw() const override;
     Vector2 Get_Previous_Pos() const override;

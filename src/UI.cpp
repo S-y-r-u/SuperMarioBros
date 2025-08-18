@@ -40,7 +40,7 @@ void UI::Process()
         if (Program_state != previousState)
         {
             // Stop current music
-            if (Program_state == gameManagerState || previousState == gameManagerState)
+            if (Program_state == gameManagerState || previousState == gameManagerState || previousState == gameOverState)
             {
                 SoundManager::GetInstance().StopMusic();
                 if (Program_state == menuState)
@@ -50,6 +50,10 @@ void UI::Process()
                 else if (Program_state == gameManagerState)
                 {
                     SoundManager::GetInstance().PlayMusic("playingMusic", true);
+                }
+                else if (Program_state == gameOverState)
+                {
+                    SoundManager::GetInstance().PlayMusic("gameover", true);
                 }
             }
             previousState = Program_state;

@@ -29,8 +29,8 @@ private:
     const float jump_velocity_ = 0.0f;
     const float detect_range_ = 1000.0f;
     const float jump_power_ = 300.0f;
-    const float x_min_ = 600.0f; // Giới hạn trái
-    const float x_max_ = 2000.0f; // Giới hạn phải
+    const float x_min_ = 6300.0f; // Giới hạn trái
+    const float x_max_ = 6850.0f; // Giới hạn phải
     Player* target_player_ = nullptr;
     float jump_cooldown_ = 0.0f;
     bool face_right_ = true; // true: quay phải, false: quay trái

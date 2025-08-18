@@ -226,10 +226,10 @@ void Player ::update(float dt, bool isAccelerating)
     }
 
     const auto &frame = getAnimationFrame();
-    if (position.y - frame[currentFrame].height >= Screen_h)
+    if (position.y - frame[currentFrame].height >= Screen_h || position.y < 0){
         isActive = 0;
-    if (position.y < 0)
-        isActive = 0;
+        this->Die();
+    }
 
     if (isDead)
     {

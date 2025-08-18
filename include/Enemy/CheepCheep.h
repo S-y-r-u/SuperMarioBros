@@ -4,7 +4,7 @@
 
 class CheepCheep : public Enemy {
 public:
-    CheepCheep(Vector2 pos, Player* player, float vx = 100.0f, float vy = -600.0f, float gravity = 300.0f);
+    CheepCheep(Vector2 pos, Player* player, float vx = 150.0f, float vy = -600.0f, float gravity = 300.0f);
     void Update(float dt) override; 
     void Draw() const override;
     Vector2 Get_Previous_Pos() const override;
