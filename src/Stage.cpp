@@ -109,7 +109,7 @@ void Stage::Player_Update()
         // else
         //     player.MoveRight();
     }
-    else
+    else if(player.Get_isDead() || !player.Get_isActive())
         player.StopMoving();
 
     bool isAccelerating = !Keyboard.empty();
