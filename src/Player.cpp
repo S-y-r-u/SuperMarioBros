@@ -142,11 +142,11 @@ void Player ::Jump()
     isGround = 0;
     velocity.y = JumpForce;
     is_climbing = false;
-    if (form == PlayerForm ::Small)
+    if (form == PlayerForm ::Small )
     {
         SoundManager::GetInstance().PlaySoundEffect("jump-small");
     }
-    else if (form == PlayerForm ::Super)
+    else 
     {
         SoundManager::GetInstance().PlaySoundEffect("jump-super");
     }
@@ -226,6 +226,7 @@ void Player ::update(float dt, bool isAccelerating)
     }
 
     const auto &frame = getAnimationFrame();
+    currentFrame = (currentFrame) % getAnimationFrame().size();
     if (position.y - frame[currentFrame].height >= Screen_h || position.y < 0){
         isActive = 0;
         this->Die();

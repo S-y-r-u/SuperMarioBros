@@ -31,8 +31,11 @@ private:
     const float jump_power_ = 300.0f;
     const float x_min_ = 6300.0f; // Giới hạn trái
     const float x_max_ = 6850.0f; // Giới hạn phải
+    const float dying_up = 0.2f; 
+    const float dying_down = 2.0f;
     Player* target_player_ = nullptr;
     float jump_cooldown_ = 0.0f;
+    const float jump_cooldown_duration_ = 3.0f;
     bool face_right_ = true; // true: quay phải, false: quay trái
 
 

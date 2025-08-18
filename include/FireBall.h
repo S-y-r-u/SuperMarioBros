@@ -9,6 +9,7 @@ class FireBall{
         Vector2 position;
         Vector2 velocity;
         bool isActive;
+        bool isExploding;
         FireBallState state;
         bool isGround; 
 
@@ -22,6 +23,7 @@ class FireBall{
         ~FireBall();
 
         bool getActive() const;
+        bool getIsExploding() const { return isExploding; }
         Rectangle get_draw_rec();
         Vector2 getVelocity() const {return velocity;}
         std :: vector<Rectangle> getFireBallFrame() const;

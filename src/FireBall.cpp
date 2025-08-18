@@ -5,6 +5,7 @@ FireBall :: FireBall(Vector2 pos, bool facingLeft){
     position = pos;
     this -> texture = &Item_Sprite::item_;
 
+    isExploding = false;
     isActive = true;
     state = FireBallState :: Fly;
     float speedX = 550.0f, speedY = 20.0f;
@@ -110,6 +111,7 @@ void FireBall :: draw(){
 
 void FireBall :: explode(){
     if(state == FireBallState :: Fly){
+        isExploding = true;
         state = FireBallState :: Explode;
         velocity = {0.0f, 0.0f};
         currentFrame = 0;

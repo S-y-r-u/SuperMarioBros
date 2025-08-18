@@ -96,7 +96,7 @@ void Bowser::AI_jump() {
 	if (player_in_range && player_jumping && is_ground && jump_cooldown_ <= 0) {
 		velocity_.y = -jump_power_;
 		is_ground = false;
-		jump_cooldown_ = 3.0f; // cooldown nhảy 3 giây
+		jump_cooldown_ = jump_cooldown_duration_; // cooldown nhảy 3 giây
 	}
 }
 
@@ -117,7 +117,13 @@ void Bowser::Animate_() {
 
 void Bowser::Be_Dying(float dt) {
 	dying_time_ += dt;
-	if (dying_time_ >= 1.0f) {
+	if (dying_time_ < dying_up) {
+		position_.y -= jump_power_  * dt;
+	}
+    else if (dying_time_ < dying_down) {
+		position_.y += jump_power_  * dt * 3.0f;
+	}
+	else if (dying_time_ >= dying_down) {
 		is_active = false;
 	}
 	is_dead = true;
@@ -165,7 +171,6 @@ void Bowser::Notify_Be_Fired_Or_Hit() {
 	if (state_ == Bowser_State::dying) return;
 	hp_ -= 3;
 	std::cout << "[Bowser] Hit or fire! HP: " << hp_ << "\n";
-	if (hp_ <= 0) state_ = Bowser_State::dying;
 }
 
 bool Bowser::Can_Be_Stomped() const {

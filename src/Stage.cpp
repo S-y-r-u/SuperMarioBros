@@ -81,7 +81,6 @@ void Stage::Cool_Down_After_Win(float dt)
 
 void Stage::Player_Update()
 {
-    std::cout << player.getPosition().x << " " << player.getPosition().y << std::endl;
     if (!Is_Game_Won && !player.Get_isDead() && player.Get_isActive())
     {
         if (IsKeyPressed(KEY_A))
@@ -102,6 +101,15 @@ void Stage::Player_Update()
             player.Crouch();
         if (IsKeyReleased(KEY_S))
             player.StopCrouch();
+        if (IsKeyPressed(KEY_Z))
+            player.getMushroom();
+        if (IsKeyPressed(KEY_X))
+            player.getFlower();
+        if (IsKeyPressed(KEY_C))
+        {
+            player.getStar();
+        }
+        
         // if (Keyboard.empty() && !IsKeyDown(KEY_S))
         //     player.StopMoving();
         // else if (Keyboard.back() == KEY_A)
@@ -980,7 +988,7 @@ void Stage::Check_FireBall_Vs_World()
 {
     for (auto *fireball : fireballs)
     {
-        if (!fireball->getActive())
+        if (!fireball->getActive() || fireball->getIsExploding())
             continue;
         Rectangle rec_fireball = fireball->get_draw_rec();
 
