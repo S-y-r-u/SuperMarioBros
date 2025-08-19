@@ -133,9 +133,10 @@ void KoopaFlyingState::Enter(KoopaTroopa *koopa)
     koopa->animation_.Set_Frames(Enemies_Sprite::Troopa_Green::Flying::flying_);
     koopa->animation_.Set_Frame_Speed(0.5f);
     koopa->velocity_.x = (koopa->velocity_.x >= 0) ? 90.0f : -90.0f;
-    koopa->velocity_.y = -fly_speed; // bay lên ban đầu
+    koopa->velocity_.y = 0; // bay lên ban đầu
     koopa->gravity_ = 600.0f;
     fly_timer = 0.0f;
+    koopa->score = 0;
 }
 
 void KoopaFlyingState::Update(KoopaTroopa *koopa, float dt)

@@ -47,7 +47,7 @@ void KoopaTroopa::SetState(KoopaState *new_state)
 void KoopaTroopa::Notify_Fall(float dt)
 {
 
-    if (current_state_)
+    if (current_state_ && first_appear)
     {
         current_state_->Update(this, dt);
     }

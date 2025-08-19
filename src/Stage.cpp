@@ -109,7 +109,7 @@ void Stage::Player_Update()
         {
             player.getStar();
         }
-        
+
         // if (Keyboard.empty() && !IsKeyDown(KEY_S))
         //     player.StopMoving();
         // else if (Keyboard.back() == KEY_A)
@@ -117,7 +117,7 @@ void Stage::Player_Update()
         // else
         //     player.MoveRight();
     }
-    else if(player.Get_isDead() || !player.Get_isActive())
+    else if (player.Get_isDead() || !player.Get_isActive())
         player.StopMoving();
 
     bool isAccelerating = !Keyboard.empty();
@@ -229,13 +229,13 @@ void Stage::Non_Player_Update()
         Rectangle rec_enemy = enemies[i]->Get_Draw_Rec();
         if (!enemies[i]->Get_First_Appear() && rec_enemy.x <= screen_rect_world.x + screen_rect_world.width)
             enemies[i]->Set_First_Appear(true);
-        if (rec_enemy.x + rec_enemy.width <= screen_rect_world.x)
+        if (rec_enemy.x + rec_enemy.width / 2.0f <= screen_rect_world.x)
         {
             enemy_map.erase(enemies[i]);
             delete enemies[i];
             enemies.erase(enemies.begin() + i);
         }
-        if (i < enemies.size() && !enemies[i]->Get_Is_Active())
+        else if (i < enemies.size() && !enemies[i]->Get_Is_Active())
         {
             Enemy *to_delete = enemies[i];
 
@@ -1058,7 +1058,7 @@ void Stage::Check_FireBall_Vs_World()
             {
                 fireball->explode();
                 enemy->Notify_Be_Fired_Or_Hit();
-                if (enemy->Can_Be_Fired_Or_Hit())
+                if (enemy->Can_Be_Fired_Or_Hit() && enemy->Get_Is_Dead())
                 {
                     information.UpdateScore(enemy->Get_Score());
                     Score_Manager::GetInstance().AddScore({enemy->Get_Draw_Rec().x, enemy->Get_Draw_Rec().y}, enemy->Get_Score());

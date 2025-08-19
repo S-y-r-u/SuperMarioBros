@@ -1,37 +1,50 @@
 #include "Enemy/CheepCheep.h"
 #include <raylib.h>
 
-CheepCheep::CheepCheep(Vector2 pos,Player* player, float vx, float vy, float gravity)
-    : Enemy(pos, {vx, vy}, gravity), previous_frame_pos_(pos), base_y_(pos.y), player(player) {
+CheepCheep::CheepCheep(Vector2 pos, Player *player, float vx, float vy, float gravity)
+    : Enemy(pos, {vx, vy}, gravity),
+      previous_frame_pos_(pos),
+      base_y_(pos.y),
+      player(player),
+      dying_timer_(0.0f)
+{
     animation_ = Animation(&Enemies_Sprite::enemies_, Enemies_Sprite::Cheep_Cheep::normal_::normal_, 1 / 4.0f);
-    score = 200 ;
+    score = 200;
 }
 
-void CheepCheep::Update(float dt) {
+void CheepCheep::Update(float dt)
+{
     previous_frame_pos_ = position_;
     // Bay lên
-    if (state_ == CheepCheepState::Normal) {
+    if (state_ == CheepCheepState::Normal)
+    {
         velocity_.y += gravity_ * dt;
         position_ += velocity_ * dt;
     }
-    if (position_.y >= base_y_) {
+    if (position_.y >= base_y_)
+    {
         position_.y = base_y_;
         // Xác định hướng bay tiếp theo
-        if (position_.x < player->getPosition().x) velocity_.x = fabs(velocity_.x);
-        else velocity_.x = -fabs(velocity_.x);
+        if (position_.x < player->getPosition().x)
+            velocity_.x = fabs(velocity_.x);
+        else
+            velocity_.x = -fabs(velocity_.x);
         velocity_.y = -fabs(velocity_.y); // Nhảy lên lại
     }
-    if (state_ == CheepCheepState::Dying){
+    if (state_ == CheepCheepState::Dying)
+    {
         position_.y += dying_speed * dt;
         dying_timer_ += dt;
-        if (dying_timer_ >= dying_animation_timer) {
+        if (dying_timer_ >= dying_animation_timer)
+        {
             is_active = false;
         }
     }
     animation_.Update(dt);
 }
 
-void CheepCheep::Draw() const {
+void CheepCheep::Draw() const
+{
     bool flip = velocity_.x > 0;
     Rectangle rec__ = {animation_.Get_Current_Rec().x, animation_.Get_Current_Rec().y, flip ? -animation_.Get_Current_Rec().width : animation_.Get_Current_Rec().width, animation_.Get_Current_Rec().height};
     float draw_width = fabs(animation_.Get_Current_Rec().width) * scale_screen;
@@ -41,22 +54,26 @@ void CheepCheep::Draw() const {
     DrawTexturePro(animation_.Get_Sprite().sprite, rec__, dest_rec, {origin.x, origin.y}, 0.0f, WHITE);
 }
 
-Vector2 CheepCheep::Get_Previous_Pos() const {
+Vector2 CheepCheep::Get_Previous_Pos() const
+{
     return previous_frame_pos_;
 }
 
-void CheepCheep::Notify_Be_Fired_Or_Hit() {
+void CheepCheep::Notify_Be_Fired_Or_Hit()
+{
     state_ = CheepCheepState::Dying;
     animation_.Set_Frames(Enemies_Sprite::Cheep_Cheep::dying_::dying_);
-    is_dead = true ;
+    is_dead = true;
 }
-void CheepCheep::Notify_Be_Stomped() {
+void CheepCheep::Notify_Be_Stomped()
+{
     state_ = CheepCheepState::Dying;
     animation_.Set_Frames(Enemies_Sprite::Cheep_Cheep::dying_::dying_);
     is_dead = true;
 }
 
-json CheepCheep::to_json() const {
+json CheepCheep::to_json() const
+{
     return {
         {"x", position_.x},
         {"y", position_.y},
@@ -68,11 +85,11 @@ json CheepCheep::to_json() const {
         {"is_ground", is_ground},
         {"first_appear", first_appear},
         {"score", score},
-        {"dying_timer", dying_timer_}
-    };
+        {"dying_timer", dying_timer_}};
 }
 
-void CheepCheep::from_json(const json& j) {
+void CheepCheep::from_json(const json &j)
+{
     position_.x = j["x"];
     position_.y = j["y"];
     velocity_.x = j["vx"];
