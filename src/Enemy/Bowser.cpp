@@ -2,7 +2,7 @@
 #include <cmath>
 #include <iostream>
 
-Bowser::Bowser(Vector2 pos, Player *player, std::vector<Enemy *> &enemies)
+Bowser::Bowser(Vector2 pos, Player *&player, std::vector<Enemy *> &enemies)
 	: Enemy(pos, {0, 0}, 1000.0f),
 	  state_(Bowser_State::normal),
 	  previous_frame_pos(pos),

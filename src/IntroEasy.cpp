@@ -39,6 +39,15 @@ void Intro_Easy::Draw()
         Rectangle dest_player = {x.x - src_player.width * scale - 30.0f, dest_texture.y - 80.0f, src_player.width * scale, src_player.height * scale};
         DrawTexturePro(Intro::intro_.sprite, src_player, dest_player, {0, 0}, 0.0f, WHITE);
     }
+    else if (player_mode == Player_Mode::MULTI_PLAYER)
+    {
+        Rectangle src_mario = Intro::mario;
+        Rectangle src_luigi = Intro::luigi;
+        Rectangle des_luigi = {x.x - src_luigi.width * scale - 30.0f, dest_texture.y - 80.0f, src_luigi.width * scale, src_luigi.height * scale};
+        Rectangle des_mario = {des_luigi.x - src_mario.width * scale / 1.5f, des_luigi.y, src_mario.width * scale, src_mario.height * scale};
+        DrawTexturePro(Intro::intro_.sprite, src_luigi, des_luigi, {0, 0}, 0.0f, WHITE);
+        DrawTexturePro(Intro::intro_.sprite, src_mario, des_mario, {0, 0}, 0.0f, WHITE);
+    };
 }
 
 void Intro_Easy::Run()

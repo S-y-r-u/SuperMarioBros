@@ -3,8 +3,9 @@
 #include "GameManager/Win_Animation_Climb_Flag.h"
 #include <fstream>
 
-class MediumMap : public Stage {
-    public:
-        MediumMap(PlayerInformation& info, Player& player);
-        ~MediumMap();
+class MediumMap : public Stage
+{
+public:
+    MediumMap(PlayerInformation &info, Player *&player);
+    ~MediumMap();
 };

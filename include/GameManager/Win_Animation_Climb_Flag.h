@@ -23,7 +23,7 @@ enum class Win_Animation_State
 class Win_Animation_Climb_Flag : public I_Win_Animation_Manager
 {
 public:
-    Win_Animation_Climb_Flag(Player *player, Vector2 flag_pole, Vector2 flag_castle, PlayerInformation &player_info);
+    Win_Animation_Climb_Flag(Player *&player, Vector2 flag_pole, Vector2 flag_castle, PlayerInformation &player_info);
     ~Win_Animation_Climb_Flag();
 
     void Update(float dt) override;
@@ -33,7 +33,7 @@ public:
     bool End_Animation() override;
 
 private:
-    Player *player_;
+    Player *&player_;
     Flag_Pole *flag_pole_;
     Flag_Castle *flag_castle_;
     PlayerInformation &player_info_;
@@ -59,6 +59,4 @@ private:
     void Pose();
     void Fade_Out();
     void Raise_Flag();
-
-    void Set_Player_Animation(Player *player) override;
 };

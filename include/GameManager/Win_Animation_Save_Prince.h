@@ -19,7 +19,7 @@ class Win_Animation_Save_Prince : public I_Win_Animation_Manager
 {
 private:
     PlayerInformation &player_info;
-    Player *player;
+    Player *&player;
     Animation kidnap;
     Animation prince;
     Vector2 kidnap_pos;
@@ -29,7 +29,7 @@ private:
     Save_Prince_State cur_state;
 
 public:
-    Win_Animation_Save_Prince(Vector2 win_pos, Vector2 pos, PlayerInformation &player_info, Player *player);
+    Win_Animation_Save_Prince(Vector2 win_pos, Vector2 pos, PlayerInformation &player_info, Player *&player);
     ~Win_Animation_Save_Prince() = default;
 
     void Update(float dt) override;
@@ -37,8 +37,6 @@ public:
     void Enter_Win_Animation() override;
     bool Check_Win_Animation() override;
     bool End_Animation() override;
-
-    void Set_Player_Animation(Player *player) override;
 
 private:
     void Player_Move();

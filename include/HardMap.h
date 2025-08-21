@@ -11,7 +11,7 @@ private:
     std::vector<I_Platform *> down_platforms;
 
 public:
-    HardMap(PlayerInformation &info, Player &player);
+    HardMap(PlayerInformation &info, Player *&player);
     void Run() override;
     void Draw() override;
     ~HardMap();

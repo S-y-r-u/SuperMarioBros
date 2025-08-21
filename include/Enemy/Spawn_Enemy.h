@@ -14,19 +14,19 @@
 #include <unordered_map>
 #include "Constants.h"
 
-
 class Spawn_Enemy
 {
 private:
-    static void Spawn_Goomba(Vector2 pos , std::unordered_map<Enemy *, std::vector<Enemy *>>& enemy_map, std::vector<Enemy *>& enemies);
-    static void Spawn_KoopaTroopa(Vector2 pos, std::unordered_map<Enemy *, std::vector<Enemy *>>& enemy_map, std::vector<Enemy *>& enemies ,bool is_flying = false);
-    static void Spawn_Latiku(Vector2 pos, std::unordered_map<Enemy *, std::vector<Enemy *>>& enemy_map, std::vector<Enemy *>& enemies , Player* player, Camera2D& camera);
-    static void Spawn_PiranhaPlant(Vector2 pos, std::vector<Enemy *>& enemies, Player* player);
-    static void Spawn_BomberBill(Vector2 pos, std::unordered_map<Enemy *, std::vector<Enemy *>>& enemy_map, std::vector<Enemy *>& enemies);
-    static void Spawn_Bowser(Vector2 pos, std::unordered_map<Enemy *, std::vector<Enemy *>>& enemy_map, std::vector<Enemy *>& enemies, Player* player, Camera2D& camera);
-    static void Spawn_LaserFire(Vector2 pos, std::vector<Enemy *>& enemies, Player* player);
-    static void Spawn_Podoboo(Vector2 pos, std::vector<Enemy *>& enemies);
-    static void Spawn_CheepCheep(Vector2 pos, std::vector<Enemy *>& enemies, Player* player);
+    static void Spawn_Goomba(Vector2 pos, std::unordered_map<Enemy *, std::vector<Enemy *>> &enemy_map, std::vector<Enemy *> &enemies);
+    static void Spawn_KoopaTroopa(Vector2 pos, std::unordered_map<Enemy *, std::vector<Enemy *>> &enemy_map, std::vector<Enemy *> &enemies, bool is_flying = false);
+    static void Spawn_Latiku(Vector2 pos, std::unordered_map<Enemy *, std::vector<Enemy *>> &enemy_map, std::vector<Enemy *> &enemies, Player *&player, Camera2D &camera);
+    static void Spawn_PiranhaPlant(Vector2 pos, std::vector<Enemy *> &enemies, Player *&player);
+    static void Spawn_BomberBill(Vector2 pos, std::unordered_map<Enemy *, std::vector<Enemy *>> &enemy_map, std::vector<Enemy *> &enemies);
+    static void Spawn_Bowser(Vector2 pos, std::unordered_map<Enemy *, std::vector<Enemy *>> &enemy_map, std::vector<Enemy *> &enemies, Player *&player, Camera2D &camera);
+    static void Spawn_LaserFire(Vector2 pos, std::vector<Enemy *> &enemies, Player *&player);
+    static void Spawn_Podoboo(Vector2 pos, std::vector<Enemy *> &enemies);
+    static void Spawn_CheepCheep(Vector2 pos, std::vector<Enemy *> &enemies, Player *&player);
+
 public:
-    static void SpawnEnemies(EnemyType type, Vector2 spawn_position , Player* player , std::unordered_map<Enemy *, std::vector<Enemy *>>& enemy_map, std::vector<Enemy *>& enemies , Camera2D& camera);
+    static void SpawnEnemies(EnemyType type, Vector2 spawn_position, Player *&player, std::unordered_map<Enemy *, std::vector<Enemy *>> &enemy_map, std::vector<Enemy *> &enemies, Camera2D &camera);
 };

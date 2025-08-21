@@ -24,18 +24,19 @@ void main()
 }
 )";
 
-Outro_Manager::Outro_Manager(Player_Mode mode)
+Outro_Manager::Outro_Manager(Player *&player)
     : animation(nullptr),
       radius(0.0f),
-      player_mode(mode)
+      player(player),
+      frame_timer(0.0f)
 {
     shader_ = LoadShaderFromMemory(nullptr, circleMaskFS);
     uResolution_ = GetShaderLocation(shader_, "resolution");
     uCenter_ = GetShaderLocation(shader_, "center");
     uRadius_ = GetShaderLocation(shader_, "radius");
-    if (mode == Player_Mode::MARIO_PLAYER)
+    if (dynamic_cast<Mario *>(player))
         animation = Animation(&Outro_Animation::outro_, Outro_Animation::Mario::outro_mario, 0.5f);
-    else if (mode == Player_Mode::LUIGI_PLAYER)
+    else if (dynamic_cast<Luigi *>(player))
         animation = Animation(&Outro_Animation::outro_, Outro_Animation::Luigi::outro_luigi, 0.5f);
 }
 
@@ -47,6 +48,14 @@ Outro_Manager::~Outro_Manager()
 void Outro_Manager::Run()
 {
     float dt = GetFrameTime();
+    if (frame_timer == 0.0f)
+    {
+        if (dynamic_cast<Mario *>(player))
+            animation = Animation(&Outro_Animation::outro_, Outro_Animation::Mario::outro_mario, 0.5f);
+        else if (dynamic_cast<Luigi *>(player))
+            animation = Animation(&Outro_Animation::outro_, Outro_Animation::Luigi::outro_luigi, 0.5f);
+    }
+    frame_timer += dt;
 
     // Nếu chưa tới frame cuối => lớn dần
     if (animation.Get_Frame_Index() < animation.Get_Frame_Count() - 1)
@@ -102,7 +111,7 @@ void Outro_Manager::Draw()
     BeginShaderMode(shader_);
     // Vẽ texture đã scale, ở giữa màn hình
     DrawTexturePro(
-        sprite.sprite,         // texture gốc
+        sprite.sprite,                // texture gốc
         src,                          // vùng lấy từ sprite sheet
         {pos.x, pos.y, drawW, drawH}, // vùng đích sau khi scale
         {0, 0},                       // origin (không xoay, nên để 0)

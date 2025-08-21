@@ -4,7 +4,7 @@
 #include <cmath>
 
 // Constructor: khởi tạo PiranhaPlant với vị trí và con trỏ tới Player
-PiranhaPlant::PiranhaPlant(Vector2 pos, Player *player_ptr)
+PiranhaPlant::PiranhaPlant(Vector2 pos, Player *&player_ptr)
     : Enemy(pos, {0.0f, 0.0f}, 0.0f), // Không có velocity và gravity ban đầu
       player(player_ptr),
       state_(PiranhaPlant_State::underground),
@@ -185,12 +185,13 @@ float PiranhaPlant::GetCurrentTargetY() const
     }
 }
 
-json PiranhaPlant::to_json() const {
+json PiranhaPlant::to_json() const
+{
     json j;
 
     // Thuộc tính kế thừa từ Enemy
-    j["position"] = { position_.x, position_.y };
-    j["velocity"] = { velocity_.x, velocity_.y };
+    j["position"] = {position_.x, position_.y};
+    j["velocity"] = {velocity_.x, velocity_.y};
     j["gravity"] = gravity_;
     j["is_ground"] = is_ground;
     j["is_active"] = is_active;
@@ -199,14 +200,15 @@ json PiranhaPlant::to_json() const {
 
     // Thuộc tính riêng của PiranhaPlant
     j["state"] = static_cast<int>(state_);
-    j["base_pos"] = { base_pos.x, base_pos.y };
-    j["above_pos"] = { above_pos.x, above_pos.y };
+    j["base_pos"] = {base_pos.x, base_pos.y};
+    j["above_pos"] = {above_pos.x, above_pos.y};
     j["delta_time"] = delta_time;
     j["state_timer"] = state_timer;
     return j;
 }
 
-void PiranhaPlant::from_json(const json& j) {
+void PiranhaPlant::from_json(const json &j)
+{
     // Thuộc tính kế thừa từ Enemy
     position_.x = j.at("position")[0];
     position_.y = j.at("position")[1];

@@ -1,6 +1,6 @@
 #include "GameManager/Win_Animation_Save_Prince.h"
 
-Win_Animation_Save_Prince::Win_Animation_Save_Prince(Vector2 win_pos, Vector2 pos, PlayerInformation &player_info, Player *player)
+Win_Animation_Save_Prince::Win_Animation_Save_Prince(Vector2 win_pos, Vector2 pos, PlayerInformation &player_info, Player *&player)
     : kidnap(nullptr),
       prince(nullptr),
       player_info(player_info),
@@ -46,7 +46,6 @@ void Win_Animation_Save_Prince::Update(float dt)
         prince.Update(dt);
         break;
     }
-    
 }
 
 void Win_Animation_Save_Prince::Draw() const
@@ -100,9 +99,4 @@ bool Win_Animation_Save_Prince::End_Animation()
         return true;
     }
     return false;
-}
-
-void Win_Animation_Save_Prince::Set_Player_Animation(Player *player)
-{
-    this->player = player;
 }

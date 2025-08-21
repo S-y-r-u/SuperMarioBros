@@ -39,11 +39,6 @@ Vector2 Podoboo::Get_Previous_Pos() const {
     return previous_frame_pos_;
 }
 
-void Podoboo::Notify_Be_Fired_Or_Hit() {}
-
-void Podoboo::Notify_Fall(float dt) {}
-void Podoboo::Notify_On_Ground() {}
-
 json Podoboo::to_json() const {
     return {
         {"x", position_.x},

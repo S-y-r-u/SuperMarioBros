@@ -3,7 +3,7 @@
 #include <raymath.h>
 
 // Constructor: khởi tạo Latiku với vị trí, trọng lực, con trỏ tới Player và danh sách kẻ địch
-Latiku::Latiku(Vector2 pos, Player *player, std::vector<Enemy *> *enemies, std::unordered_map<Enemy *, std::vector<Enemy *>> &enemy_map, Camera2D &camera)
+Latiku::Latiku(Vector2 pos, Player *&player, std::vector<Enemy *> *enemies, std::unordered_map<Enemy *, std::vector<Enemy *>> &enemy_map, Camera2D &camera)
     : Enemy(pos, {120.0f, 0}, 0.0f),
       player(player),
       state_(Latiku_State::fly),
@@ -169,12 +169,13 @@ void Latiku::Disappear_(float dt)
     position_.y = base_y + sinf(GetTime() * 4.0f) * 5.0f;
 }
 
-json Latiku::to_json() const {
+json Latiku::to_json() const
+{
     json j;
 
     // Thuộc tính kế thừa từ Enemy
-    j["position"] = { position_.x, position_.y };
-    j["velocity"] = { velocity_.x, velocity_.y };
+    j["position"] = {position_.x, position_.y};
+    j["velocity"] = {velocity_.x, velocity_.y};
     j["gravity"] = gravity_;
     j["is_ground"] = is_ground;
     j["is_active"] = is_active;
@@ -191,7 +192,8 @@ json Latiku::to_json() const {
     return j;
 }
 
-void Latiku::from_json(const json& j) {
+void Latiku::from_json(const json &j)
+{
     // Thuộc tính kế thừa từ Enemy
     position_.x = j.at("position")[0];
     position_.y = j.at("position")[1];

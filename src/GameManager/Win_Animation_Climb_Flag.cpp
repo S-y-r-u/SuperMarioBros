@@ -1,6 +1,6 @@
 #include "GameManager/Win_Animation_Climb_Flag.h"
 
-Win_Animation_Climb_Flag::Win_Animation_Climb_Flag(Player *player, Vector2 flag_pole, Vector2 flag_castle, PlayerInformation &player_info)
+Win_Animation_Climb_Flag::Win_Animation_Climb_Flag(Player *&player, Vector2 flag_pole, Vector2 flag_castle, PlayerInformation &player_info)
     : player_(player),
       flag_pole_(new Flag_Pole(flag_pole)),
       flag_castle_(new Flag_Castle(flag_castle)),
@@ -168,7 +168,3 @@ void Win_Animation_Climb_Flag::Raise_Flag()
     }
 }
 
-void Win_Animation_Climb_Flag::Set_Player_Animation(Player *player)
-{
-    player_ = player;
-}

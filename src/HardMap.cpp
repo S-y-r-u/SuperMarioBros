@@ -1,6 +1,6 @@
 #include "HardMap.h"
 
-HardMap::HardMap(PlayerInformation &info, Player &player) : Stage(info, player)
+HardMap::HardMap(PlayerInformation &info, Player *&player) : Stage(info, player)
 {
     MapTexture = LoadTexture("map/Hard/Hard.png");
     LoadMapFromFile("map/Hard/Hard.txt");
@@ -9,7 +9,7 @@ HardMap::HardMap(PlayerInformation &info, Player &player) : Stage(info, player)
     source = {0, 0, static_cast<float>(MapTexture.width), static_cast<float>(MapTexture.height)};
     dest = {0, 0, static_cast<float>(MapTexture.width * scale_screen), static_cast<float>(MapTexture.height * scale_screen)};
 
-    win_animation = new Win_Animation_Save_Prince({6840, 480}, {7440, 624}, info, &player);
+    win_animation = new Win_Animation_Save_Prince({6840, 480}, {7440, 624}, info, player);
     camera.target = {0, 0};
     camera.offset = {0, 0};
     camera.rotation = 0;
@@ -51,11 +51,11 @@ void HardMap::Spawn_Platform()
 
 void HardMap::Check_Player_Platform()
 {
-    Vector2 currCenterBottom = player.getPosition();
-    Vector2 velocity = player.get_Velocity();
+    Vector2 currCenterBottom = player->getPosition();
+    Vector2 velocity = player->get_Velocity();
 
     // Lấy kích thước player
-    Rectangle currDrawRec = player.get_draw_rec();
+    Rectangle currDrawRec = player->get_draw_rec();
     float pw = currDrawRec.width;
     float ph = currDrawRec.height;
 
@@ -80,31 +80,31 @@ void HardMap::Check_Player_Platform()
                 // Va chạm ngang
                 if (currRec.x < rec_map.x)
                 {
-                    player.Set_Pos({rec_map.x - pw / 2.0f, player.getPosition().y});
-                    player.Set_Velocity({0, player.get_Velocity().y});
+                    player->Set_Pos({rec_map.x - pw / 2.0f, player->getPosition().y});
+                    player->Set_Velocity({0, player->get_Velocity().y});
                 }
                 else
                 {
                     // Từ phải sang
-                    player.Set_Pos({rec_map.x + rec_map.width + pw / 2.0f, player.getPosition().y});
-                    player.Set_Velocity({0, player.get_Velocity().y});
+                    player->Set_Pos({rec_map.x + rec_map.width + pw / 2.0f, player->getPosition().y});
+                    player->Set_Velocity({0, player->get_Velocity().y});
                 }
             }
             else
             {
                 // Va chạm dọc
-                if (currRec.y <= rec_map.y && player.get_Velocity().y >= 0)
+                if (currRec.y <= rec_map.y && player->get_Velocity().y >= 0)
                 {
                     // Từ trên xuống
-                    player.Set_Pos({player.getPosition().x, rec_map.y});
-                    player.Set_Velocity({player.get_Velocity().x, 0});
-                    player.Set_isGround(true);
+                    player->Set_Pos({player->getPosition().x, rec_map.y});
+                    player->Set_Velocity({player->get_Velocity().x, 0});
+                    player->Set_isGround(true);
                 }
-                else if (currRec.y + currRec.height > rec_map.y + rec_map.height && player.get_Velocity().y < 0)
+                else if (currRec.y + currRec.height > rec_map.y + rec_map.height && player->get_Velocity().y < 0)
                 {
                     // Từ dưới lên
-                    player.Set_Pos({player.getPosition().x, rec_map.y + rec_map.height + ph});
-                    player.Set_Velocity({player.get_Velocity().x, 0});
+                    player->Set_Pos({player->getPosition().x, rec_map.y + rec_map.height + ph});
+                    player->Set_Velocity({player->get_Velocity().x, 0});
                 }
             }
         }
@@ -124,31 +124,31 @@ void HardMap::Check_Player_Platform()
                 // Va chạm ngang
                 if (currRec.x < rec_map.x)
                 {
-                    player.Set_Pos({rec_map.x - pw / 2.0f, player.getPosition().y});
-                    player.Set_Velocity({0, player.get_Velocity().y});
+                    player->Set_Pos({rec_map.x - pw / 2.0f, player->getPosition().y});
+                    player->Set_Velocity({0, player->get_Velocity().y});
                 }
                 else
                 {
                     // Từ phải sang
-                    player.Set_Pos({rec_map.x + rec_map.width + pw / 2.0f, player.getPosition().y});
-                    player.Set_Velocity({0, player.get_Velocity().y});
+                    player->Set_Pos({rec_map.x + rec_map.width + pw / 2.0f, player->getPosition().y});
+                    player->Set_Velocity({0, player->get_Velocity().y});
                 }
             }
             else
             {
                 // Va chạm dọc
-                if (currRec.y <= rec_map.y && player.get_Velocity().y >= 0)
+                if (currRec.y <= rec_map.y && player->get_Velocity().y >= 0)
                 {
                     // Từ trên xuống
-                    player.Set_Pos({player.getPosition().x, rec_map.y});
-                    player.Set_Velocity({player.get_Velocity().x, down_platforms[i]->Get_Velocity().y});
-                    player.Set_isGround(true);
+                    player->Set_Pos({player->getPosition().x, rec_map.y});
+                    player->Set_Velocity({player->get_Velocity().x, down_platforms[i]->Get_Velocity().y});
+                    player->Set_isGround(true);
                 }
-                else if (currRec.y + currRec.height > rec_map.y + rec_map.height && player.get_Velocity().y < 0)
+                else if (currRec.y + currRec.height > rec_map.y + rec_map.height && player->get_Velocity().y < 0)
                 {
                     // Từ dưới lên
-                    player.Set_Pos({player.getPosition().x, rec_map.y + rec_map.height + ph});
-                    player.Set_Velocity({player.get_Velocity().x, down_platforms[i]->Get_Velocity().y});
+                    player->Set_Pos({player->getPosition().x, rec_map.y + rec_map.height + ph});
+                    player->Set_Velocity({player->get_Velocity().x, down_platforms[i]->Get_Velocity().y});
                 }
             }
         }
@@ -170,13 +170,13 @@ void HardMap::Run()
 {
     Spawn_Platform();
     Stage::Run();
-    if (!player.Get_isDead())
+    if (!player->Get_isDead())
         Check_Player_Platform();
-    if (!player.Get_isTransforming())
+    if (!player->Get_isTransforming())
     {
         for (auto it : up_platforms)
             it->Update();
-        if (!player.Get_isTransforming())
+        if (!player->Get_isTransforming())
         {
             for (auto it : down_platforms)
                 it->Update();

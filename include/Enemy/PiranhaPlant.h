@@ -27,11 +27,11 @@ private:
     const float emerge_height = 76.0f;       // Chiều cao nhô lên
     const float Push_Height = 25.0f;         // Độ cao bay lên khi bị đánh
 
-    Player *player;                    // Con trỏ tới player để kiểm tra khoảng cách
+    Player *&player;                    // Con trỏ tới player để kiểm tra khoảng cách
     const float safe_distance = 300.0f; // Khoảng cách an toàn từ player
 
 public:
-    PiranhaPlant(Vector2 pos, Player *player_ptr);
+    PiranhaPlant(Vector2 pos, Player *&player_ptr);
 
     void Draw() const override;
     void Update(float dt) override;
@@ -41,10 +41,10 @@ public:
 
     bool Can_Be_Stomped() const override;
     bool Can_Be_Fired_Or_Hit() const override;
-    bool Need_Check_Map() const override { return false; } 
+    bool Need_Check_Map() const override { return false; }
 
     json to_json() const override;
-    void from_json(const json& j) override;
+    void from_json(const json &j) override;
 
 private:
     void UpdateStateMachine(float dt);

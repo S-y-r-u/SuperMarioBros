@@ -27,11 +27,11 @@ protected:
     Texture MapTexture;
     std::vector<std::vector<int>> Map;
     Texture Layer[2] = {0};
-    
-    Player &player;
+
+    Player *&player;
     PlayerInformation &information;
     I_Win_Animation_Manager *win_animation;
-    
+
     Camera2D camera = {0};
     std::vector<KeyboardKey> Keyboard;
 
@@ -40,19 +40,19 @@ protected:
     std::vector<Enemy *> enemies;
     std::vector<FireBall *> fireballs;
     std::unordered_map<Enemy *, std::vector<Enemy *>> enemy_map;
-    
+
     Player_Mode player_mode;
-    
+
     // Thời gian chờ khi nhân vật chết
     const float cool_down_after_die = 1.5f;
     const float cool_down_after_win = 1.5f;
     float timer_ = 0.0f;
-    
+
     bool Reset_Game;
     bool Is_Game_Won;
 
 public:
-    Stage(PlayerInformation &info, Player &player);
+    Stage(PlayerInformation &info, Player *&player);
     virtual ~Stage();
     void Run() override;
     void Draw() override;
@@ -77,7 +77,7 @@ public:
     void Check_Block_Vs_Block();
 
     void Check_FireBall_Vs_World();
-    
+
     void Clear_Keyboard();
 
     void LoadBlockFromFile(const std::string &filename);
@@ -89,7 +89,7 @@ public:
     bool Change_State() override;
 
     void DrawLayer();
-    
+
     json to_json() const;
-    void from_json(const json& j);
+    void from_json(const json &j);
 };

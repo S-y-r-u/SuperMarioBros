@@ -1,6 +1,6 @@
 #include "EasyMap.h"
 
-EasyMap::EasyMap(PlayerInformation &info, Player &player) : Stage(info, player)
+EasyMap::EasyMap(PlayerInformation &info, Player *&player) : Stage(info, player)
 {
     MapTexture = LoadTexture("map/Easy/Easy.png");
     LoadMapFromFile("map/Easy/Easy.txt");
@@ -14,7 +14,7 @@ EasyMap::EasyMap(PlayerInformation &info, Player &player) : Stage(info, player)
     camera.offset = {0, 0};
     camera.rotation = 0;
     camera.zoom = 1;
-    win_animation = new Win_Animation_Climb_Flag(&player, {9530, 144}, {9818, 384}, information);
+    win_animation = new Win_Animation_Climb_Flag(player, {9530, 144}, {9818, 384}, information);
 }
 
 EasyMap::~EasyMap()

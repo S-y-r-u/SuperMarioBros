@@ -1,7 +1,7 @@
 #include "Enemy/CheepCheep.h"
 #include <raylib.h>
 
-CheepCheep::CheepCheep(Vector2 pos, Player *player, float vx, float vy, float gravity)
+CheepCheep::CheepCheep(Vector2 pos, Player *&player, float vx, float vy, float gravity)
     : Enemy(pos, {vx, vy}, gravity),
       previous_frame_pos_(pos),
       base_y_(pos.y),

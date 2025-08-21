@@ -2,7 +2,7 @@
 #include "algorithm"
 #include "Enemy/KoopaTroopaState.h"
 
-Stage::Stage(PlayerInformation &info, Player &player)
+Stage::Stage(PlayerInformation &info, Player *&player)
     : information(info),
       player(player),
       Reset_Game(false),
@@ -53,12 +53,12 @@ void Stage::Run()
     win_animation->Update(GetFrameTime());
 
     Player_Update();
-    if (!player.Get_isTransforming())
+    if (!player->Get_isTransforming())
     {
         Non_Player_Update();
     }
 
-    if (!player.Get_isActive() && !Reset_Game)
+    if (!player->Get_isActive() && !Reset_Game)
         Cool_Down_After_Die(GetFrameTime());
     if (win_animation->End_Animation())
         Cool_Down_After_Win(GetFrameTime());
@@ -81,7 +81,7 @@ void Stage::Cool_Down_After_Win(float dt)
 
 void Stage::Player_Update()
 {
-    if (!Is_Game_Won && !player.Get_isDead() && player.Get_isActive())
+    if (!Is_Game_Won && !player->Get_isDead() && player->Get_isActive())
     {
         if (IsKeyPressed(KEY_A))
             Keyboard.emplace_back(KEY_A);
@@ -92,56 +92,56 @@ void Stage::Player_Update()
         if (IsKeyReleased(KEY_D))
             Keyboard.erase(std::remove(Keyboard.begin(), Keyboard.end(), KEY_D), Keyboard.end());
         if (IsKeyPressed(KEY_W))
-            player.Jump();
+            player->Jump();
         else if (IsKeyReleased(KEY_W))
-            player.Cut_Jump();
+            player->Cut_Jump();
         if (IsKeyPressed(KEY_SPACE))
-            player.Shoot(fireballs);
+            player->Shoot(fireballs);
         if (IsKeyDown(KEY_S))
-            player.Crouch();
+            player->Crouch();
         if (IsKeyReleased(KEY_S))
-            player.StopCrouch();
+            player->StopCrouch();
         if (IsKeyPressed(KEY_Z))
-            player.getMushroom();
+            player->getMushroom();
         if (IsKeyPressed(KEY_X))
-            player.getFlower();
+            player->getFlower();
         if (IsKeyPressed(KEY_C))
         {
-            player.getStar();
+            player->getStar();
         }
 
         // if (Keyboard.empty() && !IsKeyDown(KEY_S))
-        //     player.StopMoving();
+        //     player->StopMoving();
         // else if (Keyboard.back() == KEY_A)
-        //     player.MoveLeft();
+        //     player->MoveLeft();
         // else
-        //     player.MoveRight();
+        //     player->MoveRight();
     }
-    else if (player.Get_isDead() || !player.Get_isActive())
-        player.StopMoving();
+    else if (player->Get_isDead() || !player->Get_isActive())
+        player->StopMoving();
 
     bool isAccelerating = !Keyboard.empty();
-    if (isAccelerating && (!Is_Game_Won || player.Get_isDead()))
+    if (isAccelerating && (!Is_Game_Won || player->Get_isDead()))
     {
         if (Keyboard.back() == KEY_A)
         {
-            player.AccelerateLeft(GetFrameTime());
+            player->AccelerateLeft(GetFrameTime());
         }
         else if (Keyboard.back() == KEY_D)
         {
-            player.AccelerateRight(GetFrameTime());
+            player->AccelerateRight(GetFrameTime());
         }
     }
 
-    player.updateCoolDown(GetFrameTime());
-    player.update(GetFrameTime(), isAccelerating);
+    player->updateCoolDown(GetFrameTime());
+    player->update(GetFrameTime(), isAccelerating);
     information.Update(GetFrameTime());
 
     Score_Manager::GetInstance().Update();
 
-    if (!player.Get_isDead())
+    if (!player->Get_isDead())
     {
-        player.Set_isGround(false);
+        player->Set_isGround(false);
         Check_Player_Vs_Ground();
         Check_Player_Vs_Enemy();
         Check_Block_Vs_Block();
@@ -156,16 +156,16 @@ void Stage::Player_Update()
         top_left.y,
         bottom_right.x - top_left.x,
         bottom_right.y - top_left.y};
-    if (player.getPosition().x - player.get_draw_rec().width / 2.0f <= screen_rect_world.x)
+    if (player->getPosition().x - player->get_draw_rec().width / 2.0f <= screen_rect_world.x)
     {
-        player.Set_Pos({screen_rect_world.x + player.get_draw_rec().width / 2.0f, player.getPosition().y});
-        player.Set_Velocity({0, player.get_Velocity().y});
+        player->Set_Pos({screen_rect_world.x + player->get_draw_rec().width / 2.0f, player->getPosition().y});
+        player->Set_Velocity({0, player->get_Velocity().y});
     }
 }
 
 void Stage::Non_Player_Update()
 {
-    camera.target.x = std::max(camera.target.x, player.getPosition().x - Screen_w / 2.0f);
+    camera.target.x = std::max(camera.target.x, player->getPosition().x - Screen_w / 2.0f);
     if (camera.target.x >= MapTexture.width * scale_screen - Screen_w)
         camera.target.x = MapTexture.width * scale_screen - Screen_w;
 
@@ -178,11 +178,11 @@ void Stage::Non_Player_Update()
 
     for (Item *item : items)
     {
-        Rectangle player_rec = player.get_draw_rec();
+        Rectangle player_rec = player->get_draw_rec();
         Rectangle rec_item = item->Get_Draw_Rec();
         if (CheckCollisionRecs(player_rec, rec_item) && !item->Is_Appear_Animation())
         {
-            item->Activate_(player, information);
+            item->Activate_(*player, information);
         }
     }
 
@@ -330,8 +330,8 @@ void Stage::Draw()
 
     score_manager.Draw();
 
-    if (!player.Get_Disappear())
-        player.draw();
+    if (!player->Get_Disappear())
+        player->draw();
 
     EndMode2D();
 
@@ -341,11 +341,11 @@ void Stage::Draw()
 void Stage::Check_Player_Vs_Block()
 {
     // Lấy pos center-bottom ở frame trước và hiện tại
-    Vector2 currCenterBottom = player.getPosition();
-    Vector2 velocity = player.get_Velocity();
+    Vector2 currCenterBottom = player->getPosition();
+    Vector2 velocity = player->get_Velocity();
 
     // Lấy kích thước player
-    Rectangle currRec = player.get_draw_rec();
+    Rectangle currRec = player->get_draw_rec();
     float pw = currRec.width;
     float ph = currRec.height;
 
@@ -358,9 +358,9 @@ void Stage::Check_Player_Vs_Block()
 
     for (Block *block : blocks)
     {
-        if (block->Kill_Player(player))
+        if (block->Kill_Player(*player))
         {
-            player.Die();
+            player->Die();
             return;
         }
         Rectangle rec_map = block->Get_Draw_Rec();
@@ -381,8 +381,8 @@ void Stage::Check_Player_Vs_Block()
                 if (!block->Surrounded_Block[2])
                 {
                     // Từ trái sang
-                    player.Set_Pos({rec_map.x - pw / 2.0f - 0.1f, player.getPosition().y});
-                    player.Set_Velocity({0, player.get_Velocity().y});
+                    player->Set_Pos({rec_map.x - pw / 2.0f - 0.1f, player->getPosition().y});
+                    player->Set_Velocity({0, player->get_Velocity().y});
                 }
             }
             else
@@ -390,8 +390,8 @@ void Stage::Check_Player_Vs_Block()
                 if (!block->Surrounded_Block[3])
                 {
                     // Từ phải sang
-                    player.Set_Pos({rec_map.x + rec_map.width + pw / 2.0f + 0.1f, player.getPosition().y});
-                    player.Set_Velocity({0, player.get_Velocity().y});
+                    player->Set_Pos({rec_map.x + rec_map.width + pw / 2.0f + 0.1f, player->getPosition().y});
+                    player->Set_Velocity({0, player->get_Velocity().y});
                 }
             }
         }
@@ -401,28 +401,28 @@ void Stage::Check_Player_Vs_Block()
             if (currRec.y <= rec_map.y && !block->Surrounded_Block[0] && velocity.y >= 0)
             {
                 // Từ trên xuống
-                player.Set_Pos({player.getPosition().x, rec_map.y});
-                player.Set_Velocity({player.get_Velocity().x, 0.f});
-                player.Set_isGround(true);
+                player->Set_Pos({player->getPosition().x, rec_map.y});
+                player->Set_Velocity({player->get_Velocity().x, 0.f});
+                player->Set_isGround(true);
             }
             else if (currRec.y + currRec.height > rec_map.y + rec_map.height && !block->Surrounded_Block[1] && velocity.y < 0)
             {
                 // Từ dưới lên
-                player.Set_Pos({player.getPosition().x, rec_map.y + rec_map.height + ph});
-                player.Set_Velocity({player.get_Velocity().x, 0.f});
-                if (player.getPosition().x > rec_map.x + rec_map.width &&
+                player->Set_Pos({player->getPosition().x, rec_map.y + rec_map.height + ph});
+                player->Set_Velocity({player->get_Velocity().x, 0.f});
+                if (player->getPosition().x > rec_map.x + rec_map.width &&
                     !block->Surrounded_Block[3])
                 {
-                    block->On_Hit(items, player, information);
+                    block->On_Hit(items, *player, information);
                 }
-                else if (player.getPosition().x < rec_map.x &&
+                else if (player->getPosition().x < rec_map.x &&
                          !block->Surrounded_Block[2])
                 {
-                    block->On_Hit(items, player, information);
+                    block->On_Hit(items, *player, information);
                 }
-                else if (player.getPosition().x <= rec_map.x + rec_map.width && player.getPosition().x >= rec_map.x)
+                else if (player->getPosition().x <= rec_map.x + rec_map.width && player->getPosition().x >= rec_map.x)
                 {
-                    block->On_Hit(items, player, information);
+                    block->On_Hit(items, *player, information);
                 }
             }
         }
@@ -432,11 +432,11 @@ void Stage::Check_Player_Vs_Block()
 void Stage::Check_Player_Vs_Ground()
 {
     // Vị trí center-bottom của frame trước và hiện tại
-    Vector2 currCenterBottom = player.getPosition();
-    Vector2 velocity = player.get_Velocity();
+    Vector2 currCenterBottom = player->getPosition();
+    Vector2 velocity = player->get_Velocity();
 
     // Lấy kích thước player
-    Rectangle currDrawRec = player.get_draw_rec();
+    Rectangle currDrawRec = player->get_draw_rec();
     float pw = currDrawRec.width;
     float ph = currDrawRec.height;
 
@@ -467,7 +467,7 @@ void Stage::Check_Player_Vs_Ground()
 
             if (id == 2)
             {
-                player.Die();
+                player->Die();
             }
             else
             {
@@ -483,8 +483,8 @@ void Stage::Check_Player_Vs_Ground()
                         // Từ trái sang
                         if (Map[i][j - 1] == 0)
                         {
-                            player.Set_Pos({rec_map.x - pw / 2.0f, player.getPosition().y});
-                            player.Set_Velocity({0, player.get_Velocity().y});
+                            player->Set_Pos({rec_map.x - pw / 2.0f, player->getPosition().y});
+                            player->Set_Velocity({0, player->get_Velocity().y});
                         }
                     }
                     else
@@ -492,26 +492,26 @@ void Stage::Check_Player_Vs_Ground()
                         // Từ phải sang
                         if (Map[i][j + 1] == 0)
                         {
-                            player.Set_Pos({rec_map.x + rec_map.width + pw / 2.0f, player.getPosition().y});
-                            player.Set_Velocity({0, player.get_Velocity().y});
+                            player->Set_Pos({rec_map.x + rec_map.width + pw / 2.0f, player->getPosition().y});
+                            player->Set_Velocity({0, player->get_Velocity().y});
                         }
                     }
                 }
                 else
                 {
                     // Va chạm dọc
-                    if (currRec.y <= rec_map.y && Map[i - 1][j] == 0 && player.get_Velocity().y >= 0)
+                    if (currRec.y <= rec_map.y && Map[i - 1][j] == 0 && player->get_Velocity().y >= 0)
                     {
                         // Từ trên xuống
-                        player.Set_Pos({player.getPosition().x, rec_map.y});
-                        player.Set_Velocity({player.get_Velocity().x, 0});
-                        player.Set_isGround(true);
+                        player->Set_Pos({player->getPosition().x, rec_map.y});
+                        player->Set_Velocity({player->get_Velocity().x, 0});
+                        player->Set_isGround(true);
                     }
-                    else if (currRec.y + currRec.height > rec_map.y + rec_map.height && Map[i + 1][j] == 0 && player.get_Velocity().y < 0)
+                    else if (currRec.y + currRec.height > rec_map.y + rec_map.height && Map[i + 1][j] == 0 && player->get_Velocity().y < 0)
                     {
                         // Từ dưới lên
-                        player.Set_Pos({player.getPosition().x, rec_map.y + rec_map.height + ph});
-                        player.Set_Velocity({player.get_Velocity().x, 0});
+                        player->Set_Pos({player->getPosition().x, rec_map.y + rec_map.height + ph});
+                        player->Set_Velocity({player->get_Velocity().x, 0});
                     }
                 }
             }
@@ -521,7 +521,7 @@ void Stage::Check_Player_Vs_Ground()
 
 void Stage::Check_Player_Vs_Enemy()
 {
-    Rectangle playerRec = player.get_draw_rec();
+    Rectangle playerRec = player->get_draw_rec();
 
     for (Enemy *enemy : enemies)
     {
@@ -533,7 +533,7 @@ void Stage::Check_Player_Vs_Enemy()
         if (!CheckCollisionRecs(playerRec, enemyRec))
             continue;
 
-        if (player.Get_isInvincible())
+        if (player->Get_isInvincible())
         {
             enemy->Notify_Be_Fired_Or_Hit();
             SoundManager::GetInstance().PlaySoundEffect("stomp");
@@ -567,7 +567,7 @@ void Stage::Check_Player_Vs_Enemy()
                 }
                 else
                 {
-                    player.TakeDamage();
+                    player->TakeDamage();
                 }
             }
             else
@@ -583,7 +583,7 @@ void Stage::Check_Player_Vs_Enemy()
                 }
                 else
                 {
-                    player.TakeDamage();
+                    player->TakeDamage();
                 }
             }
         }
@@ -594,8 +594,8 @@ void Stage::Check_Player_Vs_Enemy()
             {
                 if (enemy->Can_Be_Kicked())
                 {
-                    player.Set_Velocity({player.get_Velocity().x, fmax(-player.get_Velocity().y, -300.0f)});
-                    player.Set_Pos({player.getPosition().x, player.getPosition().y - 30.0f});
+                    player->Set_Velocity({player->get_Velocity().x, fmax(-player->get_Velocity().y, -300.0f)});
+                    player->Set_Pos({player->getPosition().x, player->getPosition().y - 30.0f});
                     SoundManager::GetInstance().PlaySoundEffect("kick");
                     enemy->Notify_Be_Kicked(-1);
                     information.UpdateScore(enemy->Get_Score());
@@ -604,7 +604,7 @@ void Stage::Check_Player_Vs_Enemy()
                 // Player ở phía trên enemy - nhảy lên đầu enemy
                 else if (enemy->Can_Be_Stomped())
                 {
-                    player.Set_Velocity({player.get_Velocity().x, fmax(-player.get_Velocity().y, -300.0f)});
+                    player->Set_Velocity({player->get_Velocity().x, fmax(-player->get_Velocity().y, -300.0f)});
                     enemy->Notify_Be_Stomped();
                     SoundManager::GetInstance().PlaySoundEffect("stomp");
                     information.UpdateScore(enemy->Get_Score());
@@ -612,12 +612,12 @@ void Stage::Check_Player_Vs_Enemy()
                 }
                 else
                 {
-                    player.TakeDamage();
+                    player->TakeDamage();
                 }
             }
             else
             {
-                player.TakeDamage();
+                player->TakeDamage();
                 // Player ở phía dưới enemy
             }
         }
@@ -895,14 +895,14 @@ void Stage::Check_Enemy_Vs_Enemy()
     for (int i = 0; i < enemies.size(); i++)
     {
         Enemy *enemy1 = enemies[i];
-        if (!enemy1 || !enemy1->Get_Is_Active() || enemy1->Get_Is_Dead() || !enemy1->Need_Check_Map())
+        if (!enemy1 || !enemy1->Get_Is_Active() || enemy1->Get_Is_Dead() || !enemy1->Need_Check_Map() || !enemy1->Get_First_Appear())
             continue;
         Rectangle rec_enemy1 = enemy1->Get_Draw_Rec();
 
         for (int j = i + 1; j < enemies.size(); j++)
         {
             Enemy *enemy2 = enemies[j];
-            if (enemy1 == enemy2 || !enemy2->Get_Is_Active() || enemy2->Get_Is_Dead() || !enemy2->Need_Check_Map())
+            if (enemy1 == enemy2 || !enemy2->Get_Is_Active() || enemy2->Get_Is_Dead() || !enemy2->Need_Check_Map() || !enemy2->Get_First_Appear())
                 continue;
 
             Rectangle rec_enemy2 = enemy2->Get_Draw_Rec();
@@ -1131,7 +1131,7 @@ void Stage::LoadEnemiesFromFile(const std::string &filename)
         }
 
         // Spawn enemy
-        Spawn_Enemy::SpawnEnemies(type, position, &player, enemy_map, enemies, camera);
+        Spawn_Enemy::SpawnEnemies(type, position, player, enemy_map, enemies, camera);
     }
 
     file.close();
@@ -1337,8 +1337,6 @@ void Stage::from_json(const json &j)
         camera.zoom = cam[5];
     }
 
-    win_animation->Set_Player_Animation(&player);
-
     // Xóa các enemy cũ nếu có
     for (auto e : enemies)
         delete e;
@@ -1355,7 +1353,7 @@ void Stage::from_json(const json &j)
                 auto p = enemy_j["position"];
                 pos = {p[0], p[1]};
             }
-            Spawn_Enemy::SpawnEnemies(static_cast<EnemyType>(type), pos, &player, const_cast<std::unordered_map<Enemy *, std::vector<Enemy *>> &>(enemy_map), const_cast<std::vector<Enemy *> &>(enemies), camera);
+            Spawn_Enemy::SpawnEnemies(static_cast<EnemyType>(type), pos, player, const_cast<std::unordered_map<Enemy *, std::vector<Enemy *>> &>(enemy_map), const_cast<std::vector<Enemy *> &>(enemies), camera);
             if (!enemies.empty())
             {
                 json enemy_data = enemy_j;
@@ -1374,7 +1372,7 @@ void Stage::from_json(const json &j)
         {
             std::string type = item_j.value("type", "");
             size_t old_size = items.size();
-            Spawn_Item::Item_Spawn(type, items, {0, 0}, player, information, 1);
+            Spawn_Item::Item_Spawn(type, items, {0, 0}, *player, information, 1);
             if (items.size() > old_size)
             {
                 Item *item = items.back();

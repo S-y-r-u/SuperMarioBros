@@ -18,5 +18,4 @@ public:
 
     virtual bool End_Animation() = 0;
 
-    virtual void Set_Player_Animation(Player *player) = 0;
 };

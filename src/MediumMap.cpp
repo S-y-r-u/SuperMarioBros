@@ -1,6 +1,6 @@
 #include "MediumMap.h"
 
-MediumMap::MediumMap(PlayerInformation &info, Player &player) : Stage(info, player)
+MediumMap::MediumMap(PlayerInformation &info, Player *&player) : Stage(info, player)
 {
     MapTexture = LoadTexture("map/Medium/Medium.png");
     LoadMapFromFile("map/Medium/Medium.txt");
@@ -13,7 +13,7 @@ MediumMap::MediumMap(PlayerInformation &info, Player &player) : Stage(info, play
     camera.offset = {0, 0};
     camera.rotation = 0;
     camera.zoom = 1;
-    win_animation = new Win_Animation_Climb_Flag(&player, {10828, 144}, {11116, 96}, information);
+    win_animation = new Win_Animation_Climb_Flag(player, {10828, 144}, {11116, 96}, information);
 }
 
 MediumMap::~MediumMap()

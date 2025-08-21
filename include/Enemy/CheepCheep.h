@@ -5,7 +5,7 @@
 class CheepCheep : public Enemy
 {
 public:
-    CheepCheep(Vector2 pos, Player *player, float vx = 150.0f, float vy = -800.0f, float gravity = 500.0f);
+    CheepCheep(Vector2 pos, Player *&player, float vx = 150.0f, float vy = -800.0f, float gravity = 500.0f);
     void Update(float dt) override;
     void Draw() const override;
     Vector2 Get_Previous_Pos() const override;
@@ -24,7 +24,7 @@ public:
     };
 
 private:
-    Player *player;
+    Player *&player;
     Vector2 previous_frame_pos_;
     float base_y_;
     CheepCheepState state_ = CheepCheepState::Normal;

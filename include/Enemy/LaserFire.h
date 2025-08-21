@@ -4,7 +4,7 @@
 class LaserFire : public Enemy {
 public:
     // pos: vị trí bắt đầu, target: vị trí mục tiêu, speed: vận tốc tia lửa
-    LaserFire(Vector2 pos, Vector2 target, float speed = 300.0f);
+    LaserFire(Vector2 pos, Vector2 target, float speed = 350.0f);
     void Update(float dt) override;
     void Draw() const override;
     Vector2 Get_Previous_Pos() const override;

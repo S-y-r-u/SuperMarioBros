@@ -29,13 +29,13 @@ private:
     const float Push_Velocity = 200.0f;
     const float dis_to_finish = 2 * Screen_w;
 
-    Player *player;
+    Player *&player;
     std::vector<Enemy *> *enemies;
     std::unordered_map<Enemy *, std::vector<Enemy *>> &enemy_map;
     Camera2D &camera;
 
 public:
-    Latiku(Vector2 pos, Player *player, std::vector<Enemy *> *enemies, std::unordered_map<Enemy *, std::vector<Enemy *>> &enemy_map, Camera2D &camera);
+    Latiku(Vector2 pos, Player *&player, std::vector<Enemy *> *enemies, std::unordered_map<Enemy *, std::vector<Enemy *>> &enemy_map, Camera2D &camera);
 
     void Update(float dt) override;
     void Draw() const override;
@@ -48,7 +48,8 @@ public:
     bool Need_Check_Map() const override;
 
     json to_json() const override;
-    void from_json(const json& j) override;
+    void from_json(const json &j) override;
+
 private:
     void Spawn_Spiny();
     void Animate_(float dt);
