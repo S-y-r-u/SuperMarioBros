@@ -114,6 +114,7 @@ int PlayerInformation::GetLives() const
 
 void PlayerInformation::ResetTime()
 {
+    is_game_won = false;
     time = 400.0f;
 }
 
