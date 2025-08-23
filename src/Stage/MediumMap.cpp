@@ -1,4 +1,4 @@
-#include "MediumMap.h"
+#include "Stage/MediumMap.h"
 
 MediumMap::MediumMap(PlayerInformation &info, Player *&player) : Stage(info, player)
 {

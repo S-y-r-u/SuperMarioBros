@@ -1,6 +1,6 @@
 #pragma once
 #include "Enemy/Enemy.h"
-#include "Player.h"
+#include "Player/Player.h"
 
 class CheepCheep : public Enemy
 {

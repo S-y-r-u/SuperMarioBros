@@ -2,8 +2,8 @@
 #include "GameManager/I_Stage.h"
 #include "GameManager/Animation.h"
 #include "Constants.h"
-#include "Mario.h"
-#include "Luigi.h"
+#include "Player/Mario.h"
+#include "Player/Luigi.h"
 #include <raylib.h>
 
 class Outro_Manager : public I_Stage

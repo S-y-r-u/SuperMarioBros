@@ -1,4 +1,4 @@
-#include "Character.h"
+#include "Player/Character.h"
 
 Character ::Character(Vector2 startPos) : position(startPos), isGround(1), isFacingLeft(0) {}
 

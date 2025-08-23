@@ -1,4 +1,4 @@
-#include "Mario.h"
+#include "Player/Mario.h"
 
 Mario ::Mario(Vector2 startPos) : Player(startPos)
 {

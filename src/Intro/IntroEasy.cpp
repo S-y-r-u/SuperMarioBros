@@ -1,17 +1,17 @@
-#include "IntroHard.h"
+#include "Intro/IntroEasy.h"
 
-Intro_Hard::Intro_Hard(PlayerInformation &info, Player_Mode mode)
+Intro_Easy::Intro_Easy(PlayerInformation &info, Player_Mode mode)
     : Intro_Animation(info, mode)
 {
-    intro_ = LoadTexture("../resources/map/Hard/Intro_Hard.png");
+    intro_ = LoadTexture("../resources/map/Easy/Intro_Easy.png");
 }
 
-Intro_Hard::~Intro_Hard()
+Intro_Easy::~Intro_Easy()
 {
     UnloadTexture(intro_);
 }
 
-void Intro_Hard::Draw()
+void Intro_Easy::Draw()
 {
     ClearBackground(BLACK);
     player_info.Draw();
@@ -25,7 +25,7 @@ void Intro_Hard::Draw()
     Vector2 live = {x.x + 8 * scale + 1.0f + 30.0f, x.y};
     Font_Sprite::DrawText(std::to_string(player_info.GetLives()), live.x, live.y, WHITE, scale);
 
-    std::string world = "WORLD - HARD";
+    std::string world = "WORLD - EASY";
     Vector2 world_pos = {(Screen_w - (world.size() * (8 * scale + 1.0f))) / 2.0f, x.y - (8 * scale + 1.0f) - 30.0f};
     Font_Sprite::DrawText(world, world_pos.x, world_pos.y, WHITE, scale);
 
@@ -50,12 +50,12 @@ void Intro_Hard::Draw()
     };
 }
 
-void Intro_Hard::Run()
+void Intro_Easy::Run()
 {
     timer_ += GetFrameTime();
 }
 
-bool Intro_Hard::Change_State()
+bool Intro_Easy::Change_State()
 {
     return timer_ >= End_Intro;
 }

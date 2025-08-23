@@ -1,8 +1,6 @@
 #pragma once
 #include "raylib.h"
 #include "Constants.h"
-#include "Player.h"
-#include "PlayerInformation.h"
 #include "DrawScore.h"
 #include "I_Win_Animation.h"
 #include "Flag/Flag_Pole.h"

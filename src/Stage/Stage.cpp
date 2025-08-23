@@ -1,6 +1,5 @@
-#include "Stage.h"
+#include "Stage/Stage.h"
 #include "algorithm"
-#include "Enemy/KoopaTroopaState.h"
 
 Stage::Stage(PlayerInformation &info, Player *&player)
     : information(info),

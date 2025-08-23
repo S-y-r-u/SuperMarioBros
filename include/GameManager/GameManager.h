@@ -1,18 +1,17 @@
 #pragma once
 #include "Constants.h"
-#include "Stage.h"
-#include "EasyMap.h"
-#include "MediumMap.h"
-#include "HardMap.h"
+#include "Stage/EasyMap.h"
+#include "Stage/MediumMap.h"
+#include "Stage/HardMap.h"
 #include "Sprite.h"
 #include "PauseManager.h"
 #include "I_Stage.h"
-#include "IntroEasy.h"
-#include "IntroMedium.h"
-#include "IntroHard.h"
+#include "Intro/IntroEasy.h"
+#include "Intro/IntroMedium.h"
+#include "Intro/IntroHard.h"
 #include "Outro.h"
-#include "Mario.h"
-#include "Luigi.h"
+#include "Player/Mario.h"
+#include "Player/Luigi.h"
 
 class Stage; // Forward declaration
 

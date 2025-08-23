@@ -1,4 +1,4 @@
-#include "EasyMap.h"
+#include "Stage/EasyMap.h"
 
 EasyMap::EasyMap(PlayerInformation &info, Player *&player) : Stage(info, player)
 {

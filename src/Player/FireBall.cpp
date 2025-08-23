@@ -1,4 +1,4 @@
-#include "FireBall.h"
+#include "Player/FireBall.h"
 #include <iostream>
 
 FireBall :: FireBall(Vector2 pos, bool facingLeft){

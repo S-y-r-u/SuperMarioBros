@@ -1,6 +1,6 @@
 #pragma once
 #include "Enemy/Enemy.h"
-#include "Player.h"
+#include "Player/Player.h"
 #include "Enemy/LaserFire.h"
 
 enum class Bowser_State

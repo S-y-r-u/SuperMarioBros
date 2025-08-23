@@ -1,7 +1,7 @@
 #pragma once
 #include "Constants.h"
 #include "Item/Item.h"
-#include "Player.h"
+#include "Player/Player.h"
 #include "GameManager/PlayerInformation.h"
 #include "GameManager/Animation.h"
 #include <raylib.h>

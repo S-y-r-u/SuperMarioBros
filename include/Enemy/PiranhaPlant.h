@@ -1,5 +1,6 @@
 #pragma once
 #include "Enemy.h"
+#include "Player/Player.h"
 
 enum class PiranhaPlant_State
 {

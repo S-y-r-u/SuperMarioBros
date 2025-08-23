@@ -1,7 +1,7 @@
 #pragma once
 #include "Constants.h"
 #include "Sprite.h"
-#include "Player.h"
+#include "Player/Player.h"
 #include "GameManager/PlayerInformation.h"
 #include "GameManager/DrawScore.h"
 #include "GameManager/Animation.h"
@@ -41,5 +41,5 @@ public:
     virtual void Notify_Change_Direct() {}
 
     virtual json to_json() const = 0;
-    virtual void from_json(const json& j) = 0;
+    virtual void from_json(const json &j) = 0;
 };

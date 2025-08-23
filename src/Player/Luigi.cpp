@@ -1,4 +1,4 @@
-#include "Luigi.h"
+#include "Player/Luigi.h"
 
 Luigi ::Luigi(Vector2 startPos) : Player(startPos)
 {

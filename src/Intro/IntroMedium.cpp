@@ -1,4 +1,4 @@
-#include "IntroMedium.h"
+#include "Intro/IntroMedium.h"
 
 Intro_Medium::Intro_Medium(PlayerInformation &info, Player_Mode mode)
     : Intro_Animation(info, mode)

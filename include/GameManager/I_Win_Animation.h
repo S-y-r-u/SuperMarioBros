@@ -2,7 +2,7 @@
 #include "raylib.h"
 #include "Constants.h"
 #include "PlayerInformation.h"
-#include "Player.h"
+#include "Player/Player.h"
 
 class I_Win_Animation_Manager
 {
@@ -17,5 +17,4 @@ public:
     virtual bool Check_Win_Animation() = 0;
 
     virtual bool End_Animation() = 0;
-
 };

@@ -1,4 +1,4 @@
-#include "HardMap.h"
+#include "Stage/HardMap.h"
 
 HardMap::HardMap(PlayerInformation &info, Player *&player) : Stage(info, player)
 {
