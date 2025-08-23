@@ -87,6 +87,9 @@ public:
 
     void DrawLayer();
 
+    void TransformToMario();
+    void TransformToLuigi();
+
     json to_json() const;
     void from_json(const json &j);
 };

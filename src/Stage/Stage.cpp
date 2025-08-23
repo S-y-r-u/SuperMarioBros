@@ -78,6 +78,18 @@ void Stage::Cool_Down_After_Win(float dt)
     timer_ += dt;
 }
 
+void Stage::TransformToMario() {
+    Player* new_player = new Mario(*player);
+    delete player;
+    player = new_player;
+}
+
+void Stage::TransformToLuigi() {
+    Player* new_player = new Luigi(*player);
+    delete player;
+    player = new_player;
+}
+
 void Stage::Player_Update()
 {
     if (!Is_Game_Won && !player->Get_isDead() && player->Get_isActive())
@@ -92,7 +104,7 @@ void Stage::Player_Update()
             Keyboard.erase(std::remove(Keyboard.begin(), Keyboard.end(), KEY_D), Keyboard.end());
         if (IsKeyPressed(KEY_W))
             player->Jump();
-        else if (IsKeyReleased(KEY_W))
+        if (IsKeyReleased(KEY_W))
             player->Cut_Jump();
         if (IsKeyPressed(KEY_SPACE))
             player->Shoot(fireballs);
@@ -108,6 +120,10 @@ void Stage::Player_Update()
         {
             player->getStar();
         }
+        if (IsKeyPressed(KEY_M))
+            TransformToMario();
+        if (IsKeyPressed(KEY_L))
+            TransformToLuigi();
 
         // if (Keyboard.empty() && !IsKeyDown(KEY_S))
         //     player->StopMoving();

@@ -43,6 +43,47 @@ Player ::Player(Vector2 startPos) : Character(startPos)
     deceleration = 600.0f;
 }
 
+Player ::Player(const Player& other) : Character(other) {
+    velocity = other.velocity;
+    speed = other.speed;
+    gravity = other.gravity;
+    JumpForce = other.JumpForce;
+    friction = other.friction;
+
+    form = other.form;
+    state = other.state;
+    isTransforming = other.isTransforming;
+    targetForm = other.targetForm;
+
+    isInvincible = other.isInvincible;
+    invincibleTimer = other.invincibleTimer;
+    beforeStar = other.beforeStar;
+
+    isDead = other.isDead;
+    isActive = other.isActive;
+    deadTimer = other.deadTimer;
+
+    fireCoolDown = other.fireCoolDown;
+
+    currentFrame = other.currentFrame;
+    frameTimer = other.frameTimer;
+    animationSpeed = other.animationSpeed;
+    animationSpeedClimb = other.animationSpeedClimb;
+
+    climb_velo = other.climb_velo;
+
+    is_pose = other.is_pose;
+    is_fade_out = other.is_fade_out;
+    disappear = other.disappear;
+
+    isImmune = other.isImmune;
+    immunityTimer = other.immunityTimer;
+    isCrouching = other.isCrouching;
+
+    acceleration = other.acceleration;
+    deceleration = other.deceleration;
+}
+
 Player ::~Player() {}
 
 Rectangle Player ::get_draw_rec()

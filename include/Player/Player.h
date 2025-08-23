@@ -52,6 +52,7 @@ class Player : public Character{
 
     public:
         Player(Vector2 startPos);
+        Player(const Player& other);
         virtual ~Player();
 
         Rectangle get_draw_rec() override;

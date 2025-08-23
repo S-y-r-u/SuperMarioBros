@@ -12,6 +12,17 @@ Mario ::Mario(Vector2 startPos) : Player(startPos)
     deceleration = 500.0f;
 }
 
+Mario ::Mario(const Player& other) : Player(other) {
+    this->texture = &Mario_Sprite::mario_sprite;
+    speed = 300.0f;
+    gravity = 1000.0f;
+    JumpForce = -630.0f;
+    friction = 0.93f;
+
+    acceleration = 450.0f;
+    deceleration = 500.0f;
+}
+
 Mario ::~Mario() {}
 
 std::vector<Rectangle> &Mario ::getAnimationFrame() const

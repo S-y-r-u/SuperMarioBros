@@ -9,6 +9,14 @@ Luigi ::Luigi(Vector2 startPos) : Player(startPos)
     friction = 0.96f;    // trượt xa hơn
 }
 
+Luigi ::Luigi(const Player& other) : Player(other) {
+    this->texture = &Luigi_Sprite::luigi_sprite;
+    speed = 200.0f;      // chạy nhanh
+    gravity = 850.0f;    // rơi chậm
+    JumpForce = -680.0f; // nhảy cao
+    friction = 0.96f;    // trượt xa hơn
+}
+
 Luigi ::~Luigi() {}
 
 std::vector<Rectangle> &Luigi ::getAnimationFrame() const
