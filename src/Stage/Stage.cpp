@@ -103,35 +103,43 @@ void Stage::Player_Update()
 {
     if (!Is_Game_Won && !player->Get_isDead() && player->Get_isActive())
     {
-        if (IsKeyPressed(KEY_A))
-            Keyboard.emplace_back(KEY_A);
-        if (IsKeyReleased(KEY_A))
-            Keyboard.erase(std::remove(Keyboard.begin(), Keyboard.end(), KEY_A), Keyboard.end());
-        if (IsKeyPressed(KEY_D))
-            Keyboard.emplace_back(KEY_D);
-        if (IsKeyReleased(KEY_D))
-            Keyboard.erase(std::remove(Keyboard.begin(), Keyboard.end(), KEY_D), Keyboard.end());
-        if (IsKeyPressed(KEY_W))
+        // Handle input
+        int key;
+
+        // Move Left
+        key = KeySettingManager::getKey(Action::LEFT);
+        if (IsKeyPressed(key))
+            Keyboard.emplace_back(Action::LEFT);
+        if (IsKeyReleased(key))
+            Keyboard.erase(std::remove(Keyboard.begin(), Keyboard.end(), Action::LEFT), Keyboard.end());
+
+        // Move Right
+        key = KeySettingManager::getKey(Action::RIGHT);
+        if (IsKeyPressed(key))
+            Keyboard.emplace_back(Action::RIGHT);
+        if (IsKeyReleased(key))
+            Keyboard.erase(std::remove(Keyboard.begin(), Keyboard.end(), Action::RIGHT), Keyboard.end());
+
+        // Jump
+        key = KeySettingManager::getKey(Action::UP);
+        if (IsKeyPressed(key))
             player->Jump();
-        if (IsKeyReleased(KEY_W))
+        if (IsKeyReleased(key))
             player->Cut_Jump();
-        if (IsKeyPressed(KEY_SPACE))
+
+        // Fireball
+        key = KeySettingManager::getKey(Action::FIREBALL);
+        if (IsKeyPressed(key))
             player->Shoot(fireballs);
-        if (IsKeyDown(KEY_S))
-            player->Crouch();
-        if (IsKeyReleased(KEY_S))
-            player->StopCrouch();
-        if (IsKeyPressed(KEY_Z))
-            player->getMushroom();
-        if (IsKeyPressed(KEY_X))
-            player->getFlower();
-        if (IsKeyPressed(KEY_C))
-        {
-            player->getStar();
-        }
-        if (IsKeyPressed(KEY_M) && player_mode == Player_Mode::MULTI_PLAYER)
+
+        // Swap Mario
+        key = KeySettingManager::getKey(Action::SWAP_TO_MARIO);
+        if (IsKeyPressed(key))
             TransformToMario();
-        if (IsKeyPressed(KEY_L) && player_mode == Player_Mode::MULTI_PLAYER)
+
+        // Swap Luigi
+        key = KeySettingManager::getKey(Action::SWAP_TO_LUIGI);
+        if (IsKeyPressed(key))
             TransformToLuigi();
 
         // if (Keyboard.empty() && !IsKeyDown(KEY_S))
@@ -146,16 +154,19 @@ void Stage::Player_Update()
 
     bool isAccelerating = !Keyboard.empty();
     if (isAccelerating && (!Is_Game_Won || player->Get_isDead()))
+{
+    if (!Keyboard.empty())
     {
-        if (Keyboard.back() == KEY_A)
+        if (Keyboard.back() == Action::LEFT)
         {
             player->AccelerateLeft(GetFrameTime());
         }
-        else if (Keyboard.back() == KEY_D)
+        else if (Keyboard.back() == Action::RIGHT)
         {
             player->AccelerateRight(GetFrameTime());
         }
     }
+}
 
     player->updateCoolDown(GetFrameTime());
     player->update(GetFrameTime(), isAccelerating);

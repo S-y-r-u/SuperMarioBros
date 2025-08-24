@@ -3,6 +3,7 @@
 #include "Constants.h"
 #include "Player/Mario.h"
 #include "Player/Luigi.h"
+#include "Menu/KeySettingManager.h"
 #include "Item/Spawn_Item.h"
 #include "Block/Block.h"
 #include "Enemy/Spawn_Enemy.h"
@@ -31,7 +32,7 @@ protected:
     I_Win_Animation_Manager *win_animation;
 
     Camera2D camera = {0};
-    std::vector<KeyboardKey> Keyboard;
+    std::vector<Action> Keyboard;
 
     std::vector<Item *> items;
     std::vector<Block *> blocks;

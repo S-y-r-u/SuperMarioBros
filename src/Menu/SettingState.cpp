@@ -11,7 +11,7 @@ SettingState::SettingState()
     
     // Tạo các slider cho volume
     float sliderStartY =  300; // Vị trí Y bắt đầu của slider
-    float sliderCenterX = Screen_w / 2.0f - 100; // Căn giữa slider
+    float sliderCenterX = 200; // Căn giữa slider
     
     musicVolumeSlider = new MusicButton("Music Volume", sliderCenterX - 15.f, sliderStartY, 200, 20);
     soundVolumeSlider = new MusicButton("Sound Volume", sliderCenterX - 15.f, sliderStartY + 80, 200, 20);
@@ -48,9 +48,11 @@ void SettingState::Draw() {
     soundVolumeSlider->Draw();
     if (bgX >= SettingTexture->width)
         bgX -= SettingTexture->width;
+    keySettingManager.draw();
 }
 
 int SettingState::Update() {
+    keySettingManager.update();
     //update background
     float deltaTime = GetFrameTime();
     bgX += scrollSpeed * deltaTime;

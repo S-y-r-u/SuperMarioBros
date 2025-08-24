@@ -3,6 +3,7 @@
 #include "Constants.h"
 #include "Menu/Button.h"
 #include "Menu/MusicButton.h"
+#include "Menu/KeySettingManager.h"
 #include "Menu/Menu.h"
 
 class SettingState {
@@ -21,5 +22,7 @@ private:
     
     float bgX = 0.0f;
     float scrollSpeed = 50.0f; // pixels per second
+
+    KeySettingManager keySettingManager;    
 
 };
