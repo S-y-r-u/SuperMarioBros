@@ -351,7 +351,6 @@ void Player ::update(float dt, bool isAccelerating)
 
 void Player ::draw()
 {
-    DrawRectangleLinesEx(get_draw_rec(), 2, RED);
     const auto &frame = getAnimationFrame();
 
     if (frame.empty() || texture == nullptr)

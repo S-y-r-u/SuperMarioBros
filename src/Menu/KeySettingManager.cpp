@@ -13,7 +13,8 @@ KeySettingManager::KeySettingManager() {
         {Action::UP, "Jump / Up"},
         {Action::FIREBALL, "Throw Fireball"},
         {Action::SWAP_TO_MARIO, "Swap to Mario"},
-        {Action::SWAP_TO_LUIGI, "Swap to Luigi"}
+        {Action::SWAP_TO_LUIGI, "Swap to Luigi"},
+        {Action::CROUCH, "Crouch"}
     };
     isEditing = false;
     editingAction = Action::LEFT;
@@ -27,7 +28,8 @@ void KeySettingManager::initializeDefaults() {
         {Action::UP, KEY_W},
         {Action::FIREBALL, KEY_F},
         {Action::SWAP_TO_MARIO, KEY_ONE},
-        {Action::SWAP_TO_LUIGI, KEY_TWO}
+        {Action::SWAP_TO_LUIGI, KEY_TWO},
+        {Action::CROUCH, KEY_S}
     };
 }
 
@@ -50,6 +52,21 @@ int KeySettingManager::getKey(Action action) {
 
 // ====== Update UI ======
 void KeySettingManager::update() {
+    Vector2 mouse = GetMousePosition();
+    if (IsMouseButtonPressed(MOUSE_LEFT_BUTTON)) {
+        int checked = false ;
+        for (int i = 0; i < actionList.size(); i++) {
+            Rectangle keyBox = {col2X, startY + i * rowHeight, 200, 40};
+            if (CheckCollisionPointRec(mouse, keyBox)) {
+                isEditing = true;
+                editingAction = actionList[i].first;
+                checked = true ;
+            }
+        }
+        if (!checked) {
+            isEditing = false;
+        }
+    }
     if (isEditing) {
         int newKey = GetKeyPressed();
         if (newKey != 0 && newKey != KEY_BACKSPACE) {
@@ -58,16 +75,6 @@ void KeySettingManager::update() {
         } else if (IsKeyPressed(KEY_BACKSPACE)) {
             setKey(editingAction, 0);
             isEditing = false;
-        }
-    } else {
-        Vector2 mouse = GetMousePosition();
-
-        for (int i = 0; i < actionList.size(); i++) {
-            Rectangle keyBox = {col2X, startY + i * rowHeight, 200, 40};
-            if (CheckCollisionPointRec(mouse, keyBox) && IsMouseButtonPressed(MOUSE_LEFT_BUTTON)) {
-                isEditing = true;
-                editingAction = actionList[i].first;
-            }
         }
     }
 }

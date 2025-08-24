@@ -19,4 +19,6 @@ public:
     void Update();
     Rectangle Get_Bounding_Box() const;
     Vector2 Get_Velocity() const;
+    json to_json() const;
+    void from_json(const json &j);
 };  

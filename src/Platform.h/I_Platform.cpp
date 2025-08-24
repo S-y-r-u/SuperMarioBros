@@ -25,3 +25,19 @@ Vector2 I_Platform::Get_Velocity() const
 {
     return velocity;
 }
+
+json I_Platform::to_json() const {
+    json j;
+    j["position"] = {position.x, position.y};
+    j["velocity"] = {velocity.x, velocity.y};
+    // Note: You might want to serialize the animation state as well if needed
+    return j;
+}
+
+void I_Platform::from_json(const json &j) {
+    position.x = j.at("position")[0];
+    position.y = j.at("position")[1];
+    velocity.x = j.at("velocity")[0];
+    velocity.y = j.at("velocity")[1];
+    // Note: You might want to deserialize the animation state as well if needed
+}

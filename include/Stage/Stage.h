@@ -88,6 +88,6 @@ public:
     void TransformToMario();
     void TransformToLuigi();
 
-    json to_json() const;
-    void from_json(const json &j);
+    virtual json to_json() const;
+    virtual void from_json(const json &j);
 };

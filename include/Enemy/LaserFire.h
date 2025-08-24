@@ -14,7 +14,7 @@ public:
 
     bool Need_Check_Map() const override { return false; }
 
-    void Notify_Be_Fired_Or_Hit() override {}
+    void Notify_Be_Fired_Or_Hit() override { is_active = false; is_dead = true; }
     void Notify_Fall(float dt) override {}
     void Notify_On_Ground() override {}
 

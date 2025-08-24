@@ -11,7 +11,8 @@ enum class Action {
     UP,
     FIREBALL,
     SWAP_TO_MARIO,
-    SWAP_TO_LUIGI
+    SWAP_TO_LUIGI,
+    CROUCH
 };
 
 // ==================== KeySettingManager ====================

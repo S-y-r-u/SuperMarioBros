@@ -132,14 +132,27 @@ void Stage::Player_Update()
         if (IsKeyPressed(key))
             player->Shoot(fireballs);
 
+        // Crouch
+        key = KeySettingManager::getKey(Action::CROUCH);
+        if (IsKeyPressed(key))
+            player->Crouch();
+
+        if (IsKeyPressed(KEY_Z))
+            player->getMushroom();
+        if (IsKeyPressed(KEY_X))
+            player->getFlower();
+        if (IsKeyPressed(KEY_C))
+        {
+            player->getStar();
+        }
         // Swap Mario
         key = KeySettingManager::getKey(Action::SWAP_TO_MARIO);
-        if (IsKeyPressed(key))
+        if (IsKeyPressed(key) && player_mode == Player_Mode::MULTI_PLAYER)
             TransformToMario();
 
         // Swap Luigi
         key = KeySettingManager::getKey(Action::SWAP_TO_LUIGI);
-        if (IsKeyPressed(key))
+        if (IsKeyPressed(key) && player_mode == Player_Mode::MULTI_PLAYER)
             TransformToLuigi();
 
         // if (Keyboard.empty() && !IsKeyDown(KEY_S))

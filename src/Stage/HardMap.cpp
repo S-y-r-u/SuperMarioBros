@@ -31,9 +31,9 @@ HardMap::~HardMap()
 void HardMap::Spawn_Platform()
 {
     if (up_platforms.empty())
-        up_platforms.push_back(new Vertical_Platform({3480, Screen_h}, -150));
+        up_platforms.push_back(new Vertical_Platform({4152, Screen_h}, -150));
     if (down_platforms.empty())
-        down_platforms.push_back(new Vertical_Platform({3624, -24}, 150));
+        down_platforms.push_back(new Vertical_Platform({4296, -24}, 150));
     while (!up_platforms.empty() && up_platforms.back()->Get_Bounding_Box().y < -480)
     {
         delete up_platforms.back();
@@ -264,4 +264,56 @@ void HardMap::Delete_Fire_Block()
             ++it;
         }
     }
+}
+
+json HardMap::to_json() const
+{
+    json j = Stage::to_json();
+    // Serialize specific attributes for HardMap
+    j["up_platforms"] = json::array();
+    for (const auto &platform : up_platforms)
+    {
+        j["up_platforms"].push_back(platform->to_json());
+    }
+    j["down_platforms"] = json::array();
+    for (const auto &platform : down_platforms)
+    {
+        j["down_platforms"].push_back(platform->to_json());
+    }
+    // j["fire_blocks"] = json::array();
+    // for (const auto &fire_block : fire_blocks)
+    // {
+    //     j["fire_blocks"].push_back(fire_block->to_json());
+    // }
+    return j;
+}
+
+void HardMap::from_json(const json &j)
+{
+    Stage::from_json(j);
+    // Deserialize specific attributes for HardMap
+    for (auto &it : up_platforms)
+        delete it;
+    up_platforms.clear();
+    for (auto &it : down_platforms)
+        delete it;
+    down_platforms.clear();
+    for (const auto &item : j.at("up_platforms"))
+    {
+        I_Platform *platform = new Vertical_Platform({4152, Screen_h}, -150);
+        platform->from_json(item);
+        up_platforms.push_back(platform);
+    }
+    for (const auto &item : j.at("down_platforms"))
+    {
+        I_Platform *platform = new Vertical_Platform({4296, -24}, 150);
+        platform->from_json(item);
+        down_platforms.push_back(platform);
+    }
+    // for (const auto &item : j.at("fire_blocks"))
+    // {
+    //     Fire_Block *fire_block = new Fire_Block();
+    //     fire_block->from_json(item);
+    //     fire_blocks.push_back(fire_block);
+    // }
 }

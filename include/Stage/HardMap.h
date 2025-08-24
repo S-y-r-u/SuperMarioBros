@@ -16,6 +16,8 @@ public:
     HardMap(PlayerInformation &info, Player *&player, Player_Mode &player_mode);
     void Run() override;
     void Draw() override;
+    json to_json() const override;
+    void from_json(const json &j) override;
     ~HardMap();
 
 private:
