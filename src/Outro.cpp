@@ -54,6 +54,7 @@ void Outro_Manager::Run()
             animation = Animation(&Outro_Animation::outro_, Outro_Animation::Mario::outro_mario, 0.5f);
         else if (dynamic_cast<Luigi *>(player))
             animation = Animation(&Outro_Animation::outro_, Outro_Animation::Luigi::outro_luigi, 0.5f);
+        SoundManager::GetInstance().PlayMusic("princess_rescued", true);
     }
     frame_timer += dt;
 

@@ -54,6 +54,7 @@ void Stage::Run()
                 while (!it->Get_Is_Dead())
                     it->Notify_Be_Fired_Or_Hit();
             }
+            
         }
     }
     win_animation->Update(GetFrameTime());
@@ -143,7 +144,9 @@ void Stage::Player_Update()
             player->getFlower();
         if (IsKeyPressed(KEY_C))
         {
-            player->getStar();
+
+            Star star({10,10});
+            star.Activate_(*player, information);
         }
         // Swap Mario
         key = KeySettingManager::getKey(Action::SWAP_TO_MARIO);

@@ -45,14 +45,17 @@ void UI::Process()
                 SoundManager::GetInstance().StopMusic();
                 if (Program_state == menuState)
                 {
+                    SoundManager::GetInstance().StopSoundEffect("invincible");
                     SoundManager::GetInstance().PlayMusic("MenuMusic", true);
                 }
                 else if (Program_state == gameManagerState)
                 {
+                    SoundManager::GetInstance().StopSoundEffect("invincible");
                     SoundManager::GetInstance().PlayMusic("playingMusic", true);
                 }
-                else if (Program_state == gameOverState)
+                else if (Program_state == gameOverState || Program_state == timeUpState)
                 {
+                    SoundManager::GetInstance().StopSoundEffect("invincible");
                     SoundManager::GetInstance().PlayMusic("gameover", true);
                 }
             }
@@ -85,7 +88,8 @@ void UI::Process()
                     fin.close();
                     std::cout << "[DEBUG] Loaded game state from save.json\n";
                 }
-                else {
+                else
+                {
                     std::cerr << "[ERROR] Failed to open save.json\n";
                 }
             }
@@ -124,7 +128,8 @@ void UI::Process()
         {
             Program_state = timeUp->Update();
         }
-        else if(Program_state == ProgramState :: InfoState){
+        else if (Program_state == ProgramState ::InfoState)
+        {
             Program_state = infoButton->Update();
         }
         // Draw
@@ -159,7 +164,8 @@ void UI::Process()
         {
             timeUp->Draw();
         }
-        else if(Program_state == ProgramState::InfoState){
+        else if (Program_state == ProgramState::InfoState)
+        {
             infoButton->Draw();
         }
 

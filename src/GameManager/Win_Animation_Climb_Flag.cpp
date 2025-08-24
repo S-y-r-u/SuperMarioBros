@@ -54,6 +54,8 @@ void Win_Animation_Climb_Flag::Enter_Win_Animation()
     Mario_Base_Y = Flag_Bottom_Y + Tile_Size - 10.0f;
     current_state = Win_Animation_State::Climbing;
     player_info_.Game_Won();
+    SoundManager::GetInstance().StopMusic();
+    SoundManager::GetInstance().PlaySoundEffect("flagpole");
 }
 
 void Win_Animation_Climb_Flag::Update(float dt)
@@ -97,6 +99,7 @@ void Win_Animation_Climb_Flag::Climb_Flag_Pole()
     {
         current_state = Win_Animation_State::Preparing;
         flag_pole_->Set_Velocity({0, 0});
+        SoundManager::GetInstance().PlaySoundEffect("world_clear");
     }
 }
 
@@ -167,4 +170,3 @@ void Win_Animation_Climb_Flag::Raise_Flag()
         flag_castle_->Set_Velocity({0, -Slide_Speed / 2.0f});
     }
 }
-

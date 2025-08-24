@@ -1,6 +1,7 @@
 #pragma once
 #include "GameManager/I_Stage.h"
 #include "GameManager/Animation.h"
+#include "Menu/SoundManager.h"
 #include "Constants.h"
 #include "Player/Mario.h"
 #include "Player/Luigi.h"

@@ -21,6 +21,7 @@ public:
     void PlaySoundEffect(const std::string& name);
     void PlayMusic(const std::string& name, bool loop = false);
     void StopMusic();
+    void StopSoundEffect(const std::string& name);
     void Update();  // Must be called each frame if music is playing
 
     void SetSFXVolume(float volume);    // 0.0f → 1.0f

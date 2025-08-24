@@ -56,6 +56,7 @@ void PlayerInformation::Update(const float &dt)
         time -= 2 * dt;
     else if (up_score)
     {
+
         time -= 40 * dt;
         score += 20;
     }
@@ -141,6 +142,7 @@ void PlayerInformation::Game_Won()
 void PlayerInformation::Up_Score()
 {
     up_score = true;
+    SoundManager::GetInstance().PlayMusic("finalcalc", true);
 }
 
 void PlayerInformation::Set_Time_To_0()
@@ -148,6 +150,7 @@ void PlayerInformation::Set_Time_To_0()
     time = 0;
     up_score = false;
     is_game_won = true;
+    SoundManager::GetInstance().StopMusic();
 }
 
 json PlayerInformation::to_json() const

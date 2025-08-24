@@ -79,6 +79,8 @@ void Win_Animation_Save_Prince::Enter_Win_Animation()
 {
     cur_state = Save_Prince_State::PLAYER_MOVING;
     player_info.Game_Won();
+    SoundManager::GetInstance().StopMusic();
+    SoundManager::GetInstance().PlaySoundEffect("world_clear");
 }
 
 void Win_Animation_Save_Prince::Player_Move()

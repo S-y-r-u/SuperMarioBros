@@ -3,6 +3,7 @@
 #include "sprite.h"
 #include "Constants.h"
 #include "Animation.h"
+#include "Menu/SoundManager.h"
 
 class PlayerInformation
 {

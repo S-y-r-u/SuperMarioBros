@@ -3,6 +3,7 @@
 #include "Constants.h"
 #include "PlayerInformation.h"
 #include "Player/Player.h"
+#include "Menu/SoundManager.h"
 
 class I_Win_Animation_Manager
 {

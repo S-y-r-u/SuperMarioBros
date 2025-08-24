@@ -43,7 +43,8 @@ Player ::Player(Vector2 startPos) : Character(startPos)
     deceleration = 600.0f;
 }
 
-Player ::Player(const Player& other) : Character(other) {
+Player ::Player(const Player &other) : Character(other)
+{
     velocity = other.velocity;
     speed = other.speed;
     gravity = other.gravity;
@@ -234,6 +235,8 @@ void Player ::update(float dt, bool isAccelerating)
             invincibleTimer -= dt;
             if (invincibleTimer <= 0.0f)
             {
+                SoundManager::GetInstance().StopSoundEffect("invincible");
+                SoundManager::GetInstance().ResumeMusic();
                 isInvincible = false;
                 form = targetForm;
             }
@@ -261,6 +264,8 @@ void Player ::update(float dt, bool isAccelerating)
         invincibleTimer -= dt;
         if (invincibleTimer <= 0.0f)
         {
+            SoundManager::GetInstance().StopSoundEffect("invincible");
+            SoundManager::GetInstance().ResumeMusic();
             isInvincible = 0;
             form = beforeStar;
         }
