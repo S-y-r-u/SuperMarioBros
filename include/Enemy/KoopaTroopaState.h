@@ -1,6 +1,7 @@
 #pragma once
 #include "Enemy.h"
 class KoopaTroopa;
+class MapManagement;
 
 class KoopaState
 {
@@ -12,6 +13,7 @@ public:
     virtual void OnStomped(KoopaTroopa *koopa) {}
     virtual void OnFired(KoopaTroopa *koopa);
     virtual void OnKicked(KoopaTroopa *koopa, int direction) {}
+    virtual void Apply_AI(KoopaTroopa *koopa, MapManagement &map) {}
 };
 
 // ------ WALKING ------
@@ -21,6 +23,7 @@ public:
     void Enter(KoopaTroopa *koopa) override;
     void Update(KoopaTroopa *koopa, float dt) override;
     void OnStomped(KoopaTroopa *koopa) override;
+    void Apply_AI(KoopaTroopa *koopa, MapManagement &map) override;
 };
 
 // ------ SHELL IDLE ------
@@ -62,14 +65,11 @@ public:
 class KoopaFlyingState : public KoopaState
 {
 private:
-    float fly_timer = 0.0f;
-    const float fly_interval = 10.5f;
     const float fly_speed = 240.0f;
 
 public:
     void Enter(KoopaTroopa *koopa) override;
     void Update(KoopaTroopa *koopa, float dt) override;
-    float GetFlyingTimer() const { return fly_timer; }
-    void SetFlyingTimer(float timer) { fly_timer = timer; }
     void OnStomped(KoopaTroopa *koopa) override;
+    void Apply_AI(KoopaTroopa *koopa, MapManagement &map) override;
 };

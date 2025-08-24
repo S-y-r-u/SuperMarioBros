@@ -1,9 +1,10 @@
 #include "Stage/MediumMap.h"
 
-MediumMap::MediumMap(PlayerInformation &info, Player *&player) : Stage(info, player)
+MediumMap::MediumMap(PlayerInformation &info, Player *&player, Player_Mode &player_mode) : Stage(info, player, player_mode)
 {
     MapTexture = LoadTexture("map/Medium/Medium.png");
-    LoadMapFromFile("map/Medium/Medium.txt");
+    map = new MapManagement("map/Medium/Medium.txt");
+    LoadBlockFromFile("map/Medium/Block_Medium.txt");
     Layer[0] = LoadTexture("map/Medium/First_Layer.png");
     Layer[1] = LoadTexture("map/Medium/Second_Layer.png");
     LoadEnemiesFromFile("map/Medium/Enemy_Medium.txt");

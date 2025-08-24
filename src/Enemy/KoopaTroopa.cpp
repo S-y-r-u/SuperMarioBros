@@ -129,12 +129,13 @@ bool KoopaTroopa::Kill_Enemy()
 {
     return dynamic_cast<KoopaShellMovingState *>(current_state_) != nullptr;
 }
-json KoopaTroopa::to_json() const {
+json KoopaTroopa::to_json() const
+{
     json j;
 
     // Enemy base
-    j["position"] = { position_.x, position_.y };
-    j["velocity"] = { velocity_.x, velocity_.y };
+    j["position"] = {position_.x, position_.y};
+    j["velocity"] = {velocity_.x, velocity_.y};
     j["gravity"] = gravity_;
     j["is_ground"] = is_ground;
     j["is_active"] = is_active;
@@ -142,29 +143,38 @@ json KoopaTroopa::to_json() const {
     j["first_appear"] = first_appear;
 
     // KoopaTroopa riêng
-    j["before_pos"] = { before_pos_.x, before_pos_.y };
+    j["before_pos"] = {before_pos_.x, before_pos_.y};
 
     // Lưu state
     json state_json;
-    if (auto s = dynamic_cast<KoopaWalkingState*>(current_state_)) {
+    if (auto s = dynamic_cast<KoopaWalkingState *>(current_state_))
+    {
         state_json["name"] = "walking";
-    } else if (auto s = dynamic_cast<KoopaShellIdleState*>(current_state_)) {
+    }
+    else if (auto s = dynamic_cast<KoopaShellIdleState *>(current_state_))
+    {
         state_json["name"] = "shell_idle";
         state_json["timer"] = s->GetTimer(); // cần hàm getter
-    } else if (auto s = dynamic_cast<KoopaShellMovingState*>(current_state_)) {
+    }
+    else if (auto s = dynamic_cast<KoopaShellMovingState *>(current_state_))
+    {
         state_json["name"] = "shell_moving";
-    } else if (auto s = dynamic_cast<KoopaDyingState*>(current_state_)) {
+    }
+    else if (auto s = dynamic_cast<KoopaDyingState *>(current_state_))
+    {
         state_json["name"] = "dying";
-    } else if (auto s = dynamic_cast<KoopaFlyingState*>(current_state_)) {
+    }
+    else if (auto s = dynamic_cast<KoopaFlyingState *>(current_state_))
+    {
         state_json["name"] = "flying";
-        state_json["flying_timer"] = s->GetFlyingTimer();
     }
     j["state"] = state_json;
 
     return j;
 }
 
-void KoopaTroopa::from_json(const json& j) {
+void KoopaTroopa::from_json(const json &j)
+{
     // Enemy base
     position_.x = j.at("position")[0];
     position_.y = j.at("position")[1];
@@ -184,22 +194,36 @@ void KoopaTroopa::from_json(const json& j) {
     auto state_json = j.at("state");
     std::string name = state_json.at("name").get<std::string>();
 
-    if (name == "walking") {
+    if (name == "walking")
+    {
         SetState(new KoopaWalkingState());
-    } else if (name == "shell_idle") {
+    }
+    else if (name == "shell_idle")
+    {
         auto s = new KoopaShellIdleState();
         s->SetTimer(state_json.at("timer")); // cần hàm setter
         SetState(s);
-    } else if (name == "shell_moving") {
+    }
+    else if (name == "shell_moving")
+    {
         auto s = new KoopaShellMovingState();
         SetState(s);
-    } else if (name == "dying") {
+    }
+    else if (name == "dying")
+    {
         SetState(new KoopaDyingState());
-    } else if (name == "flying") {
+    }
+    else if (name == "flying")
+    {
         auto s = new KoopaFlyingState();
-        s->SetFlyingTimer(state_json.at("flying_timer"));
         SetState(s);
     }
 }
 
-
+void KoopaTroopa::Apply_AI(MapManagement &map)
+{
+    if (current_state_)
+    {
+        current_state_->Apply_AI(this, map);
+    }
+}

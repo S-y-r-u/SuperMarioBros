@@ -3,7 +3,7 @@
 
 Podoboo::Podoboo(Vector2 pos, float speed)
     : Enemy(pos, {0, speed}, 0.0f), previous_frame_pos_(pos), base_y_(pos.y), going_up_(true) {
-        animation_ = Animation(&Enemies_Sprite::enemies_, Enemies_Sprite::Podoboo::normal_, 1 / 4.0f);
+        animation_ = Animation(&Enemies_Sprite::enemies_, Enemies_Sprite::Podoboo::normal_, 1 / 8.0f);
     }
 
 void Podoboo::Update(float dt) {
@@ -21,6 +21,7 @@ void Podoboo::Update(float dt) {
             going_up_ = true;
         }
     }
+    animation_.Update(dt);
 }
 
 void Podoboo::Draw() const {

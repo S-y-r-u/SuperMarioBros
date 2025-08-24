@@ -68,34 +68,34 @@ void GameManager::SetDifficulty(Difficulty diff)
         switch (difficulty)
         {
         case Difficulty::Easy:
-            if (player_mode == Player_Mode::MARIO_PLAYER)
+            if (player_mode == Player_Mode::MARIO_PLAYER || player_mode == Player_Mode::MULTI_PLAYER)
                 player = new Mario({400, 200});
             else if (player_mode == Player_Mode::LUIGI_PLAYER)
                 player = new Luigi({400, 200});
             player_info = new PlayerInformation(400, 3);
             player_info->SetWorld("EASY");
             intro_stage = new Intro_Easy(*player_info, player_mode);
-            stage = new EasyMap(*player_info, player); // Replace with your actual Easy stage class
+            stage = new EasyMap(*player_info, player, player_mode); // Replace with your actual Easy stage class
             break;
         case Difficulty::Medium:
-            if (player_mode == Player_Mode::MARIO_PLAYER)
+            if (player_mode == Player_Mode::MARIO_PLAYER || player_mode == Player_Mode::MULTI_PLAYER)
                 player = new Mario({144, 624});
             else if (player_mode == Player_Mode::LUIGI_PLAYER)
                 player = new Luigi({144, 624});
             player_info = new PlayerInformation(400, 3);
             player_info->SetWorld("MEDIUM");
             intro_stage = new Intro_Medium(*player_info, player_mode);
-            stage = new MediumMap(*player_info, player); // Replace with your actual Medium stage class
+            stage = new MediumMap(*player_info, player, player_mode); // Replace with your actual Medium stage class
             break;
         case Difficulty::Hard:
-            if (player_mode == Player_Mode::MARIO_PLAYER)
+            if (player_mode == Player_Mode::MARIO_PLAYER || player_mode == Player_Mode::MULTI_PLAYER)
                 player = new Mario({48, 336});
             else if (player_mode == Player_Mode::LUIGI_PLAYER)
                 player = new Luigi({48, 336});
             player_info = new PlayerInformation(400, 3);
             player_info->SetWorld("HARD");
             intro_stage = new Intro_Hard(*player_info, player_mode);
-            stage = new HardMap(*player_info, player); // Replace with your actual Hard stage class
+            stage = new HardMap(*player_info, player, player_mode); // Replace with your actual Hard stage class
             break;
         default:
             stage = nullptr;
@@ -105,14 +105,14 @@ void GameManager::SetDifficulty(Difficulty diff)
     // Vào Game từ Play
     if (game_mode == Game_Mode::Play_Through)
     {
-        if (player_mode == Player_Mode::MARIO_PLAYER)
+        if (player_mode == Player_Mode::MARIO_PLAYER || player_mode == Player_Mode::MULTI_PLAYER)
             player = new Mario({400, 200});
         else if (player_mode == Player_Mode::LUIGI_PLAYER)
             player = new Luigi({400, 200});
         player_info = new PlayerInformation(400, 6);
         player_info->SetWorld("EASY");
         intro_stage = new Intro_Easy(*player_info, player_mode);
-        stage = new EasyMap(*player_info, player);
+        stage = new EasyMap(*player_info, player, player_mode);
     }
     outro_stage = new Outro_Manager(player);
     current_stage = intro_stage;
@@ -170,28 +170,28 @@ void GameManager::ResetGame(Difficulty diff)
     switch (difficulty)
     {
     case Difficulty::Easy:
-        if (player_mode == Player_Mode::MARIO_PLAYER)
+        if (player_mode == Player_Mode::MARIO_PLAYER || player_mode == Player_Mode::MULTI_PLAYER)
             player = new Mario({400, 200});
         else if (player_mode == Player_Mode::LUIGI_PLAYER)
             player = new Luigi({400, 200});
         intro_stage = new Intro_Easy(*player_info, player_mode);
-        stage = new EasyMap(*player_info, player); // Replace with your actual Easy stage class
+        stage = new EasyMap(*player_info, player, player_mode); // Replace with your actual Easy stage class
         break;
     case Difficulty::Medium:
-        if (player_mode == Player_Mode::MARIO_PLAYER)
+        if (player_mode == Player_Mode::MARIO_PLAYER || player_mode == Player_Mode::MULTI_PLAYER)
             player = new Mario({144, 624});
         else if (player_mode == Player_Mode::LUIGI_PLAYER)
             player = new Luigi({144, 624});
         intro_stage = new Intro_Medium(*player_info, player_mode);
-        stage = new MediumMap(*player_info, player); // Replace with your actual Medium stage class
+        stage = new MediumMap(*player_info, player, player_mode); // Replace with your actual Medium stage class
         break;
     case Difficulty::Hard:
-        if (player_mode == Player_Mode::MARIO_PLAYER)
+        if (player_mode == Player_Mode::MARIO_PLAYER || player_mode == Player_Mode::MULTI_PLAYER)
             player = new Mario({48, 336});
         else if (player_mode == Player_Mode::LUIGI_PLAYER)
             player = new Luigi({48, 336});
         intro_stage = new Intro_Hard(*player_info, player_mode);
-        stage = new HardMap(*player_info, player); // Replace with your actual Hard stage class
+        stage = new HardMap(*player_info, player, player_mode); // Replace with your actual Hard stage class
         break;
     default:
         stage = nullptr;
@@ -239,13 +239,13 @@ void GameManager::TransGame()
         intro_stage = new Intro_Medium(*player_info, player_mode);
         player->Set_Pos({144, 624});
         player->Set_Disappear(false);
-        stage = new MediumMap(*player_info, player); // Replace with your actual Medium stage class
+        stage = new MediumMap(*player_info, player, player_mode); // Replace with your actual Medium stage class
         break;
     case Difficulty::Hard:
         intro_stage = new Intro_Hard(*player_info, player_mode);
         player->Set_Pos({48, 336});
         player->Set_Disappear(false);
-        stage = new HardMap(*player_info, player); // Replace with your actual Hard stage class
+        stage = new HardMap(*player_info, player, player_mode); // Replace with your actual Hard stage class
         break;
     }
     current_stage = intro_stage;
@@ -475,13 +475,13 @@ void GameManager::from_json(const json &j)
         switch (difficulty)
         {
         case Difficulty::Easy:
-            stage = new EasyMap(*player_info, player);
+            stage = new EasyMap(*player_info, player, player_mode);
             break;
         case Difficulty::Medium:
-            stage = new MediumMap(*player_info, player);
+            stage = new MediumMap(*player_info, player, player_mode);
             break;
         case Difficulty::Hard:
-            stage = new HardMap(*player_info, player);
+            stage = new HardMap(*player_info, player, player_mode);
             break;
         }
         stage->from_json(j.at("stage"));

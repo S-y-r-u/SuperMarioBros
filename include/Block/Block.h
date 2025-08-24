@@ -8,7 +8,6 @@
 class Block
 {
 private:
-
     A_Block_State *question_state_;
     A_Block_State *normal_state_;
     A_Block_State *unbreakable_state_;
@@ -27,7 +26,7 @@ public:
     void Update_();
     void Draw_();
     void On_Hit(std::vector<Item *> &item, Player &player, PlayerInformation &info);
-    bool Kill_Player(Player &player);
+    bool Kill_Player(Player &player, Camera2D &camera);
 
     void Set_State(A_Block_State *new_state);
 
@@ -46,5 +45,5 @@ public:
     A_Block_State *GetBreakableState() const;
 
     json to_json() const;
-    void from_json(const json& j);
+    void from_json(const json &j);
 };

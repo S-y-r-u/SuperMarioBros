@@ -1495,7 +1495,9 @@ namespace Enemies_Sprite
     }
     namespace Podoboo
     {
+        extern Rectangle p1;
         extern Rectangle p2;
+        extern Rectangle p3;
         extern std::vector<Rectangle> normal_;
     }
 
@@ -1658,4 +1660,17 @@ namespace SavePrince
 namespace Platform
 {
     extern Rectangle vertical_;
+}
+
+namespace Fire_Block_Animation
+{
+    extern Rectangle f1;
+    extern Rectangle f2;
+    extern Rectangle f3;
+    extern Rectangle f4;
+    extern Rectangle f5;
+    extern Rectangle f6;
+    extern Rectangle f7;
+    extern Rectangle f8;
+    extern std::vector<Rectangle> fire_block_;
 }

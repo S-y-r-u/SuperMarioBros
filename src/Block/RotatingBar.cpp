@@ -6,7 +6,7 @@ RotatingBar::RotatingBar(Vector2 pivotPos)
       pivot(pivotPos),
       length(150.0f),
       angle(0),
-      speed(45.0f) {}
+      speed(65.0f) {}
 
 void RotatingBar::Update(float dt)
 {

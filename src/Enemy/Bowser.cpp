@@ -25,11 +25,6 @@ void Bowser::Update(float dt)
 	previous_frame_pos = position_;
 
 	// dying state
-	if (hp_ <= 0 && state_ != Bowser_State::dying)
-	{
-		state_ = Bowser_State::dying;
-		animation_.Set_Frames(Bowser_Sprite::dying_::dying_);
-	}
 
 	if (state_ == Bowser_State::dying)
 	{
@@ -72,7 +67,7 @@ void Bowser::Update(float dt)
 			state_ = Bowser_State::normal;
 			animation_.Set_Frames(Bowser_Sprite::normal_::normal_);
 			fire_timer = 0.0f;
-			fire_cooldown_ = 1.0f; // reset cooldown bắn
+			fire_cooldown_ = 2.0f; // reset cooldown bắn
 		}
 	}
 	Move_(dt);
@@ -188,6 +183,12 @@ void Bowser::Notify_Be_Fired_Or_Hit()
 	if (state_ == Bowser_State::dying)
 		return;
 	hp_ -= 3;
+	if (hp_ <= 0 && state_ != Bowser_State::dying)
+	{
+		is_dead = 1;
+		state_ = Bowser_State::dying;
+		animation_.Set_Frames(Bowser_Sprite::dying_::dying_);
+	}
 	std::cout << "[Bowser] Hit or fire! HP: " << hp_ << "\n";
 }
 

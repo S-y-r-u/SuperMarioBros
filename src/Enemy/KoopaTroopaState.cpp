@@ -31,6 +31,24 @@ void KoopaWalkingState::OnStomped(KoopaTroopa *koopa)
     koopa->SetState(new KoopaShellIdleState());
 }
 
+void KoopaWalkingState::Apply_AI(KoopaTroopa *koopa, MapManagement &map)
+{
+    if (koopa->is_ground == false)
+        return;
+    Rectangle koopaRec = koopa->Get_Draw_Rec();
+    Vector2 next_pos;
+    if (koopa->velocity_.x > 0)
+        next_pos = {koopaRec.x + koopaRec.width, koopa->position_.y + 10.0f};
+    else
+        next_pos = {koopaRec.x, koopa->position_.y + 10.0f};
+    int row = static_cast<int>(next_pos.y / Tile_Size);
+    int col = static_cast<int>(next_pos.x / Tile_Size);
+    if (map.GetTile(col, row) == 0)
+    {
+        koopa->Notify_Change_Direct();
+    }
+}
+
 // ---------- SHELL IDLE ----------
 void KoopaShellIdleState::Enter(KoopaTroopa *koopa)
 {
@@ -135,25 +153,17 @@ void KoopaFlyingState::Enter(KoopaTroopa *koopa)
     koopa->velocity_.x = (koopa->velocity_.x >= 0) ? 90.0f : -90.0f;
     koopa->velocity_.y = 0; // bay lên ban đầu
     koopa->gravity_ = 600.0f;
-    fly_timer = 0.0f;
     koopa->score = 0;
 }
 
 void KoopaFlyingState::Update(KoopaTroopa *koopa, float dt)
 {
-    fly_timer += dt;
     if (koopa->is_ground)
     {
         koopa->velocity_.y = -fly_speed; // nếu chạm đất thì bay lên
         koopa->is_ground = false;        // không còn trên mặt đất
     }
     koopa->velocity_.y += koopa->gravity_ * dt; // áp dụng trọng lực
-
-    if (fly_timer >= fly_interval)
-    {
-        koopa->velocity_.x *= -1; // đổi hướng bay left right
-        fly_timer = 0;
-    }
 
     koopa->animation_.Update(dt);
 }
@@ -162,4 +172,26 @@ void KoopaFlyingState::OnStomped(KoopaTroopa *koopa)
 {
     // Khi bị giẫm sẽ thành shell
     koopa->SetState(new KoopaWalkingState());
+}
+
+void KoopaFlyingState::Apply_AI(KoopaTroopa *koopa, MapManagement &map)
+{
+    Rectangle koopaRec = koopa->Get_Draw_Rec();
+    Vector2 next_pos;
+    if (koopa->velocity_.x > 0)
+        next_pos = {koopaRec.x + koopaRec.width, koopa->position_.y + 10.0f};
+    else
+        next_pos = {koopaRec.x, koopa->position_.y + 10.0f};
+    int col = next_pos.x / Tile_Size;
+    bool is_change = true;
+    for (int i = 0; i < map.GetHeight(); i++)
+    {
+        if (map.GetTile(col, i) != 0)
+        {
+            is_change = false;
+            break;
+        }
+    }
+    if (is_change)
+        koopa->Notify_Change_Direct();
 }

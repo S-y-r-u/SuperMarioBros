@@ -10,6 +10,7 @@
 #include "GameManager/DrawScore.h"
 #include "GameManager/I_Win_Animation.h"
 #include "GameManager/I_Stage.h"
+#include "Map/MapManagement.h"
 #include <vector>
 #include <algorithm>
 #include <unordered_map>
@@ -22,7 +23,7 @@ protected:
     Rectangle source;
     Rectangle dest;
     Texture MapTexture;
-    std::vector<std::vector<int>> Map;
+    MapManagement *map;
     Texture Layer[2] = {0};
 
     Player *&player;
@@ -38,7 +39,7 @@ protected:
     std::vector<FireBall *> fireballs;
     std::unordered_map<Enemy *, std::vector<Enemy *>> enemy_map;
 
-    Player_Mode player_mode;
+    Player_Mode &player_mode;
 
     // Thời gian chờ khi nhân vật chết
     const float cool_down_after_die = 1.5f;
@@ -49,7 +50,7 @@ protected:
     bool Is_Game_Won;
 
 public:
-    Stage(PlayerInformation &info, Player *&player);
+    Stage(PlayerInformation &info, Player *&player, Player_Mode &player_mode);
     virtual ~Stage();
     void Run() override;
     void Draw() override;
@@ -60,16 +61,13 @@ public:
     void Player_Update();
     void Non_Player_Update();
 
-    void Check_Player_Vs_Ground();
     void Check_Player_Vs_Block();
     void Check_Player_Vs_Enemy();
 
-    void Check_Enemy_Vs_Ground();
     void Check_Enemy_Vs_Block();
     void Check_Enemy_Vs_Enemy();
 
     void Check_Item_Vs_Block();
-    void Check_Item_Vs_Ground();
 
     void Check_Block_Vs_Block();
 
@@ -78,7 +76,6 @@ public:
     void Clear_Keyboard();
 
     void LoadBlockFromFile(const std::string &filename);
-    void LoadMapFromFile(const std::string &filename);
     void LoadEnemiesFromFile(const std::string &filename);
 
     bool Need_Reset_Game() const;

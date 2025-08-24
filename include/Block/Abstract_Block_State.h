@@ -20,7 +20,7 @@ public:
     virtual void Draw_() = 0;
     virtual void Update_() = 0;
     virtual void On_Hit(std::vector<Item *> &item, Player &player, PlayerInformation &info) = 0;
-    virtual bool Kill_Player(Player &player);
+    virtual bool Kill_Player(Player &player, Camera2D& camera);
 
     virtual bool Get_Elapse() = 0;
     virtual bool Get_Is_Delete() const;

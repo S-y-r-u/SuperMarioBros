@@ -1470,7 +1470,9 @@ namespace Enemies_Sprite
     namespace Podoboo
     {
         Rectangle p1 = {289, 186, 14, 16};
-        std::vector<Rectangle> normal_ = {p1};
+        Rectangle p2 = {306, 186, 14, 16};
+        Rectangle p3 = {323, 186, 14, 16};
+        std::vector<Rectangle> normal_ = {p1, p2, p3};
     }
     namespace Cheep_Cheep
     {
@@ -1623,4 +1625,17 @@ namespace SavePrince
 namespace Platform
 {
     Rectangle vertical_ = {83, 206, 24, 8};
+}
+
+namespace Fire_Block_Animation
+{
+    Rectangle f1 = {273, 154, 16, 16};
+    Rectangle f2 = {290, 154, 16, 16};
+    Rectangle f3 = {307, 154, 16, 16};
+    Rectangle f4 = {324, 154, 16, 16};
+    Rectangle f5 = {341, 154, 16, 16};
+    Rectangle f6 = {358, 154, 16, 16};
+    Rectangle f7 = {375, 154, 16, 16};
+    Rectangle f8 = {392, 154, 16, 16};
+    std::vector<Rectangle> fire_block_ = {f1, f2, f3, f4, f5, f6, f7, f8};
 }

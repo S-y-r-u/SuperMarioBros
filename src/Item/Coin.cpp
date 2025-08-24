@@ -28,6 +28,7 @@ json Coin::to_json() const {
     j["pos"] = { pos_.x, pos_.y };
     j["appear_animation"] = appear_animation;
     j["is_delete"] = is_delete;
+    return j;
 }
 
 void Coin::from_json(const json& j) {

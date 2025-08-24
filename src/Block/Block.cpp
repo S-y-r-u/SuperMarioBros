@@ -46,9 +46,9 @@ void Block::On_Hit(std::vector<Item *> &item, Player &player, PlayerInformation 
     current_state_->On_Hit(item, player, info);
 }
 
-bool Block::Kill_Player(Player &player)
+bool Block::Kill_Player(Player &player, Camera2D &camera)
 {
-    return current_state_->Kill_Player(player);
+    return current_state_->Kill_Player(player, camera);
 }
 
 void Block::Set_State(A_Block_State *new_state)
@@ -104,43 +104,52 @@ A_Block_State *Block::GetBreakableState() const
     return break_state_;
 }
 
-
 // Demo: Serialize Block (chỉ cho Normal_Block)
-json Block::to_json() const {
+json Block::to_json() const
+{
     json j;
     j["pos"] = {pos_.x, pos_.y};
     j["item_count"] = item_count_;
     j["type_item"] = type_item_;
     // Lưu state hiện tại
-    if (current_state_ == normal_state_) j["current_state"] = "normal";
-    else if (current_state_ == question_state_) j["current_state"] = "question";
-    else if (current_state_ == break_state_) j["current_state"] = "breakable";
-    else if (current_state_ == unbreakable_state_) j["current_state"] = "unbreakable";
+    if (current_state_ == normal_state_)
+        j["current_state"] = "normal";
+    else if (current_state_ == question_state_)
+        j["current_state"] = "question";
+    else if (current_state_ == break_state_)
+        j["current_state"] = "breakable";
+    else if (current_state_ == unbreakable_state_)
+        j["current_state"] = "unbreakable";
     // Luôn lưu tất cả các state
-    j["normal_state"] = static_cast<Normal_Block*>(normal_state_)->to_json();
-    j["question_state"] = static_cast<Question_Block*>(question_state_)->to_json();
-    j["breakable_state"] = static_cast<Breakable_BLock*>(break_state_)->to_json();
-    j["unbreakable_state"] = static_cast<Unbreakable_Block*>(unbreakable_state_)->to_json();
+    j["normal_state"] = static_cast<Normal_Block *>(normal_state_)->to_json();
+    j["question_state"] = static_cast<Question_Block *>(question_state_)->to_json();
+    j["breakable_state"] = static_cast<Breakable_BLock *>(break_state_)->to_json();
+    j["unbreakable_state"] = static_cast<Unbreakable_Block *>(unbreakable_state_)->to_json();
     return j;
 }
 
-void Block::from_json(const json& j) {
+void Block::from_json(const json &j)
+{
     pos_.x = j["pos"][0];
     pos_.y = j["pos"][1];
     item_count_ = j["item_count"];
     type_item_ = j["type_item"];
     std::string state = j.value("current_state", "normal");
     if (j.contains("normal_state") && normal_state_)
-        static_cast<Normal_Block*>(normal_state_)->from_json(j["normal_state"]);
+        static_cast<Normal_Block *>(normal_state_)->from_json(j["normal_state"]);
     if (j.contains("question_state") && question_state_)
-        static_cast<Question_Block*>(question_state_)->from_json(j["question_state"]);
+        static_cast<Question_Block *>(question_state_)->from_json(j["question_state"]);
     if (j.contains("breakable_state") && break_state_)
-        static_cast<Breakable_BLock*>(break_state_)->from_json(j["breakable_state"]);
+        static_cast<Breakable_BLock *>(break_state_)->from_json(j["breakable_state"]);
     if (j.contains("unbreakable_state") && unbreakable_state_)
-        static_cast<Unbreakable_Block*>(unbreakable_state_)->from_json(j["unbreakable_state"]);
+        static_cast<Unbreakable_Block *>(unbreakable_state_)->from_json(j["unbreakable_state"]);
     // Đặt lại state hiện tại
-    if (state == "normal" && normal_state_) current_state_ = normal_state_;
-    else if (state == "question" && question_state_) current_state_ = question_state_;
-    else if (state == "breakable" && break_state_) current_state_ = break_state_;
-    else if (state == "unbreakable" && unbreakable_state_) current_state_ = unbreakable_state_;
+    if (state == "normal" && normal_state_)
+        current_state_ = normal_state_;
+    else if (state == "question" && question_state_)
+        current_state_ = question_state_;
+    else if (state == "breakable" && break_state_)
+        current_state_ = break_state_;
+    else if (state == "unbreakable" && unbreakable_state_)
+        current_state_ = unbreakable_state_;
 }

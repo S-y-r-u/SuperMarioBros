@@ -1,9 +1,9 @@
 #include "Stage/EasyMap.h"
 
-EasyMap::EasyMap(PlayerInformation &info, Player *&player) : Stage(info, player)
+EasyMap::EasyMap(PlayerInformation &info, Player *&player, Player_Mode &player_mode) : Stage(info, player, player_mode)
 {
     MapTexture = LoadTexture("map/Easy/Easy.png");
-    LoadMapFromFile("map/Easy/Easy.txt");
+    map = new MapManagement("map/Easy/Easy.txt");
     LoadBlockFromFile("map/Easy/Block_Easy.txt");
     Layer[0] = LoadTexture("map/Easy/First_Layer.png");
     Layer[1] = LoadTexture("map/Easy/Second_Layer.png");

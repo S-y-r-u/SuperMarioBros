@@ -2,7 +2,8 @@
 
 Unbreakable_Block::Unbreakable_Block(Block &m_block)
     : A_Block_State(),
-    m_block(m_block)
+      m_block(m_block),
+      first_appear(false)
 {
     animation_ = Animation(&Item_Sprite::item_, Item_Sprite::Brown_Brick::type_1);
     if (m_block.Get_Type_Item() == "rotating_bar")
@@ -39,7 +40,7 @@ void Unbreakable_Block::Draw_()
 
 void Unbreakable_Block::Update_()
 {
-    if (m_rotating_bar)
+    if (m_rotating_bar && first_appear)
         m_rotating_bar->Update(GetFrameTime());
 }
 
@@ -56,18 +57,30 @@ void Unbreakable_Block::On_Hit(std::vector<Item *> &item, Player &player, Player
     SoundManager::GetInstance().PlaySoundEffect("bump");
 }
 
-bool Unbreakable_Block::Kill_Player(Player &player)
+bool Unbreakable_Block::Kill_Player(Player &player, Camera2D &camera)
 {
+    Vector2 top_left = GetScreenToWorld2D({0, 0}, camera);
+    Vector2 bottom_right = GetScreenToWorld2D({(float)GetScreenWidth(), (float)GetScreenHeight()}, camera);
+
+    Rectangle screen_rect_world = {
+        top_left.x,
+        top_left.y,
+        bottom_right.x - top_left.x,
+        bottom_right.y - top_left.y};
+    if (m_rotating_bar && (m_rotating_bar->GetPivot().x <= screen_rect_world.x + screen_rect_world.width || m_rotating_bar->GetEndPoint().x <= screen_rect_world.x + screen_rect_world.width))
+        first_appear = true;
     if (m_rotating_bar)
         return m_rotating_bar->CheckCollision(player.get_draw_rec());
     return false;
 }
 
 // Serialize Unbreakable_Block
-json Unbreakable_Block::to_json() const {
+json Unbreakable_Block::to_json() const
+{
     json j;
     // Nếu có rotating bar thì lưu
-    if (m_rotating_bar) {
+    if (m_rotating_bar)
+    {
         j["rotating_bar"] = m_rotating_bar->to_json();
     }
     j["animation"] = animation_.to_json();
@@ -75,10 +88,13 @@ json Unbreakable_Block::to_json() const {
     return j;
 }
 
-void Unbreakable_Block::from_json(const json& j) {
+void Unbreakable_Block::from_json(const json &j)
+{
     // Nếu có rotating_bar thì đọc lại
-    if (j.contains("rotating_bar")) {
-        if (!m_rotating_bar) m_rotating_bar = new RotatingBar({0,0});
+    if (j.contains("rotating_bar"))
+    {
+        if (!m_rotating_bar)
+            m_rotating_bar = new RotatingBar({0, 0});
         m_rotating_bar->from_json(j["rotating_bar"]);
     }
     animation_.from_json(j["animation"]);

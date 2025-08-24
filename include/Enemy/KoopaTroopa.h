@@ -1,7 +1,9 @@
 #pragma once
 #include "Enemy/Enemy.h"
+#include "Map/MapManagement.h"
 
 class KoopaState;
+class MapManagement;
 
 class KoopaTroopa : public Enemy
 {
@@ -42,8 +44,9 @@ public:
     bool Can_Be_Fired_Or_Hit() const override { return true; }
     bool Can_Be_Kicked() const override;
 
-    json to_json() const override ;
-    void from_json(const json& j) override;
+    json to_json() const override;
+    void from_json(const json &j) override;
 
     bool Kill_Enemy() override;
+    void Apply_AI(MapManagement &map);
 };

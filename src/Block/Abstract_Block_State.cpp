@@ -6,7 +6,7 @@ A_Block_State::A_Block_State()
 
 bool A_Block_State::Get_Is_Delete() const { return false; }
 
-bool A_Block_State::Kill_Player(Player &player)
+bool A_Block_State::Kill_Player(Player &player, Camera2D& camera)
 {
     return false;
 }
